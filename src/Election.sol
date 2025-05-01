@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+/**
+ * @title VutsEngine
+ * @author Ayeni-yeniyan
+ * @notice This election contract stores the election information for an election in the VutsEngine.
+ * Each election is owned by the VutsEngine. It holds a createdBy field which keeps the information of the election creator
+ *
+ */
 contract Election {
     // Election owner
     // Election owner picks the election start time and end time and format
