@@ -18,9 +18,8 @@
 // internal
 // private
 // view & pure functions
-
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.20;
 
 // Imports
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
@@ -35,8 +34,12 @@ contract Election is Ownable {
     // ====================================================================
     // Errors
     // ====================================================================
-    error Election__UnregisteredVoterCannotBeEmpty();
-    error Election__UnregisteredCandidatesCannotBeEmpty();
+    error Election__VoterInfoDTOCannotBeEmpty();
+    error Election__UnregisteredVoterCannotBeAccredited();
+    error Election__OnlyPollingUnitAllowed();
+    error Election__OnlyPollingOfficerAllowed();
+    error Election__AddressCanOnlyHaveOneRole();
+    error Election__CandidatesInfoDTOCannotBeEmpty();
     error Election__InvalidStartTimeStamp();
     error Election__InvalidEndTimeStamp();
     error Election__InvalidElectionState(
@@ -46,6 +49,10 @@ contract Election is Ownable {
     error Election__UnauthorizedAccountOnlyVutsEngineCanCallContract(
         address account
     );
+    error Election__VoterCannotBeValidated();
+    error Election__UnknownVoter(string matricNo);
+    error Election__UnaccreditedVoter(string matricNo);
+    error Election__PollingOfficerAndUnitCannotBeEmpty();
 
     // ====================================================================
     // Type declarations
@@ -62,7 +69,7 @@ contract Election is Ownable {
     /**
      * @dev This structure is for registering voters only
      */
-    struct UnregisteredVoter {
+    struct VoterInfoDTO {
         string name;
         string matricNo;
     }
@@ -78,7 +85,7 @@ contract Election is Ownable {
     /**
      * @dev This is for storing the unregistered candidates only
      */
-    struct UnregisteredCandidate {
+    struct CandidateInfoDTO {
         string name;
         string matricNo;
         string category;
@@ -106,6 +113,7 @@ contract Election is Ownable {
      * @dev Voters state Enum
      */
     enum VoterState {
+        UNKNOWN,
         REGISTERED,
         ACCREDITED,
         VOTED
@@ -128,16 +136,22 @@ contract Election is Ownable {
     uint256 private immutable _endTimeStamp;
 
     /// @dev The total number of registered voters
-    uint256 private _registeredVotersNum;
+    uint256 private _registeredVotersCount;
 
     /// @dev The total number of accredited voters
-    uint256 private _accreditedVotersNum;
+    uint256 private _accreditedVotersCount;
 
     /// @dev The total number of voters who have voted
-    uint256 private _votedVotersNum;
+    uint256 private _votedVotersCount;
+
+    /// @dev The total number of accredited voters
+    uint256 private _pollingOfficerCount;
+
+    /// @dev The total number of voters who have voted
+    uint256 private _pollintUnitCount;
 
     /// @dev The total number of registered candidates
-    uint256 private _registeredCandidatesNum;
+    uint256 private _registeredCandidatesCount;
 
     /// @dev The unique election name for this election
     string private _electionName;
@@ -148,6 +162,12 @@ contract Election is Ownable {
     /// @dev map of category to candidatenames to candidate
     mapping(string categoryName => mapping(string candidateMatricNo => ElectionCandidate electionCandidates))
         private _candidatesMap;
+
+    mapping(address pollingAddress => bool isValid)
+        private _allowedPollingUnits;
+
+    mapping(address pollingOfficerAddress => bool isValid)
+        private _allowedPollingOfficers;
 
     /// @dev Election state
     ElectionState private _electionState;
@@ -188,6 +208,34 @@ contract Election is Ownable {
         _;
     }
 
+    modifier pollingUnitOnly(address pollingUnitAddress) {
+        if (!_allowedPollingUnits[pollingUnitAddress]) {
+            revert Election__OnlyPollingUnitAllowed();
+        }
+        _;
+    }
+
+    modifier pollingOfficerOnly(address pollingUnitAddress) {
+        if (!_allowedPollingUnits[pollingUnitAddress]) {
+            revert Election__OnlyPollingOfficerAllowed();
+        }
+        _;
+    }
+
+    modifier noUnknown(string memory matricNo) {
+        if (_votersMap[matricNo].voterState == VoterState.UNKNOWN) {
+            revert Election__UnknownVoter(matricNo);
+        }
+        _;
+    }
+
+    modifier accreditedVoterOnly(string memory matricNo) {
+        if (_votersMap[matricNo].voterState != VoterState.ACCREDITED) {
+            revert Election__UnaccreditedVoter(matricNo);
+        }
+        _;
+    }
+
     // ====================================================================
     // Functions
     // ====================================================================
@@ -208,8 +256,10 @@ contract Election is Ownable {
         uint256 startTimeStamp,
         uint256 endTimeStamp,
         string memory electionName,
-        UnregisteredCandidate[] memory candidatesList,
-        UnregisteredVoter[] memory votersList
+        CandidateInfoDTO[] memory candidatesList,
+        VoterInfoDTO[] memory votersList,
+        address[] memory pollingUnitAddresses,
+        address[] memory pollingOfficerAddresses
     ) Ownable(msg.sender) {
         if (block.timestamp <= startTimeStamp) {
             revert Election__InvalidStartTimeStamp();
@@ -228,13 +278,194 @@ contract Election is Ownable {
 
         _registerCandidates(candidatesList);
         _registerVoters(votersList);
+        _registerOfficersAndUnits({
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnitAddresses: pollingUnitAddresses
+        });
     }
 
-    // external functions
+    // ====================================================================
+    // External functions
+    // ====================================================================
 
-    // public functions
+    // ====================================================================
+    // Public functions
+    // ====================================================================
 
-    // internal functions
+    /**
+     * @dev Returns the address of the election creator
+     * @return address Creator's address
+     */
+    function getCreatedBy() public view returns (address) {
+        return _createdBy;
+    }
+
+    /**
+     * @dev Returns the unique token identifier for this election
+     * @return uint256 Election unique token ID
+     */
+    function getElectionUniqueTokenId() public view returns (uint256) {
+        return _electionUniqueTokenId;
+    }
+
+    /**
+     * @dev Returns the start timestamp for this election
+     * @return uint256 Start timestamp
+     */
+    function getStartTimeStamp() public view returns (uint256) {
+        return _startTimeStamp;
+    }
+
+    /**
+     * @dev Returns the end timestamp for this election
+     * @return uint256 End timestamp
+     */
+    function getEndTimeStamp() public view returns (uint256) {
+        return _endTimeStamp;
+    }
+
+    /**
+     * @dev Returns the name of this election
+     * @return string Election name
+     */
+    function getElectionName() public view returns (string memory) {
+        return _electionName;
+    }
+
+    /**
+     * @dev Returns the current state of the election
+     * @return ElectionState Current election state
+     */
+    function getElectionState() public view returns (ElectionState) {
+        // Create a storage variable to hold the current state
+        ElectionState currentState = _electionState;
+
+        // Check if state needs updating based on current time
+        uint256 currentTs = block.timestamp;
+        if (
+            currentTs >= _startTimeStamp &&
+            currentTs < _endTimeStamp &&
+            currentState != ElectionState.STARTED
+        ) {
+            currentState = ElectionState.STARTED;
+        }
+        if (currentTs >= _endTimeStamp) {
+            currentState = ElectionState.ENDED;
+        }
+
+        return currentState;
+    }
+
+    // Sensitive getters that only work after election ends
+    /**
+     * @dev Returns the total number of registered voters
+     * @return uint256 Number of registered voters
+     */
+    function getRegisteredVotersCount() public view returns (uint256) {
+        return _registeredVotersCount;
+    }
+
+    /**
+     * @dev Returns the total number of accredited voters
+     * @return uint256 Number of accredited voters
+     */
+    function getAccreditedVotersCount() public view returns (uint256) {
+        return _accreditedVotersCount;
+    }
+
+    /**
+     * @dev Returns the total number of voters who have voted
+     * @return uint256 Number of voters who have voted
+     */
+    function getVotedVotersCount() public view returns (uint256) {
+        return _votedVotersCount;
+    }
+
+    /**
+     * @dev Returns the total number of polling officers
+     * @return uint256 Number of polling officers
+     */
+    function getPollingOfficerCount() public view returns (uint256) {
+        return _pollingOfficerCount;
+    }
+
+    /**
+     * @dev Returns the total number of polling units
+     * @return uint256 Number of polling units
+     */
+    function getPollingUnitCount() public view returns (uint256) {
+        return _pollintUnitCount;
+    }
+
+    /**
+     * @dev Returns the total number of registered candidates
+     * @return uint256 Number of registered candidates
+     */
+    function getRegisteredCandidatesCount() public view returns (uint256) {
+        return _registeredCandidatesCount;
+    }
+
+    /**
+     * @dev Accredits a voter with valid matric number
+     * @param voterMatricNo The matric number of the voter
+     * @param pollingOfficerAddress Address of the polling officer
+     */
+    function accrediteVoter(
+        string memory voterMatricNo,
+        address pollingOfficerAddress
+    )
+        public
+        pollingOfficerOnly(pollingOfficerAddress)
+        onElectionStarted
+        noUnknown(voterMatricNo)
+    {
+        _votersMap[voterMatricNo].voterState = VoterState.ACCREDITED;
+        _accreditedVotersCount++;
+    }
+
+    /**
+     * @dev Allows an accredited voter to vote for candidates
+     * @param voterMatricNo The matric number of the voter
+     * @param voterName The name of the voter for validation
+     * @param pollingUnitAddress Address of the polling unit
+     * @param candidatesList List of candidates being voted for
+     */
+    function voteCandidates(
+        string memory voterMatricNo,
+        string memory voterName,
+        address pollingUnitAddress,
+        CandidateInfoDTO[] memory candidatesList
+    )
+        public
+        pollingUnitOnly(pollingUnitAddress)
+        onElectionStarted
+        noUnknown(voterMatricNo)
+        accreditedVoterOnly(voterMatricNo)
+    {
+        if (candidatesList.length < 1) {
+            revert Election__CandidatesInfoDTOCannotBeEmpty();
+        }
+        if (!compareStrings(voterName, _votersMap[voterMatricNo].name)) {
+            revert Election__VoterCannotBeValidated();
+        }
+        for (uint i = 0; i < candidatesList.length; i++) {
+            CandidateInfoDTO memory candidate = candidatesList[i];
+            _candidatesMap[candidate.category][candidate.matricNo].votes++;
+        }
+        _votersMap[voterMatricNo].voterState = VoterState.VOTED;
+        _votedVotersCount++;
+    }
+
+    /**
+     * @dev Updates the election state based on current time
+     */
+    function updateElectionState() public {
+        _updateElectionState();
+    }
+
+    // ====================================================================
+    // Internal functions
+    // ====================================================================
 
     /**
      * @dev Updates the election state based on current timestamp
@@ -269,14 +500,14 @@ contract Election is Ownable {
      * @param votersList Array of unregistered voters to register
      */
     function _registerVoters(
-        UnregisteredVoter[] memory votersList
+        VoterInfoDTO[] memory votersList
     ) internal onlyOwner {
         if (votersList.length < 1) {
-            revert Election__UnregisteredVoterCannotBeEmpty();
+            revert Election__VoterInfoDTOCannotBeEmpty();
         }
         // add all voters to votersList
         for (uint i = 0; i < votersList.length; i++) {
-            UnregisteredVoter memory voter = votersList[i];
+            VoterInfoDTO memory voter = votersList[i];
             // create an electionVoter from voter
             ElectionVoter memory registeredVoter = ElectionVoter({
                 name: voter.name,
@@ -285,7 +516,7 @@ contract Election is Ownable {
             // add to votersList
             _votersMap[voter.matricNo] = registeredVoter;
         }
-        _registeredVotersNum = votersList.length;
+        _registeredVotersCount = votersList.length;
     }
 
     /**
@@ -293,14 +524,14 @@ contract Election is Ownable {
      * @param candidatesList Array of unregistered candidates to register
      */
     function _registerCandidates(
-        UnregisteredCandidate[] memory candidatesList
+        CandidateInfoDTO[] memory candidatesList
     ) internal onlyOwner {
         if (candidatesList.length < 1) {
-            revert Election__UnregisteredCandidatesCannotBeEmpty();
+            revert Election__CandidatesInfoDTOCannotBeEmpty();
         }
         // add all Candidates to _candidateMap
         for (uint i = 0; i < candidatesList.length; i++) {
-            UnregisteredCandidate memory voter = candidatesList[i];
+            CandidateInfoDTO memory voter = candidatesList[i];
             // create an ElectionCandidate from candidate
             ElectionCandidate memory registeredCandidate = ElectionCandidate({
                 name: voter.name,
@@ -311,12 +542,69 @@ contract Election is Ownable {
                 voter.matricNo
             ] = registeredCandidate;
         }
-        _registeredCandidatesNum = candidatesList.length;
+        _registeredCandidatesCount = candidatesList.length;
     }
 
-    // private functions
+    /**
+     * @dev Registers polling officers and polling units
+     * @param pollingOfficerAddresses Array of polling officer addresses
+     * @param pollingUnitAddresses Array of polling unit addresses
+     */
+    function _registerOfficersAndUnits(
+        address[] memory pollingOfficerAddresses,
+        address[] memory pollingUnitAddresses
+    ) internal onlyOwner {
+        if (
+            pollingOfficerAddresses.length < 1 ||
+            pollingUnitAddresses.length < 1
+        ) {
+            revert Election__PollingOfficerAndUnitCannotBeEmpty();
+        }
 
-    // view & pure functions
+        for (uint i = 0; i < pollingOfficerAddresses.length; i++) {
+            address officerAddress = pollingOfficerAddresses[i];
+            if (officerAddress == _createdBy) {
+                revert Election__AddressCanOnlyHaveOneRole();
+            }
+            _allowedPollingOfficers[officerAddress] = true;
+        }
+        for (uint i = 0; i < pollingUnitAddresses.length; i++) {
+            address unitAddress = pollingUnitAddresses[i];
+            if (
+                unitAddress == _createdBy &&
+                _allowedPollingOfficers[unitAddress]
+            ) {
+                revert Election__AddressCanOnlyHaveOneRole();
+            }
+            _allowedPollingUnits[unitAddress] = true;
+        }
+
+        _pollingOfficerCount = pollingOfficerAddresses.length;
+        _pollintUnitCount = pollingUnitAddresses.length;
+    }
+
+    // ====================================================================
+    // Private functions
+    // ====================================================================
+
+    // ====================================================================
+    // View & pure functions
+    // ====================================================================
+
+    /**
+     * @dev Compares two strings by comparing their keccak256 hashes
+     * @param first First string to compare
+     * @param second Second string to compare
+     * @return bool True if strings are equal, false otherwise
+     */
+    function compareStrings(
+        string memory first,
+        string memory second
+    ) public pure returns (bool) {
+        return
+            keccak256(abi.encodePacked(first)) ==
+            keccak256(abi.encodePacked(second));
+    }
 }
 
 // Election owner
