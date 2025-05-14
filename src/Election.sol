@@ -55,6 +55,12 @@ contract Election is Ownable {
     error Election__PollingOfficerAndUnitCannotBeEmpty();
 
     // ====================================================================
+    // Events
+    // ====================================================================
+    event AccreditedVoter(string matricNo);
+    event VoterVoted(string matricNo);
+
+    // ====================================================================
     // Type declarations
     // ====================================================================
 
@@ -421,6 +427,7 @@ contract Election is Ownable {
     {
         _votersMap[voterMatricNo].voterState = VoterState.ACCREDITED;
         _accreditedVotersCount++;
+        emit AccreditedVoter(voterMatricNo);
     }
 
     /**
@@ -454,6 +461,8 @@ contract Election is Ownable {
         }
         _votersMap[voterMatricNo].voterState = VoterState.VOTED;
         _votedVotersCount++;
+
+        emit VoterVoted(voterMatricNo);
     }
 
     /**
