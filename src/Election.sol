@@ -40,6 +40,7 @@ contract Election is Ownable {
     error Election__OnlyPollingOfficerAllowed();
     error Election__AddressCanOnlyHaveOneRole();
     error Election__CandidatesInfoDTOCannotBeEmpty();
+    error Election__AllCategoriesMustHaveOnlyOneVotedCandidate();
     error Election__InvalidStartTimeStamp();
     error Election__InvalidEndTimeStamp();
     error Election__InvalidElectionState(
@@ -53,16 +54,40 @@ contract Election is Ownable {
     error Election__UnknownVoter(string matricNo);
     error Election__UnaccreditedVoter(string matricNo);
     error Election__PollingOfficerAndUnitCannotBeEmpty();
-
-    // ====================================================================
-    // Events
-    // ====================================================================
-    event AccreditedVoter(string matricNo);
-    event VoterVoted(string matricNo);
+    error Election__DuplicateVoter(string matricNo);
+    error Election__DuplicateCandidate(string matricNo);
+    error Election__DuplicateCategory();
+    error Election__InvalidCategory(string categoryName);
 
     // ====================================================================
     // Type declarations
     // ====================================================================
+
+    /**
+     * @dev Election State Enum
+     */
+    enum ElectionState {
+        OPENED,
+        STARTED,
+        ENDED
+    }
+
+    /**
+     * @dev Voters state Enum
+     */
+    enum VoterState {
+        UNKNOWN,
+        REGISTERED,
+        ACCREDITED,
+        VOTED
+    }
+    /**
+     * @dev Voters state Enum
+     */
+    enum CandidateState {
+        UNKNOWN,
+        REGISTERED
+    }
 
     /**
      * @dev Defines the structure of our voter
@@ -86,6 +111,7 @@ contract Election is Ownable {
     struct ElectionCandidate {
         string name;
         uint256 votes;
+        CandidateState state;
     }
 
     /**
@@ -106,29 +132,9 @@ contract Election is Ownable {
         string category;
     }
 
-    /**
-     * @dev Election State Enum
-     */
-    enum ElectionState {
-        OPENED,
-        STARTED,
-        ENDED
-    }
-
-    /**
-     * @dev Voters state Enum
-     */
-    enum VoterState {
-        UNKNOWN,
-        REGISTERED,
-        ACCREDITED,
-        VOTED
-    }
-
     // ====================================================================
     // State variables
     // ====================================================================
-
     /// @dev Creator of the election
     address private immutable _createdBy;
 
@@ -142,7 +148,7 @@ contract Election is Ownable {
     uint256 private immutable _endTimeStamp;
 
     /// @dev The total number of registered voters
-    uint256 private _registeredVotersCount;
+    string[] private _registeredVotersList;
 
     /// @dev The total number of accredited voters
     uint256 private _accreditedVotersCount;
@@ -156,8 +162,8 @@ contract Election is Ownable {
     /// @dev The total number of voters who have voted
     uint256 private _pollintUnitCount;
 
-    /// @dev The total number of registered candidates
-    uint256 private _registeredCandidatesCount;
+    /// @dev List of registered candidates
+    string[] private _registeredCandidatesList;
 
     /// @dev The unique election name for this election
     string private _electionName;
@@ -169,11 +175,16 @@ contract Election is Ownable {
     mapping(string categoryName => mapping(string candidateMatricNo => ElectionCandidate electionCandidates))
         private _candidatesMap;
 
+/// @dev mapping of valid polling addresses
     mapping(address pollingAddress => bool isValid)
         private _allowedPollingUnits;
 
+/// @dev mapping of valid polling officer addresses
     mapping(address pollingOfficerAddress => bool isValid)
         private _allowedPollingOfficers;
+
+/// @dev List of all the categories in this election
+    string[] private _electionCategories;
 
     /// @dev Election state
     ElectionState private _electionState;
@@ -181,6 +192,8 @@ contract Election is Ownable {
     // ====================================================================
     // Events
     // ====================================================================
+    event AccreditedVoter(string matricNo);
+    event VoterVoted();
 
     // ====================================================================
     // Modifiers
@@ -221,8 +234,8 @@ contract Election is Ownable {
         _;
     }
 
-    modifier pollingOfficerOnly(address pollingUnitAddress) {
-        if (!_allowedPollingUnits[pollingUnitAddress]) {
+    modifier pollingOfficerOnly(address pollingOfficerAddress) {
+        if (!_allowedPollingOfficers[pollingOfficerAddress]) {
             revert Election__OnlyPollingOfficerAllowed();
         }
         _;
@@ -265,12 +278,13 @@ contract Election is Ownable {
         CandidateInfoDTO[] memory candidatesList,
         VoterInfoDTO[] memory votersList,
         address[] memory pollingUnitAddresses,
-        address[] memory pollingOfficerAddresses
+        address[] memory pollingOfficerAddresses,
+        string[] memory electionCategories
     ) Ownable(msg.sender) {
-        if (block.timestamp <= startTimeStamp) {
+        if (block.timestamp >= startTimeStamp) {
             revert Election__InvalidStartTimeStamp();
         }
-        if (endTimeStamp <= startTimeStamp) {
+        if (startTimeStamp >= endTimeStamp) {
             revert Election__InvalidEndTimeStamp();
         }
         _createdBy = createdBy;
@@ -288,6 +302,7 @@ contract Election is Ownable {
             pollingOfficerAddresses: pollingOfficerAddresses,
             pollingUnitAddresses: pollingUnitAddresses
         });
+        _validateCategories(electionCategories);
     }
 
     // ====================================================================
@@ -297,6 +312,191 @@ contract Election is Ownable {
     // ====================================================================
     // Public functions
     // ====================================================================
+
+    /**
+     * @dev Returns Returns a list of all voters
+     */
+    function getAllVoters() public view returns (ElectionVoter[] memory) {
+        ElectionVoter[] memory all = new ElectionVoter[](
+            _registeredVotersList.length
+        );
+        for (uint i = 0; i < _registeredVotersList.length; i++) {
+            all[i] = _votersMap[_registeredVotersList[i]];
+        }
+        return all;
+    }
+
+    /**
+     * @dev Returns Returns a list of all accredited voters
+     */
+    function getAllAccreditedVoters()
+        public
+        view
+        returns (ElectionVoter[] memory)
+    {
+        uint256 voterCount;
+        ElectionVoter[] memory all = new ElectionVoter[](
+            _accreditedVotersCount
+        );
+        for (uint i = 0; i < _registeredVotersList.length; i++) {
+            ElectionVoter memory voter = _votersMap[_registeredVotersList[i]];
+            if (voter.voterState == VoterState.ACCREDITED) {
+                all[voterCount] = voter;
+                voterCount++;
+            }
+        }
+        return all;
+    }
+
+    /**
+     * @dev Returns Returns a list of all Voted voters
+     */
+    function getAllVotedVoters() public view returns (ElectionVoter[] memory) {
+        uint256 voterCount;
+        ElectionVoter[] memory all = new ElectionVoter[](_votedVotersCount);
+        for (uint i = 0; i < _registeredVotersList.length; i++) {
+            ElectionVoter memory voter = _votersMap[_registeredVotersList[i]];
+            if (voter.voterState == VoterState.VOTED) {
+                all[voterCount] = voter;
+                voterCount++;
+            }
+        }
+        return all;
+    }
+
+    /**
+     * @dev Returns Returns a list of all Candidates
+     */
+    function getAllCandidatesInDto()
+        public
+        view
+        returns (CandidateInfoDTO[] memory)
+    {
+        uint256 candidateCount;
+        CandidateInfoDTO[] memory all = new CandidateInfoDTO[](
+            _registeredCandidatesList.length
+        );
+        for (uint i = 0; i < _electionCategories.length; i++) {
+            for (uint j = 0; j < _registeredCandidatesList.length; j++) {
+                ElectionCandidate memory candidate = _candidatesMap[
+                    _electionCategories[i]
+                ][_registeredCandidatesList[j]];
+                if (candidate.state == CandidateState.REGISTERED) {
+                    all[candidateCount] = CandidateInfoDTO({
+                        name: candidate.name,
+                        matricNo: _registeredCandidatesList[j],
+                        category: _electionCategories[i]
+                    });
+                    candidateCount++;
+                }
+            }
+        }
+        return all;
+    }
+
+    /**
+     * @dev Returns Returns a list of all Candidates
+     */
+    function getAllCandidates()
+        public
+        onElectionEnded
+        returns (ElectionCandidate[] memory)
+    {
+        uint256 candidateCount;
+        ElectionCandidate[] memory all = new ElectionCandidate[](
+            _registeredCandidatesList.length
+        );
+        for (uint i = 0; i < _electionCategories.length; i++) {
+            for (uint j = 0; j < _registeredCandidatesList.length; j++) {
+                ElectionCandidate memory candidate = _candidatesMap[
+                    _electionCategories[i]
+                ][_registeredCandidatesList[j]];
+                if (candidate.state == CandidateState.REGISTERED) {
+                    all[candidateCount] = candidate;
+                    candidateCount++;
+                }
+            }
+        }
+        return all;
+    }
+
+    /**
+     * @dev Returns Returns a list of all Candidates
+     */
+    function getEachCategoryWinner()
+        public
+        onElectionEnded
+        returns (ElectionWinner[][] memory)
+    {
+        // Assign to _electionCategories.length.
+        // We will be returning a list containing a list
+        // that holds the candidate that won since it is possible to tie
+        ElectionWinner[][] memory allWinners = new ElectionWinner[][](
+            _electionCategories.length
+        );
+        for (uint i = 0; i < _electionCategories.length; i++) {
+            string memory category = _electionCategories[i];
+            uint256 maxVotes;
+            uint256 winnerCount;
+
+            // Find the maxVote for this category
+            for (uint j = 0; j < _registeredCandidatesList.length; j++) {
+                ElectionCandidate memory candidate = _candidatesMap[category][
+                    _registeredCandidatesList[j]
+                ];
+                if (
+                    candidate.state == CandidateState.REGISTERED &&
+                    candidate.votes > maxVotes
+                ) {
+                    maxVotes = candidate.votes;
+                }
+            }
+            // Count winners with max votes
+            if (maxVotes > 0) {
+                for (uint j = 0; j < _registeredCandidatesList.length; j++) {
+                    ElectionCandidate memory candidate = _candidatesMap[
+                        category
+                    ][_registeredCandidatesList[j]];
+                    if (
+                        candidate.state == CandidateState.REGISTERED &&
+                        candidate.votes == maxVotes
+                    ) {
+                        winnerCount++;
+                    }
+                }
+                // Collect all winners
+                ElectionWinner[] memory categoryWinners = new ElectionWinner[](
+                    winnerCount
+                );
+                uint256 currentWinnerIndex;
+                for (uint j = 0; j < _registeredCandidatesList.length; j++) {
+                    string memory candidateMatricNo = _registeredCandidatesList[
+                        j
+                    ];
+                    ElectionCandidate memory candidate = _candidatesMap[
+                        category
+                    ][candidateMatricNo];
+
+                    if (
+                        candidate.state == CandidateState.REGISTERED &&
+                        candidate.votes == maxVotes
+                    ) {
+                        categoryWinners[currentWinnerIndex] = ElectionWinner({
+                            matricNo: candidateMatricNo,
+                            electionCandidate: candidate,
+                            category: category
+                        });
+                        currentWinnerIndex++;
+                    }
+                }
+                allWinners[i] = categoryWinners;
+            } else {
+                // No votes cast in this category
+                allWinners[i] = new ElectionWinner[](0);
+            }
+        }
+        return allWinners;
+    }
 
     /**
      * @dev Returns the address of the election creator
@@ -362,13 +562,12 @@ contract Election is Ownable {
         return currentState;
     }
 
-    // Sensitive getters that only work after election ends
     /**
      * @dev Returns the total number of registered voters
      * @return uint256 Number of registered voters
      */
     function getRegisteredVotersCount() public view returns (uint256) {
-        return _registeredVotersCount;
+        return _registeredVotersList.length;
     }
 
     /**
@@ -408,7 +607,7 @@ contract Election is Ownable {
      * @return uint256 Number of registered candidates
      */
     function getRegisteredCandidatesCount() public view returns (uint256) {
-        return _registeredCandidatesCount;
+        return _registeredCandidatesList.length;
     }
 
     /**
@@ -421,6 +620,7 @@ contract Election is Ownable {
         address pollingOfficerAddress
     )
         public
+        onlyOwner
         pollingOfficerOnly(pollingOfficerAddress)
         onElectionStarted
         noUnknown(voterMatricNo)
@@ -444,6 +644,7 @@ contract Election is Ownable {
         CandidateInfoDTO[] memory candidatesList
     )
         public
+        onlyOwner
         pollingUnitOnly(pollingUnitAddress)
         onElectionStarted
         noUnknown(voterMatricNo)
@@ -452,17 +653,22 @@ contract Election is Ownable {
         if (candidatesList.length < 1) {
             revert Election__CandidatesInfoDTOCannotBeEmpty();
         }
+        if (candidatesList.length != _electionCategories.length) {
+            revert Election__AllCategoriesMustHaveOnlyOneVotedCandidate();
+        }
         if (!compareStrings(voterName, _votersMap[voterMatricNo].name)) {
             revert Election__VoterCannotBeValidated();
         }
         for (uint i = 0; i < candidatesList.length; i++) {
             CandidateInfoDTO memory candidate = candidatesList[i];
+            if (!_isValidCategory(candidate.category)) {
+                revert Election__InvalidCategory(candidate.category);
+            }
             _candidatesMap[candidate.category][candidate.matricNo].votes++;
         }
         _votersMap[voterMatricNo].voterState = VoterState.VOTED;
         _votedVotersCount++;
-
-        emit VoterVoted(voterMatricNo);
+        emit VoterVoted();
     }
 
     /**
@@ -475,6 +681,47 @@ contract Election is Ownable {
     // ====================================================================
     // Internal functions
     // ====================================================================
+
+    /**
+     * @dev Checks if the categoryName is valid
+     */
+    function _isValidCategory(
+        string memory categoryName
+    ) internal view returns (bool) {
+        for (uint i = 0; i < _electionCategories.length; i++) {
+            if (compareStrings(categoryName, _electionCategories[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function _containsDuplicateCategory(
+        string[] memory votedCategories,
+        string memory newCategory
+    ) internal pure returns (bool) {
+        for (uint i = 0; i < votedCategories.length; i++) {
+            if (compareStrings(newCategory, votedCategories[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function _validateCategories(string[] memory votedCategories) internal {
+        for (uint i = 0; i < votedCategories.length; i++) {
+            if (
+                _containsDuplicateCategory(
+                    _electionCategories,
+                    votedCategories[i]
+                )
+            ) {
+                revert Election__DuplicateCategory();
+            } else {
+                _electionCategories.push(votedCategories[i]);
+            }
+        }
+    }
 
     /**
      * @dev Updates the election state based on current timestamp
@@ -522,10 +769,14 @@ contract Election is Ownable {
                 name: voter.name,
                 voterState: VoterState.REGISTERED
             });
-            // add to votersList
-            _votersMap[voter.matricNo] = registeredVoter;
+            // add to votersList if the state is unknown
+            if (_votersMap[voter.matricNo].voterState == VoterState.UNKNOWN) {
+                _votersMap[voter.matricNo] = registeredVoter;
+            } else {
+                revert Election__DuplicateVoter(voter.matricNo);
+            }
+            _registeredVotersList.push(voter.matricNo);
         }
-        _registeredVotersCount = votersList.length;
     }
 
     /**
@@ -540,18 +791,26 @@ contract Election is Ownable {
         }
         // add all Candidates to _candidateMap
         for (uint i = 0; i < candidatesList.length; i++) {
-            CandidateInfoDTO memory voter = candidatesList[i];
+            CandidateInfoDTO memory candidate = candidatesList[i];
             // create an ElectionCandidate from candidate
             ElectionCandidate memory registeredCandidate = ElectionCandidate({
-                name: voter.name,
-                votes: 0
+                name: candidate.name,
+                votes: 0,
+                state: CandidateState.REGISTERED
             });
-            // add to votersList
-            _candidatesMap[voter.category][
-                voter.matricNo
-            ] = registeredCandidate;
+            if (
+                _candidatesMap[candidate.category][candidate.matricNo].state ==
+                CandidateState.UNKNOWN
+            ) {
+                // add to votersList
+                _candidatesMap[candidate.category][
+                    candidate.matricNo
+                ] = registeredCandidate;
+            } else {
+                revert Election__DuplicateCandidate(candidate.matricNo);
+            }
+            _registeredCandidatesList.push(candidate.matricNo);
         }
-        _registeredCandidatesCount = candidatesList.length;
     }
 
     /**
@@ -580,7 +839,7 @@ contract Election is Ownable {
         for (uint i = 0; i < pollingUnitAddresses.length; i++) {
             address unitAddress = pollingUnitAddresses[i];
             if (
-                unitAddress == _createdBy &&
+                unitAddress == _createdBy ||
                 _allowedPollingOfficers[unitAddress]
             ) {
                 revert Election__AddressCanOnlyHaveOneRole();
@@ -615,17 +874,3 @@ contract Election is Ownable {
             keccak256(abi.encodePacked(second));
     }
 }
-
-// Election owner
-// Election owner picks the election start time and end time and format
-// Registration officer address
-// Registration officers can register users by associating their address with users
-// Check if user is valid
-// Accredited voters can vote only
-// Can view all voters
-// Can check accredited voters
-// Check if election is open
-// Close election How should the previous result be stored?
-// Election name
-// Each election is a controct. When it is finished it can no longer be changed. Once done it is done
-// Election start, OPEN_FOR_REGISTRATION, OPEN_FOR_VOTING, CLOSED
