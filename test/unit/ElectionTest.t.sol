@@ -72,9 +72,25 @@ contract ElectionTest is Test {
     address[] pollingUnitAddresses;
 
     function setUp() public {
+        _setupTestData();
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+    }
+
+    function _setupTestData() internal {
         // Set timestamps relative to current time
         startTimestamp = block.timestamp + 1 hours;
-        endTimestamp = block.timestamp + 2 hours;
+        endTimestamp = startTimestamp + 7 hours;
 
         // Setup test candidates
         candidatesList.push(candidateOne);
@@ -100,19 +116,6 @@ contract ElectionTest is Test {
         //
         electionCategories = ["President", "VicePresident"];
         duplicateCat = ["President", "VicePresident", "VicePresident"];
-
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            startTimeStamp: startTimestamp,
-            endTimeStamp: endTimestamp,
-            electionName: ELECTION_NAME,
-            candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            electionCategories: electionCategories
-        });
     }
 
     // ====================================================================
@@ -310,6 +313,77 @@ contract ElectionTest is Test {
         });
     }
 
+    function testElectionRevertWhenDuplicateVoter() public {
+        Election.VoterInfoDTO[]
+            memory duplicateVoters = new Election.VoterInfoDTO[](2);
+        duplicateVoters[0] = voterOne;
+        duplicateVoters[1] = voterOne;
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__DuplicateVoter.selector,
+                voterOne.matricNo
+            )
+        );
+        new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: duplicateVoters,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+    }
+
+    function testElectionRevertWhenDuplicateCandidate() public {
+        Election.CandidateInfoDTO[]
+            memory duplicateCandidates = new Election.CandidateInfoDTO[](2);
+        duplicateCandidates[0] = candidateOne;
+        duplicateCandidates[1] = candidateOne;
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__DuplicateCandidate.selector,
+                candidateOne.matricNo
+            )
+        );
+        new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: duplicateCandidates,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+    }
+
+    function testElectionRevertWhenPollingOfficerIsAlsoPollingUnit() public {
+        address[] memory conflictingUnits = new address[](1);
+        conflictingUnits[0] = pollingOfficer1; // Same as polling officer
+
+        vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
+        new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: conflictingUnits,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+    }
+
     // ====================================================================
     // Election State Tests
     // ====================================================================
@@ -430,6 +504,26 @@ contract ElectionTest is Test {
 
         vm.prank(unknownAddress);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+    }
+
+    function testAccrediteVoterRevertWhenAlreadyAccredited() public {
+        vm.warp(startTimestamp);
+
+        // First accreditation
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        // Try to accredite again
+        vm.expectRevert(Election.Election__VoterAlreadyAccredited.selector);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+    }
+
+    function testAccrediteMultipleVotersSuccess() public {
+        vm.warp(startTimestamp);
+
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+        election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
+
+        assertEq(election.getAccreditedVotersCount(), 2);
     }
 
     // ====================================================================
@@ -641,6 +735,89 @@ contract ElectionTest is Test {
         );
     }
 
+    function testVoteCandidatesRevertWhenVoterAlreadyVoted() public {
+        vm.warp(startTimestamp);
+
+        // Accredite and vote first time
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        Election.CandidateInfoDTO[]
+            memory votingCandidates = new Election.CandidateInfoDTO[](2);
+        votingCandidates[0] = candidateOne;
+        votingCandidates[1] = candidateThree;
+
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            votingCandidates
+        );
+
+        // Try to vote again
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__VoterAlreadyVoted.selector
+            )
+        );
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit2,
+            votingCandidates
+        );
+    }
+
+    function testVoteCandidatesRevertWhenIncorrectCategoryCount() public {
+        vm.warp(startTimestamp);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        // Only vote for 1 category when 2 are required
+        Election.CandidateInfoDTO[]
+            memory votingCandidates = new Election.CandidateInfoDTO[](1);
+        votingCandidates[0] = candidateOne;
+
+        vm.expectRevert(
+            Election
+                .Election__AllCategoriesMustHaveOnlyOneVotedCandidate
+                .selector
+        );
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            votingCandidates
+        );
+    }
+
+    function testVoteCandidatesMultipleVotersSuccess() public {
+        vm.warp(startTimestamp);
+
+        // Accredite multiple voters
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+        election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
+
+        Election.CandidateInfoDTO[]
+            memory votingCandidates = new Election.CandidateInfoDTO[](2);
+        votingCandidates[0] = candidateOne;
+        votingCandidates[1] = candidateThree;
+
+        // Vote with both voters
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            votingCandidates
+        );
+        election.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            pollingUnit2,
+            votingCandidates
+        );
+
+        assertEq(election.getVotedVotersCount(), 2);
+    }
+
     // ====================================================================
     // Utility Function Tests
     // ====================================================================
@@ -650,5 +827,333 @@ contract ElectionTest is Test {
         assertFalse(election.compareStrings("hello", "world"));
         assertTrue(election.compareStrings("", ""));
         assertFalse(election.compareStrings("test", ""));
+    }
+
+    // ====================================================================
+    // Getter Functions
+    // ====================================================================
+
+    function testGetAllVotersReturnsCorrectData() public view {
+        Election.ElectionVoter[] memory allVoters = election.getAllVoters();
+        assertEq(allVoters.length, votersList.length);
+
+        // Check first voter data
+        assertEq(allVoters[0].name, voterOne.name);
+        assertEq(
+            uint256(allVoters[0].voterState),
+            uint256(Election.VoterState.REGISTERED)
+        );
+    }
+
+    function testGetAllAccreditedVotersInitiallyEmpty() public view {
+        Election.ElectionVoter[] memory accreditedVoters = election
+            .getAllAccreditedVoters();
+        assertEq(accreditedVoters.length, 0);
+    }
+
+    function testGetAllAccreditedVotersAfterAccreditation() public {
+        vm.warp(startTimestamp);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        Election.ElectionVoter[] memory accreditedVoters = election
+            .getAllAccreditedVoters();
+        assertEq(accreditedVoters.length, 1);
+        assertEq(accreditedVoters[0].name, voterOne.name);
+        assertEq(
+            uint256(accreditedVoters[0].voterState),
+            uint256(Election.VoterState.ACCREDITED)
+        );
+    }
+
+    function testGetAllVotedVotersInitiallyEmpty() public view {
+        Election.ElectionVoter[] memory votedVoters = election
+            .getAllVotedVoters();
+        assertEq(votedVoters.length, 0);
+    }
+
+    function testGetAllVotedVotersAfterVoting() public {
+        vm.warp(startTimestamp);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        Election.CandidateInfoDTO[]
+            memory votingCandidates = new Election.CandidateInfoDTO[](2);
+        votingCandidates[0] = candidateOne;
+        votingCandidates[1] = candidateThree;
+
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            votingCandidates
+        );
+
+        Election.ElectionVoter[] memory votedVoters = election
+            .getAllVotedVoters();
+        assertEq(votedVoters.length, 1);
+        assertEq(votedVoters[0].name, voterOne.name);
+        assertEq(
+            uint256(votedVoters[0].voterState),
+            uint256(Election.VoterState.VOTED)
+        );
+    }
+
+    function testGetAllCandidatesInDto() public view {
+        Election.CandidateInfoDTO[] memory candidates = election
+            .getAllCandidatesInDto();
+        assertEq(candidates.length, candidatesList.length);
+
+        // Verify first candidate
+        assertEq(candidates[0].name, candidateOne.name);
+        assertEq(candidates[0].matricNo, candidateOne.matricNo);
+        assertEq(candidates[0].category, candidateOne.category);
+    }
+
+    // ====================================================================
+    // Election Results (Post-Election)
+    // ====================================================================
+
+    function testGetAllCandidatesRevertWhenElectionNotEnded() public {
+        vm.warp(startTimestamp); // Election started but not ended
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__InvalidElectionState.selector,
+                Election.ElectionState.ENDED,
+                Election.ElectionState.STARTED
+            )
+        );
+        election.getAllCandidates();
+    }
+
+    function testGetAllCandidatesAfterElectionEnds() public {
+        vm.warp(endTimestamp + 1); // Election ended
+
+        Election.ElectionCandidate[] memory candidates = election
+            .getAllCandidates();
+        assertEq(candidates.length, candidatesList.length);
+    }
+
+    function testGetEachCategoryWinnerRevertWhenElectionNotEnded() public {
+        vm.warp(startTimestamp);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__InvalidElectionState.selector,
+                Election.ElectionState.ENDED,
+                Election.ElectionState.STARTED
+            )
+        );
+        election.getEachCategoryWinner();
+    }
+
+    function testGetEachCategoryWinnerWithNoVotes() public {
+        vm.warp(endTimestamp + 1);
+
+        Election.ElectionWinner[][] memory winners = election
+            .getEachCategoryWinner();
+        assertEq(winners.length, 2); // Two categories
+        assertEq(winners[0].length, 0); // No votes for President
+        assertEq(winners[1].length, 0); // No votes for VicePresident
+    }
+
+    function testGetEachCategoryWinnerWithVotes() public {
+        vm.warp(startTimestamp);
+
+        // Accredite and vote
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+        election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
+
+        Election.CandidateInfoDTO[]
+            memory vote1 = new Election.CandidateInfoDTO[](2);
+        vote1[0] = candidateOne; // President
+        vote1[1] = candidateThree; // VicePresident
+
+        Election.CandidateInfoDTO[]
+            memory vote2 = new Election.CandidateInfoDTO[](2);
+        vote2[0] = candidateOne; // President (same)
+        vote2[1] = candidateFour; // VicePresident (different)
+
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            vote1
+        );
+        election.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            pollingUnit2,
+            vote2
+        );
+
+        vm.warp(endTimestamp + 1);
+
+        Election.ElectionWinner[][] memory winners = election
+            .getEachCategoryWinner();
+        assertEq(winners.length, 2);
+        assertEq(winners[0].length, 1); // One President winner (candidateOne with 2 votes)
+        assertEq(winners[1].length, 2); // Two VicePresident winners (tie with 1 vote each)
+    }
+
+    function testGetEachCategoryWinnerWithTie() public {
+        vm.warp(startTimestamp);
+
+        // Create a tie scenario
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+        election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
+
+        Election.CandidateInfoDTO[]
+            memory vote1 = new Election.CandidateInfoDTO[](2);
+        vote1[0] = candidateOne;
+        vote1[1] = candidateThree;
+
+        Election.CandidateInfoDTO[]
+            memory vote2 = new Election.CandidateInfoDTO[](2);
+        vote2[0] = candidateTwo; // Different president candidate
+        vote2[1] = candidateFour; // Different VP candidate
+
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            vote1
+        );
+        election.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            pollingUnit2,
+            vote2
+        );
+
+        vm.warp(endTimestamp + 1);
+
+        Election.ElectionWinner[][] memory winners = election
+            .getEachCategoryWinner();
+        assertEq(winners[0].length, 2); // Tie for President
+        assertEq(winners[1].length, 2); // Tie for VicePresident
+    }
+
+    // ====================================================================
+    // Edge Cases and Error Conditions
+    // ====================================================================
+
+    function testElectionStateTransitionAtExactTimestamps() public {
+        // Test at exact start timestamp
+        vm.warp(startTimestamp);
+        assertEq(
+            uint256(election.getElectionState()),
+            uint256(Election.ElectionState.STARTED)
+        );
+
+        // Test one second before end
+        vm.warp(endTimestamp - 1);
+        assertEq(
+            uint256(election.getElectionState()),
+            uint256(Election.ElectionState.STARTED)
+        );
+
+        // Test at exact end timestamp
+        vm.warp(endTimestamp);
+        assertEq(
+            uint256(election.getElectionState()),
+            uint256(Election.ElectionState.ENDED)
+        );
+    }
+
+    function testVoteCountingAccuracy() public {
+        vm.warp(startTimestamp);
+
+        // Accredite 3 voters
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+        election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
+        election.accrediteVoter(voterThree.matricNo, pollingOfficer1);
+
+        // All vote for candidateOne for President, different for VP
+        Election.CandidateInfoDTO[]
+            memory vote1 = new Election.CandidateInfoDTO[](2);
+        vote1[0] = candidateOne;
+        vote1[1] = candidateThree;
+
+        Election.CandidateInfoDTO[]
+            memory vote2 = new Election.CandidateInfoDTO[](2);
+        vote2[0] = candidateOne;
+        vote2[1] = candidateThree;
+
+        Election.CandidateInfoDTO[]
+            memory vote3 = new Election.CandidateInfoDTO[](2);
+        vote3[0] = candidateOne;
+        vote3[1] = candidateFour;
+
+        election.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            pollingUnit1,
+            vote1
+        );
+        election.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            pollingUnit2,
+            vote2
+        );
+        election.voteCandidates(
+            voterThree.matricNo,
+            voterThree.name,
+            pollingUnit1,
+            vote3
+        );
+
+        vm.warp(endTimestamp + 1);
+
+        Election.ElectionWinner[][] memory winners = election
+            .getEachCategoryWinner();
+        // candidateOne should have 3 votes for President
+        assertEq(winners[0].length, 1);
+        assertEq(winners[0][0].electionCandidate.votes, 3);
+
+        // candidateThree should have 2 votes, candidateFour should have 1 vote for VP
+        assertEq(winners[1].length, 1);
+        assertEq(winners[1][0].electionCandidate.votes, 2);
+    }
+
+    // ====================================================================
+    // MISSING TESTS - Boundary Conditions
+    // ====================================================================
+
+    function testConstructorWithMinimumValidInputs() public {
+        // Test with minimal valid inputs (1 candidate, 1 voter, 1 officer, 1 unit, 1 category)
+        Election.CandidateInfoDTO[]
+            memory minCandidates = new Election.CandidateInfoDTO[](1);
+        minCandidates[0] = candidateOne;
+
+        Election.VoterInfoDTO[] memory minVoters = new Election.VoterInfoDTO[](
+            1
+        );
+        minVoters[0] = voterOne;
+
+        address[] memory minOfficers = new address[](1);
+        minOfficers[0] = pollingOfficer1;
+
+        address[] memory minUnits = new address[](1);
+        minUnits[0] = pollingUnit1;
+
+        string[] memory minCategories = new string[](1);
+        minCategories[0] = "President";
+
+        Election minElection = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: minCandidates,
+            votersList: minVoters,
+            pollingUnitAddresses: minUnits,
+            pollingOfficerAddresses: minOfficers,
+            electionCategories: minCategories
+        });
+
+        assertEq(minElection.getRegisteredVotersCount(), 1);
+        assertEq(minElection.getRegisteredCandidatesCount(), 1);
     }
 }

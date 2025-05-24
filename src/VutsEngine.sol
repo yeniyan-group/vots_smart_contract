@@ -18,6 +18,7 @@ contract VutsEngine {
     // ====================================================================
     error VutsEngine__DuplicateElectionName(string electionName);
     error VutsEngine__ElectionContractNotFound(uint256 electionTokenId);
+    error VutsEngine__ElectionNameCannotBeEmpty();
 
     // ====================================================================
     // Events
@@ -58,6 +59,9 @@ contract VutsEngine {
         uint256 tokenId = electionNameToTokenId[electionName];
         if (tokenId > 0) {
             revert VutsEngine__DuplicateElectionName(electionName);
+        }
+        if (compareStrings("", electionName)) {
+            revert VutsEngine__ElectionNameCannotBeEmpty();
         }
         // Generate tokenId for election
         uint256 newElectionTokenId = ++tokenIdCount;
@@ -424,5 +428,24 @@ contract VutsEngine {
                 });
             }
         }
+    }
+
+    // ====================================================================
+    // View & pure functions
+    // ====================================================================
+
+    /**
+     * @dev Compares two strings by comparing their keccak256 hashes
+     * @param first First string to compare
+     * @param second Second string to compare
+     * @return bool True if strings are equal, false otherwise
+     */
+    function compareStrings(
+        string memory first,
+        string memory second
+    ) public pure returns (bool) {
+        return
+            keccak256(abi.encodePacked(first)) ==
+            keccak256(abi.encodePacked(second));
     }
 }

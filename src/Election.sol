@@ -51,6 +51,8 @@ contract Election is Ownable {
         address account
     );
     error Election__VoterCannotBeValidated();
+    error Election__VoterAlreadyVoted();
+    error Election__VoterAlreadyAccredited();
     error Election__UnknownVoter(string matricNo);
     error Election__UnaccreditedVoter(string matricNo);
     error Election__PollingOfficerAndUnitCannotBeEmpty();
@@ -175,15 +177,15 @@ contract Election is Ownable {
     mapping(string categoryName => mapping(string candidateMatricNo => ElectionCandidate electionCandidates))
         private _candidatesMap;
 
-/// @dev mapping of valid polling addresses
+    /// @dev mapping of valid polling addresses
     mapping(address pollingAddress => bool isValid)
         private _allowedPollingUnits;
 
-/// @dev mapping of valid polling officer addresses
+    /// @dev mapping of valid polling officer addresses
     mapping(address pollingOfficerAddress => bool isValid)
         private _allowedPollingOfficers;
 
-/// @dev List of all the categories in this election
+    /// @dev List of all the categories in this election
     string[] private _electionCategories;
 
     /// @dev Election state
@@ -249,6 +251,9 @@ contract Election is Ownable {
     }
 
     modifier accreditedVoterOnly(string memory matricNo) {
+        if (_votersMap[matricNo].voterState == VoterState.VOTED) {
+            revert Election__VoterAlreadyVoted();
+        }
         if (_votersMap[matricNo].voterState != VoterState.ACCREDITED) {
             revert Election__UnaccreditedVoter(matricNo);
         }
@@ -625,6 +630,9 @@ contract Election is Ownable {
         onElectionStarted
         noUnknown(voterMatricNo)
     {
+        if (_votersMap[voterMatricNo].voterState == VoterState.ACCREDITED) {
+            revert Election__VoterAlreadyAccredited();
+        }
         _votersMap[voterMatricNo].voterState = VoterState.ACCREDITED;
         _accreditedVotersCount++;
         emit AccreditedVoter(voterMatricNo);
