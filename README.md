@@ -1,66 +1,276 @@
-## Foundry
+# VutsEngine - Decentralized Voting System
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A comprehensive blockchain-based voting system built on Ethereum that ensures transparent, secure, and tamper-proof elections.
 
-Foundry consists of:
+## 🚀 Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+VutsEngine is a smart contract-based voting platform that tokenizes elections and provides a complete end-to-end voting solution. The system consists of two main contracts:
 
-## Documentation
+- **VutsEngine**: Core contract that manages election creation and acts as a factory
+- **Election**: Individual election contracts with comprehensive voting logic
 
-https://book.getfoundry.sh/
+## ✨ Features
 
-## Usage
+### Core Functionality
+- **Election Creation**: Create multiple elections with unique identifiers
+- **Voter Registration**: Register voters with matriculation numbers
+- **Candidate Registration**: Register candidates across multiple categories
+- **Voter Accreditation**: Polling officers can accredit registered voters
+- **Secure Voting**: Accredited voters can cast votes through polling units
+- **Real-time Results**: Track election statistics and results
+- **Winner Determination**: Automatic winner calculation with tie handling
 
-### Build
+### Security Features
+- **Role-based Access Control**: Distinct roles for polling officers and units
+- **State Management**: Elections progress through OPENED → STARTED → ENDED states
+- **Duplicate Prevention**: Protection against duplicate voters and candidates
+- **Time-based Controls**: Elections automatically start and end based on timestamps
+- **Validation Checks**: Comprehensive input validation and error handling
 
-```shell
-$ forge build
+### Advanced Features
+- **Multi-category Elections**: Support for elections with multiple position categories
+- **Tie Handling**: Automatic detection and reporting of tied results
+- **Election Tokenization**: Each election gets a unique token ID for reference
+- **Comprehensive Statistics**: Detailed voter and candidate analytics
+- **Event Logging**: All major actions emit events for transparency
+
+## 📋 Prerequisites
+
+- Solidity ^0.8.21
+- OpenZeppelin Contracts (for Ownable functionality)
+- Ethereum development environment (Hardhat, Truffle, etc.)
+
+## 🛠 Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd vuts-engine
 ```
 
-### Test
-
-```shell
-$ forge test
+2. Install dependencies:
+```bash
+npm install @openzeppelin/contracts
 ```
 
-### Format
-
-```shell
-$ forge fmt
+3. Compile contracts:
+```bash
+npx hardhat compile
 ```
 
-### Gas Snapshots
+## 🌐 Live Deployment
 
-```shell
-$ forge snapshot
+The VutsEngine contract is currently deployed and live on Sepolia testnet:
+
+**Contract Address**: `0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf`
+
+**Network**: Sepolia Testnet
+- **Chain ID**: 11155111
+- **RPC URL**: https://sepolia.infura.io/v3/YOUR-PROJECT-ID
+- **Block Explorer**: https://sepolia.etherscan.io/address/0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf
+
+### Interacting with the Live Contract
+
+You can interact with the deployed contract using:
+
+1. **Etherscan Interface**: Visit the contract on Sepolia Etherscan to read contract state
+2. **Web3 Libraries**: Connect using ethers.js or web3.js
+3. **Frontend Applications**: Build dApps that interact with the contract
+
+```javascript
+// Example using ethers.js
+const contractAddress = "0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf";
+const vutsEngine = new ethers.Contract(contractAddress, abi, signer);
+
+// Get total elections count
+const totalElections = await vutsEngine.getTotalElectionsCount();
 ```
 
-### Anvil
+## 📖 Usage
 
-```shell
-$ anvil
+### Deploying the System
+
+The VutsEngine is already deployed on Sepolia testnet at `0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf`.
+
+For local development or custom deployments:
+```solidity
+// Deploy VutsEngine contract
+VutsEngine vutsEngine = new VutsEngine();
 ```
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+Or connect to the existing deployment:
+```javascript
+const vutsEngine = new ethers.Contract(
+    "0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf", 
+    vutsEngineABI, 
+    provider
+);
 ```
 
-### Cast
+### Creating an Election
 
-```shell
-$ cast <subcommand>
+```solidity
+// Prepare election data
+VoterInfoDTO[] memory voters = [
+    VoterInfoDTO("John Doe", "MAT001"),
+    VoterInfoDTO("Jane Smith", "MAT002")
+];
+
+CandidateInfoDTO[] memory candidates = [
+    CandidateInfoDTO("Alice Johnson", "CAN001", "President"),
+    CandidateInfoDTO("Bob Wilson", "CAN002", "President")
+];
+
+address[] memory pollingUnits = [0x123..., 0x456...];
+address[] memory pollingOfficers = [0x789..., 0xabc...];
+string[] memory categories = ["President", "Vice President"];
+
+// Create election
+vutsEngine.createElection(
+    startTimestamp,
+    endTimestamp,
+    "Student Union Election 2024",
+    candidates,
+    voters,
+    pollingUnits,
+    pollingOfficers,
+    categories
+);
 ```
 
-### Help
+### Voting Process
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+1. **Accredit Voter** (Polling Officer):
+```solidity
+vutsEngine.accrediteVoter("MAT001", electionTokenId);
 ```
+
+2. **Cast Vote** (Polling Unit):
+```solidity
+CandidateInfoDTO[] memory votes = [
+    CandidateInfoDTO("Alice Johnson", "CAN001", "President")
+];
+vutsEngine.voteCandidates("MAT001", "John Doe", votes, electionTokenId);
+```
+
+3. **Get Results** (After election ends):
+```solidity
+ElectionWinner[][] memory winners = vutsEngine.getEachCategoryWinner(electionTokenId);
+```
+
+## 📊 Contract Architecture
+
+### VutsEngine Contract
+- Manages multiple elections
+- Acts as a factory for Election contracts
+- Provides unified interface for all election operations
+- Maintains election registry with token IDs
+
+### Election Contract
+- Handles individual election logic
+- Manages voters, candidates, and voting process
+- Implements state transitions and validations
+- Calculates results and determines winners
+
+## 🔐 Security Considerations
+
+### Access Control
+- Only VutsEngine can interact with Election contracts
+- Polling officers can only accredit voters
+- Polling units can only process votes
+- Addresses cannot have multiple roles
+
+### Validation
+- Comprehensive input validation
+- Duplicate prevention mechanisms
+- State-based operation restrictions
+- Time-based access controls
+
+### Transparency
+- All operations emit events
+- Immutable vote records
+- Public result verification
+- Open-source smart contracts
+
+## 📚 API Reference
+
+### VutsEngine Functions
+
+#### Election Management
+- `createElection()` - Create a new election
+- `getTotalElectionsCount()` - Get total number of elections
+- `getAllElectionsSummary()` - Get summary of all elections
+
+#### Voting Operations
+- `accrediteVoter()` - Accredit a voter for voting
+- `voteCandidates()` - Cast votes for candidates
+
+#### Data Retrieval
+- `getElectionInfo()` - Get basic election information
+- `getElectionStats()` - Get comprehensive election statistics
+- `getAllVoters()` - Get all registered voters
+- `getAllCandidates()` - Get all candidates with results
+- `getEachCategoryWinner()` - Get winners for each category
+
+### Election Functions
+
+#### Voter Management
+- `getAllVoters()` - Get all registered voters
+- `getAllAccreditedVoters()` - Get accredited voters
+- `getAllVotedVoters()` - Get voters who have voted
+
+#### Results
+- `getAllCandidates()` - Get candidates with vote counts
+- `getEachCategoryWinner()` - Get category winners
+
+## 🎯 Use Cases
+
+- **Academic Institutions**: Student union elections, faculty elections
+- **Corporate Governance**: Board elections, shareholder voting
+- **Community Organizations**: Member elections, policy voting
+- **Political Elections**: Local government, party primaries
+- **DAO Governance**: Decentralized organization voting
+
+## 🚨 Error Handling
+
+The system includes comprehensive error handling for common scenarios:
+
+- Invalid timestamps
+- Duplicate registrations
+- Unauthorized access attempts
+- Invalid election states
+- Missing required data
+- Voting violations
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Ayeni-yeniyan** - *Smart Contract Developer*
+
+## 🙏 Acknowledgments
+
+- OpenZeppelin for secure contract templates
+- Ethereum community for development tools
+- Contributors and testers
+
+## 📞 Support
+
+For questions, issues, or contributions, please:
+- Open an issue on GitHub
+- Contact the development team
+- Review the documentation
+
+---
+
+**Note**: This is a smart contract system that handles sensitive voting data. Please ensure proper testing and security audits before deploying to mainnet.

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 import {Election} from "./Election.sol";
-import {StringUtils} from "src/stringUtils/StringUtils.sol";
 
 /**
  * @title VutsEngine
@@ -49,19 +48,19 @@ contract VutsEngine {
     function createElection(
         uint256 startTimeStamp,
         uint256 endTimeStamp,
-        string memory electionName,
-        Election.CandidateInfoDTO[] memory candidatesList,
-        Election.VoterInfoDTO[] memory votersList,
-        address[] memory pollingUnitAddresses,
-        address[] memory pollingOfficerAddresses,
-        string[] memory electionCategories
+        string calldata electionName,
+        Election.CandidateInfoDTO[] calldata candidatesList,
+        Election.VoterInfoDTO[] calldata votersList,
+        address[] calldata pollingUnitAddresses,
+        address[] calldata pollingOfficerAddresses,
+        string[] calldata electionCategories
     ) public {
         // Check that electionName is not duplicate
         uint256 tokenId = electionNameToTokenId[electionName];
         if (tokenId > 0) {
             revert VutsEngine__DuplicateElectionName(electionName);
         }
-        if (StringUtils.compareStrings("", electionName)) {
+        if (bytes(electionName).length == 0) {
             revert VutsEngine__ElectionNameCannotBeEmpty();
         }
         // Generate tokenId for election
@@ -90,7 +89,7 @@ contract VutsEngine {
     }
 
     function accrediteVoter(
-        string memory voterMatricNo,
+        string calldata voterMatricNo,
         uint256 electionTokenId
     ) public validElection(electionTokenId) {
         // Call accredite function
@@ -101,9 +100,9 @@ contract VutsEngine {
     }
 
     function voteCandidates(
-        string memory voterMatricNo,
-        string memory voterName,
-        Election.CandidateInfoDTO[] memory candidatesList,
+        string calldata voterMatricNo,
+        string calldata voterName,
+        Election.CandidateInfoDTO[] calldata candidatesList,
         uint256 electionTokenId
     ) public validElection(electionTokenId) {
         // Call vote function
@@ -144,7 +143,7 @@ contract VutsEngine {
      * @return uint256 Token ID (returns 0 if not found)
      */
     function getElectionTokenId(
-        string memory electionName
+        string calldata electionName
     ) public view returns (uint256) {
         return electionNameToTokenId[electionName];
     }
@@ -155,7 +154,7 @@ contract VutsEngine {
      * @return bool True if election exists
      */
     function electionExists(
-        string memory electionName
+        string calldata electionName
     ) public view returns (bool) {
         return electionNameToTokenId[electionName] > 0;
     }
