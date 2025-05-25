@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.21;
 import {Election} from "./Election.sol";
+import {StringUtils} from "src/stringUtils/StringUtils.sol";
 
 /**
  * @title VutsEngine
@@ -60,7 +61,7 @@ contract VutsEngine {
         if (tokenId > 0) {
             revert VutsEngine__DuplicateElectionName(electionName);
         }
-        if (compareStrings("", electionName)) {
+        if (StringUtils.compareStrings("", electionName)) {
             revert VutsEngine__ElectionNameCannotBeEmpty();
         }
         // Generate tokenId for election
@@ -428,24 +429,5 @@ contract VutsEngine {
                 });
             }
         }
-    }
-
-    // ====================================================================
-    // View & pure functions
-    // ====================================================================
-
-    /**
-     * @dev Compares two strings by comparing their keccak256 hashes
-     * @param first First string to compare
-     * @param second Second string to compare
-     * @return bool True if strings are equal, false otherwise
-     */
-    function compareStrings(
-        string memory first,
-        string memory second
-    ) public pure returns (bool) {
-        return
-            keccak256(abi.encodePacked(first)) ==
-            keccak256(abi.encodePacked(second));
     }
 }

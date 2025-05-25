@@ -19,10 +19,11 @@
 // private
 // view & pure functions
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.21;
 
 // Imports
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {StringUtils} from "src/stringUtils/StringUtils.sol";
 
 /**
  * @title Election
@@ -664,7 +665,12 @@ contract Election is Ownable {
         if (candidatesList.length != _electionCategories.length) {
             revert Election__AllCategoriesMustHaveOnlyOneVotedCandidate();
         }
-        if (!compareStrings(voterName, _votersMap[voterMatricNo].name)) {
+        if (
+            !StringUtils.compareStrings(
+                voterName,
+                _votersMap[voterMatricNo].name
+            )
+        ) {
             revert Election__VoterCannotBeValidated();
         }
         for (uint i = 0; i < candidatesList.length; i++) {
@@ -697,7 +703,9 @@ contract Election is Ownable {
         string memory categoryName
     ) internal view returns (bool) {
         for (uint i = 0; i < _electionCategories.length; i++) {
-            if (compareStrings(categoryName, _electionCategories[i])) {
+            if (
+                StringUtils.compareStrings(categoryName, _electionCategories[i])
+            ) {
                 return true;
             }
         }
@@ -709,7 +717,7 @@ contract Election is Ownable {
         string memory newCategory
     ) internal pure returns (bool) {
         for (uint i = 0; i < votedCategories.length; i++) {
-            if (compareStrings(newCategory, votedCategories[i])) {
+            if (StringUtils.compareStrings(newCategory, votedCategories[i])) {
                 return true;
             }
         }
@@ -857,28 +865,5 @@ contract Election is Ownable {
 
         _pollingOfficerCount = pollingOfficerAddresses.length;
         _pollintUnitCount = pollingUnitAddresses.length;
-    }
-
-    // ====================================================================
-    // Private functions
-    // ====================================================================
-
-    // ====================================================================
-    // View & pure functions
-    // ====================================================================
-
-    /**
-     * @dev Compares two strings by comparing their keccak256 hashes
-     * @param first First string to compare
-     * @param second Second string to compare
-     * @return bool True if strings are equal, false otherwise
-     */
-    function compareStrings(
-        string memory first,
-        string memory second
-    ) public pure returns (bool) {
-        return
-            keccak256(abi.encodePacked(first)) ==
-            keccak256(abi.encodePacked(second));
     }
 }
