@@ -44,18 +44,18 @@ VutsEngine is a smart contract-based voting platform that tokenizes elections an
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/yeniyan-group/vuts_smart_contract.git
 cd vuts-engine
 ```
 
 2. Install dependencies:
 ```bash
-npm install @openzeppelin/contracts
+make install
 ```
 
 3. Compile contracts:
 ```bash
-npx hardhat compile
+forge build
 ```
 
 ## 🌐 Live Deployment
