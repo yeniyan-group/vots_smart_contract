@@ -317,6 +317,29 @@ contract Election is Ownable {
     // ====================================================================
     // Public functions
     // ====================================================================
+    function validateVoterForVoting(
+        string memory name,
+        string memory matricNo,
+        address pollingUnitAddress
+    ) public view pollingUnitOnly(pollingUnitAddress) returns (bool) {
+        ElectionVoter memory voter = _votersMap[matricNo];
+
+        return
+            compareStrings(voter.name, name) &&
+            voter.voterState == VoterState.ACCREDITED;
+    }
+
+    function validateAddressAsPollingUnit(
+        address pollingUnitAddress
+    ) public view pollingUnitOnly(pollingUnitAddress) returns (bool) {
+        return _allowedPollingUnits[pollingUnitAddress];
+    }
+
+    function validateAddressAsPollingOfficer(
+        address pollingUnitAddress
+    ) public view pollingOfficerOnly(pollingUnitAddress) returns (bool) {
+        return _allowedPollingOfficers[pollingUnitAddress];
+    }
 
     /**
      * @dev Returns Returns a list of all voters

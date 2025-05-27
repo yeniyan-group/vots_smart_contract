@@ -114,6 +114,32 @@ contract VutsEngine {
         );
     }
 
+    function validateVoterForVoting(
+        string memory voterMatricNo,
+        string memory voterName,
+        uint256 electionTokenId
+    ) public view validElection(electionTokenId) returns (bool) {
+        return
+            Election(electionTokenToAddress[electionTokenId])
+                .validateVoterForVoting(voterName, voterMatricNo, msg.sender);
+    }
+
+    function validateAddressAsPollingUnit(
+        uint256 electionTokenId
+    ) public view validElection(electionTokenId) returns (bool) {
+        return
+            Election(electionTokenToAddress[electionTokenId])
+                .validateAddressAsPollingUnit(msg.sender);
+    }
+
+    function validateAddressAsPollingOfficer(
+        uint256 electionTokenId
+    ) public view validElection(electionTokenId) returns (bool) {
+        return
+            Election(electionTokenToAddress[electionTokenId])
+                .validateAddressAsPollingOfficer(msg.sender);
+    }
+
     // ====================================================================
     // Getter Functions - Engine Level
     // ====================================================================
