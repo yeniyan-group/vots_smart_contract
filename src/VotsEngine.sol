@@ -43,6 +43,23 @@ contract VotsEngine {
         uint256 electionId;
         string electionName;
         Election.ElectionState state;
+        uint256 startTimestamp;
+        uint256 endTimestamp;
+        uint256 registeredVotersCount;
+    }
+
+    struct ElectionInformation {
+        uint256 electionId;
+        address createdBy;
+        string electionName;
+        Election.ElectionState state;
+        uint256 startTimestamp;
+        uint256 endTimestamp;
+        uint256 registeredVotersCount;
+        uint256 accreditedVotersCount;
+        uint256 votedVotersCount;
+        string[] electionCategories;
+        Election.CandidateInfoDTO[] candidatesList;
     }
 
     function createElection(
@@ -210,22 +227,23 @@ contract VotsEngine {
         public
         view
         validElection(electionTokenId)
-        returns (
-            address createdBy,
-            string memory electionName,
-            uint256 startTimeStamp,
-            uint256 endTimeStamp,
-            Election.ElectionState electionState
-        )
+        returns (ElectionInformation memory electionInformation)
     {
         Election election = Election(electionTokenToAddress[electionTokenId]);
-        return (
-            election.getCreatedBy(),
-            election.getElectionName(),
-            election.getStartTimeStamp(),
-            election.getEndTimeStamp(),
-            election.getElectionState()
-        );
+        return
+            ElectionInformation({
+                electionId: electionTokenId,
+                createdBy: election.getCreatedBy(),
+                electionName: election.getElectionName(),
+                state: election.getElectionState(),
+                startTimestamp: election.getStartTimeStamp(),
+                endTimestamp: election.getEndTimeStamp(),
+                registeredVotersCount: election.getRegisteredVotersCount(),
+                accreditedVotersCount: election.getAccreditedVotersCount(),
+                votedVotersCount: election.getVotedVotersCount(),
+                electionCategories: election.getElectionCategories(),
+                candidatesList: election.getAllCandidatesInDto()
+            });
     }
 
     /**
@@ -450,7 +468,10 @@ contract VotsEngine {
                 electionsSummaryList[i - 1] = ElectionSummary({
                     electionId: election.getElectionUniqueTokenId(),
                     electionName: election.getElectionName(),
-                    state: election.getElectionState()
+                    state: election.getElectionState(),
+                    startTimestamp: election.getStartTimeStamp(),
+                    endTimestamp: election.getEndTimeStamp(),
+                    registeredVotersCount: election.getRegisteredVotersCount()
                 });
             }
         }

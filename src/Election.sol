@@ -644,6 +644,10 @@ contract Election is Ownable {
         return _registeredCandidatesList.length;
     }
 
+    function getElectionCategories() public view returns (string[] memory) {
+        return _electionCategories;
+    }
+
     /**
      * @dev Accredits a voter with valid matric number
      * @param voterMatricNo The matric number of the voter
