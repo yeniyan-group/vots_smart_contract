@@ -20,4 +20,4 @@ snapshot :; forge snapshot
 
 format :; forge fmt
 
-deploy-vutsengine :; @forge script script/DeployVutsEngine.s.sol:DeployVutsEngine --rpc-url ${SEPOLIA_RPC_URL} --account vutsdefault --broadcast --verify  --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
+deploy-votsengine :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${SEPOLIA_RPC_URL} --account vutsdefault --broadcast --verify  --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv

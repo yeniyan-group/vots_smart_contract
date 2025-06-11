@@ -2,12 +2,12 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
-import {VutsEngine, Election} from "../../src/VutsEngine.sol";
-import {DeployVutsEngine} from "../../script/DeployVutsEngine.s.sol";
+import {VotsEngine, Election} from "../../src/votsEngine.sol";
+import {DeployVotsEngine} from "../../script/DeployvotsEngine.s.sol";
 
-contract VutsEngineTest is Test {
-    VutsEngine public vutsEngine;
-    DeployVutsEngine public deployVutsEngine;
+contract VotsEngineTest is Test {
+    VotsEngine public votsEngine;
+    DeployVotsEngine public deployVotsEngine;
 
     address public creator = makeAddr("creator");
     address public creator2 = makeAddr("creator2");
@@ -31,31 +31,41 @@ contract VutsEngineTest is Test {
         Election.CandidateInfoDTO({
             name: "Ayeni Samuel",
             matricNo: "CAND001",
-            category: "President"
+            category: "President",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateTwo =
         Election.CandidateInfoDTO({
             name: "Leumas Ineya",
             matricNo: "CAND002",
-            category: "President"
+            category: "President",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateThree =
         Election.CandidateInfoDTO({
             name: "Bob Johnson",
             matricNo: "CAND003",
-            category: "VicePresident"
+            category: "VicePresident",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateFour =
         Election.CandidateInfoDTO({
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
-            category: "VicePresident"
+            category: "VicePresident",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO unknownCandidate =
         Election.CandidateInfoDTO({
             name: "Unknown Bob",
             matricNo: "CAND0088",
-            category: "UNKNOWNGUY"
+            category: "UNKNOWNGUY",
+            voteFor: 0,
+            voteAgainst: 0
         });
 
     Election.VoterInfoDTO voterOne =
@@ -78,8 +88,8 @@ contract VutsEngineTest is Test {
 
     function setUp() public {
         _setupTestData();
-        deployVutsEngine = new DeployVutsEngine();
-        vutsEngine = deployVutsEngine.run();
+        deployVotsEngine = new DeployVotsEngine();
+        votsEngine = VotsEngine(address(deployVotsEngine.run()));
     }
 
     function _setupTestData() internal {
@@ -119,7 +129,7 @@ contract VutsEngineTest is Test {
 
     function testCreateElectionSuccess() public {
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -131,22 +141,22 @@ contract VutsEngineTest is Test {
         );
 
         // Verify election was created
-        assertTrue(vutsEngine.electionExists(ELECTION_NAME));
-        assertEq(vutsEngine.getTotalElectionsCount(), 1);
+        assertTrue(votsEngine.electionExists(ELECTION_NAME));
+        assertEq(votsEngine.getTotalElectionsCount(), 1);
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
         assertEq(tokenId, 1);
 
-        address electionAddress = vutsEngine.getElectionAddress(tokenId);
+        address electionAddress = votsEngine.getElectionAddress(tokenId);
         assertTrue(electionAddress != address(0));
     }
 
     function testCreateElectionEmitsEvent() public {
         vm.expectEmit(true, true, false, true);
-        emit VutsEngine.ElectionContractedCreated(1, ELECTION_NAME);
+        emit VotsEngine.ElectionContractedCreated(1, ELECTION_NAME);
 
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -161,7 +171,7 @@ contract VutsEngineTest is Test {
     function testCreateElectionRevertOnDuplicateName() public {
         // Create first election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -175,13 +185,13 @@ contract VutsEngineTest is Test {
         // Try to create duplicate
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__DuplicateElectionName.selector,
+                VotsEngine.VotsEngine__DuplicateElectionName.selector,
                 ELECTION_NAME
             )
         );
 
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp + 10 days,
             endTimestamp + 10 days,
             ELECTION_NAME,
@@ -196,7 +206,7 @@ contract VutsEngineTest is Test {
     function testCreateMultipleElections() public {
         // Create first election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             "Election 1",
@@ -209,7 +219,7 @@ contract VutsEngineTest is Test {
 
         // Create second election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp + 10 days,
             endTimestamp + 10 days,
             "Election 2",
@@ -220,17 +230,17 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        assertEq(vutsEngine.getTotalElectionsCount(), 2);
-        assertTrue(vutsEngine.electionExists("Election 1"));
-        assertTrue(vutsEngine.electionExists("Election 2"));
+        assertEq(votsEngine.getTotalElectionsCount(), 2);
+        assertTrue(votsEngine.electionExists("Election 1"));
+        assertTrue(votsEngine.electionExists("Election 2"));
     }
 
     function testCreateElectionRevertOnEmptyElectionName() public {
         vm.expectRevert(
-            VutsEngine.VutsEngine__ElectionNameCannotBeEmpty.selector
+            VotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector
         );
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             "",
@@ -249,7 +259,7 @@ contract VutsEngineTest is Test {
     function testAccrediteVoterSuccess() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -260,23 +270,23 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election
         vm.warp(startTimestamp + 1);
 
         // Accredite voter
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Verify accreditation
-        assertEq(vutsEngine.getAccreditedVotersCount(tokenId), 1);
+        assertEq(votsEngine.getAccreditedVotersCount(tokenId), 1);
     }
 
     function testAccrediteVoterRevertOnInvalidPollingOfficer() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -287,7 +297,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election
         vm.warp(startTimestamp + 1);
@@ -295,7 +305,7 @@ contract VutsEngineTest is Test {
         // Try to accredite with invalid officer
         vm.expectRevert(Election.Election__OnlyPollingOfficerAllowed.selector);
         vm.prank(unknownAddress); // user2 is not a polling officer
-        vutsEngine.accrediteVoter(voterFive.name, tokenId);
+        votsEngine.accrediteVoter(voterFive.name, tokenId);
     }
 
     function testAccrediteVoterRevertOnInvalidElection() public {
@@ -303,19 +313,19 @@ contract VutsEngineTest is Test {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 invalidTokenId
             )
         );
 
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.name, invalidTokenId);
+        votsEngine.accrediteVoter(voterOne.name, invalidTokenId);
     }
 
     function testAccrediteVoterRevertBeforeElectionStart() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -326,7 +336,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Try to accredite before election starts
         vm.expectRevert(
@@ -338,7 +348,7 @@ contract VutsEngineTest is Test {
         );
 
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.name, tokenId);
+        votsEngine.accrediteVoter(voterOne.name, tokenId);
     }
 
     // ====================================================================
@@ -348,7 +358,7 @@ contract VutsEngineTest is Test {
     function testVoteCandidatesSuccess() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -359,12 +369,12 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election and accredite voter
         vm.warp(startTimestamp + 1);
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Prepare vote
         Election.CandidateInfoDTO[]
@@ -374,7 +384,7 @@ contract VutsEngineTest is Test {
 
         // Cast vote
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterOne.matricNo,
             voterOne.name,
             votes,
@@ -382,13 +392,13 @@ contract VutsEngineTest is Test {
         );
 
         // Verify vote was cast
-        assertEq(vutsEngine.getVotedVotersCount(tokenId), 1);
+        assertEq(votsEngine.getVotedVotersCount(tokenId), 1);
     }
 
     function testVoteCandidatesRevertOnInvalidPollingUnit() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -399,12 +409,12 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election and accredite voter
         vm.warp(startTimestamp + 1);
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Prepare vote
         Election.CandidateInfoDTO[]
@@ -416,7 +426,7 @@ contract VutsEngineTest is Test {
         // Try to vote with invalid polling unit
         vm.expectRevert(Election.Election__OnlyPollingUnitAllowed.selector);
         vm.prank(creator); // creator is not a polling unit
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterOne.matricNo,
             voterOne.name,
             votes,
@@ -427,7 +437,7 @@ contract VutsEngineTest is Test {
     function testVoteCandidatesRevertOnUnaccreditedVoter() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -438,7 +448,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election (don't accredite voter)
         vm.warp(startTimestamp + 1);
@@ -458,7 +468,7 @@ contract VutsEngineTest is Test {
             )
         );
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterFive.matricNo,
             voterFive.name,
             votes,
@@ -473,7 +483,7 @@ contract VutsEngineTest is Test {
     function testGetElectionInfo() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -484,7 +494,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         (
             address createdBy,
@@ -492,7 +502,7 @@ contract VutsEngineTest is Test {
             uint256 startTs,
             uint256 endTs,
             Election.ElectionState state
-        ) = vutsEngine.getElectionInfo(tokenId);
+        ) = votsEngine.getElectionInfo(tokenId);
 
         assertEq(createdBy, creator);
         assertEq(electionName, ELECTION_NAME);
@@ -504,7 +514,7 @@ contract VutsEngineTest is Test {
     function testGetElectionStats() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -515,7 +525,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         (
             uint256 registeredVotersCount,
@@ -524,7 +534,7 @@ contract VutsEngineTest is Test {
             uint256 registeredCandidatesCount,
             uint256 pollingOfficerCount,
             uint256 pollingUnitCount
-        ) = vutsEngine.getElectionStats(tokenId);
+        ) = votsEngine.getElectionStats(tokenId);
 
         assertEq(registeredVotersCount, votersList.length);
         assertEq(accreditedVotersCount, 0);
@@ -537,7 +547,7 @@ contract VutsEngineTest is Test {
     function testGetAllVoters() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -548,9 +558,9 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
-        Election.ElectionVoter[] memory voters = vutsEngine.getAllVoters(
+        Election.ElectionVoter[] memory voters = votsEngine.getAllVoters(
             tokenId
         );
 
@@ -565,7 +575,7 @@ contract VutsEngineTest is Test {
     function testGetAllCandidatesInDto() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -576,9 +586,9 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
-        Election.CandidateInfoDTO[] memory candidates = vutsEngine
+        Election.CandidateInfoDTO[] memory candidates = votsEngine
             .getAllCandidatesInDto(tokenId);
 
         assertEq(candidates.length, 4);
@@ -590,7 +600,7 @@ contract VutsEngineTest is Test {
     function testGetAllElectionsSummary() public {
         // Create multiple elections
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             "Election 1",
@@ -602,7 +612,7 @@ contract VutsEngineTest is Test {
         );
 
         vm.prank(creator2);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp + 10 days,
             endTimestamp + 10 days,
             "Election 2",
@@ -613,7 +623,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        VutsEngine.ElectionSummary[] memory summaries = vutsEngine
+        VotsEngine.ElectionSummary[] memory summaries = votsEngine
             .getAllElectionsSummary();
 
         assertEq(summaries.length, 2);
@@ -626,51 +636,51 @@ contract VutsEngineTest is Test {
     function testGetElectionInfoRevertOnInvalidTokenId() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 999
             )
         );
-        vutsEngine.getElectionInfo(999);
+        votsEngine.getElectionInfo(999);
     }
 
     function testGetElectionStatsRevertOnInvalidTokenId() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 999
             )
         );
-        vutsEngine.getElectionStats(999);
+        votsEngine.getElectionStats(999);
     }
 
     function testGetAllVotersRevertOnInvalidTokenId() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 999
             )
         );
-        vutsEngine.getAllVoters(999);
+        votsEngine.getAllVoters(999);
     }
 
     function testGetAllCandidatesInDtoRevertOnInvalidTokenId() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 999
             )
         );
-        vutsEngine.getAllCandidatesInDto(999);
+        votsEngine.getAllCandidatesInDto(999);
     }
 
     function testGetEachCategoryWinnerRevertOnInvalidTokenId() public {
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 999
             )
         );
-        vutsEngine.getEachCategoryWinner(999);
+        votsEngine.getEachCategoryWinner(999);
     }
 
     // ====================================================================
@@ -679,15 +689,15 @@ contract VutsEngineTest is Test {
 
     function testElectionTokenIdZeroHandling() public {
         // Test that token ID 0 is treated as non-existent
-        assertFalse(vutsEngine.electionExistsByTokenId(0));
+        assertFalse(votsEngine.electionExistsByTokenId(0));
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                VutsEngine.VutsEngine__ElectionContractNotFound.selector,
+                VotsEngine.VotsEngine__ElectionContractNotFound.selector,
                 0
             )
         );
-        vutsEngine.getElectionAddress(0);
+        votsEngine.getElectionAddress(0);
     }
 
     // ====================================================================
@@ -697,7 +707,7 @@ contract VutsEngineTest is Test {
     function testGetElectionResultsAfterElectionEnds() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -708,17 +718,17 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Start election, accredite voters, and cast votes
         vm.warp(startTimestamp + 1);
 
         // Accredite and vote for multiple voters
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterTwo.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterTwo.matricNo, tokenId);
 
         // Vote 1
         Election.CandidateInfoDTO[]
@@ -728,7 +738,7 @@ contract VutsEngineTest is Test {
         votes1[1] = candidateThree;
 
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterOne.matricNo,
             voterOne.name,
             votes1,
@@ -743,7 +753,7 @@ contract VutsEngineTest is Test {
         votes2[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterTwo.matricNo,
             voterTwo.name,
             votes2,
@@ -754,9 +764,9 @@ contract VutsEngineTest is Test {
         vm.warp(endTimestamp + 1);
 
         // Get results
-        Election.ElectionCandidate[] memory allCandidates = vutsEngine
+        Election.ElectionCandidate[] memory allCandidates = votsEngine
             .getAllCandidates(tokenId);
-        Election.ElectionWinner[][] memory winners = vutsEngine
+        Election.ElectionWinner[][] memory winners = votsEngine
             .getEachCategoryWinner(tokenId);
 
         // Verify results
@@ -775,7 +785,7 @@ contract VutsEngineTest is Test {
     function testGetResultsRevertBeforeElectionEnds() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -786,7 +796,7 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Try to get results before election ends
         vm.expectRevert(
@@ -796,7 +806,7 @@ contract VutsEngineTest is Test {
                 Election.ElectionState.OPENED
             )
         );
-        vutsEngine.getAllCandidates(tokenId);
+        votsEngine.getAllCandidates(tokenId);
     }
 
     // ====================================================================
@@ -806,7 +816,7 @@ contract VutsEngineTest is Test {
     function testUpdateElectionState() public {
         // Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -817,24 +827,24 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Initially OPENED
-        (, , , , Election.ElectionState state) = vutsEngine.getElectionInfo(
+        (, , , , Election.ElectionState state) = votsEngine.getElectionInfo(
             tokenId
         );
         assertEq(uint(state), uint(Election.ElectionState.OPENED));
 
         // Move to STARTED
         vm.warp(startTimestamp + 1);
-        vutsEngine.updateElectionState(tokenId);
-        (, , , , state) = vutsEngine.getElectionInfo(tokenId);
+        votsEngine.updateElectionState(tokenId);
+        (, , , , state) = votsEngine.getElectionInfo(tokenId);
         assertEq(uint(state), uint(Election.ElectionState.STARTED));
 
         // Move to ENDED
         vm.warp(endTimestamp + 1);
-        vutsEngine.updateElectionState(tokenId);
-        (, , , , state) = vutsEngine.getElectionInfo(tokenId);
+        votsEngine.updateElectionState(tokenId);
+        (, , , , state) = votsEngine.getElectionInfo(tokenId);
         assertEq(uint(state), uint(Election.ElectionState.ENDED));
     }
 
@@ -845,7 +855,7 @@ contract VutsEngineTest is Test {
     function testFullElectionFlow() public {
         // 1. Create election
         vm.prank(creator);
-        vutsEngine.createElection(
+        votsEngine.createElection(
             startTimestamp,
             endTimestamp,
             ELECTION_NAME,
@@ -856,36 +866,36 @@ contract VutsEngineTest is Test {
             electionCategories
         );
 
-        uint256 tokenId = vutsEngine.getElectionTokenId(ELECTION_NAME);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // 2. Verify initial state
         assertEq(
-            vutsEngine.getRegisteredVotersCount(tokenId),
+            votsEngine.getRegisteredVotersCount(tokenId),
             votersList.length
         );
         assertEq(
-            vutsEngine.getRegisteredCandidatesCount(tokenId),
+            votsEngine.getRegisteredCandidatesCount(tokenId),
             candidatesList.length
         );
-        assertEq(vutsEngine.getAccreditedVotersCount(tokenId), 0);
-        assertEq(vutsEngine.getVotedVotersCount(tokenId), 0);
+        assertEq(votsEngine.getAccreditedVotersCount(tokenId), 0);
+        assertEq(votsEngine.getVotedVotersCount(tokenId), 0);
 
         // 3. Start election
         vm.warp(startTimestamp + 1);
 
         // 4. Accredite all voters
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterOne.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         vm.prank(pollingOfficer2);
-        vutsEngine.accrediteVoter(voterTwo.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterTwo.matricNo, tokenId);
 
         vm.prank(pollingOfficer1);
-        vutsEngine.accrediteVoter(voterThree.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterThree.matricNo, tokenId);
         vm.prank(pollingOfficer2);
-        vutsEngine.accrediteVoter(voterFour.matricNo, tokenId);
+        votsEngine.accrediteVoter(voterFour.matricNo, tokenId);
 
-        assertEq(vutsEngine.getAccreditedVotersCount(tokenId), 4);
+        assertEq(votsEngine.getAccreditedVotersCount(tokenId), 4);
 
         // 5. Cast votes
         Election.CandidateInfoDTO[]
@@ -895,7 +905,7 @@ contract VutsEngineTest is Test {
         votes[1] = candidateThree;
 
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterOne.matricNo,
             voterOne.name,
             votes,
@@ -903,7 +913,7 @@ contract VutsEngineTest is Test {
         );
 
         vm.prank(pollingUnit2);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterTwo.matricNo,
             voterTwo.name,
             votes,
@@ -914,7 +924,7 @@ contract VutsEngineTest is Test {
         votes[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterThree.matricNo,
             voterThree.name,
             votes,
@@ -924,19 +934,19 @@ contract VutsEngineTest is Test {
         votes[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        vutsEngine.voteCandidates(
+        votsEngine.voteCandidates(
             voterFour.matricNo,
             voterFour.name,
             votes,
             tokenId
         );
 
-        assertEq(vutsEngine.getVotedVotersCount(tokenId), 4);
+        assertEq(votsEngine.getVotedVotersCount(tokenId), 4);
 
         // 6. End election and check results
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = vutsEngine
+        Election.ElectionWinner[][] memory winners = votsEngine
             .getEachCategoryWinner(tokenId);
 
         // President: John Doe should win with 2 votes

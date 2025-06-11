@@ -27,8 +27,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 /**
  * @title Election
  * @author Ayeni-yeniyan
- * @notice This election contract stores the election information for an election in the VutsEngine.
- * Each election is owned by the VutsEngine. It holds a createdBy field which keeps the information of the election creator
+ * @notice This election contract stores the election information for an election in the VotsEngine.
+ * Each election is owned by the VotsEngine. It holds a createdBy field which keeps the information of the election creator
  */
 contract Election is Ownable {
     // ====================================================================
@@ -47,7 +47,7 @@ contract Election is Ownable {
         ElectionState expected,
         ElectionState actual
     );
-    error Election__UnauthorizedAccountOnlyVutsEngineCanCallContract(
+    error Election__UnauthorizedAccountOnlyVotsEngineCanCallContract(
         address account
     );
     error Election__VoterCannotBeValidated();
@@ -59,6 +59,7 @@ contract Election is Ownable {
     error Election__DuplicateVoter(string matricNo);
     error Election__DuplicateCandidate(string matricNo);
     error Election__DuplicateCategory();
+    error Election__InvalidVote();
     error Election__InvalidCategory(string categoryName);
 
     // ====================================================================
@@ -113,6 +114,7 @@ contract Election is Ownable {
     struct ElectionCandidate {
         string name;
         uint256 votes;
+        uint256 votesAgainst;
         CandidateState state;
     }
 
@@ -123,6 +125,8 @@ contract Election is Ownable {
         string name;
         string matricNo;
         string category;
+        uint256 voteFor;
+        uint256 voteAgainst;
     }
 
     /**
@@ -413,7 +417,9 @@ contract Election is Ownable {
                     all[candidateCount] = CandidateInfoDTO({
                         name: candidate.name,
                         matricNo: _registeredCandidatesList[j],
-                        category: _electionCategories[i]
+                        category: _electionCategories[i],
+                        voteFor: 0,
+                        voteAgainst: 0
                     });
                     candidateCount++;
                 }
@@ -695,7 +701,15 @@ contract Election is Ownable {
             if (!_isValidCategory(candidate.category)) {
                 revert Election__InvalidCategory(candidate.category);
             }
-            _candidatesMap[candidate.category][candidate.matricNo].votes++;
+            if (candidate.voteFor == candidate.voteAgainst) {
+                revert Election__InvalidVote();
+            }
+            if (candidate.voteFor > candidate.voteAgainst) {
+                _candidatesMap[candidate.category][candidate.matricNo].votes++;
+            } else {
+                _candidatesMap[candidate.category][candidate.matricNo]
+                    .votesAgainst++;
+            }
         }
         _votersMap[voterMatricNo].voterState = VoterState.VOTED;
         _votedVotersCount++;
@@ -776,7 +790,7 @@ contract Election is Ownable {
      */
     function _checkOwner() internal view override {
         if (owner() != _msgSender()) {
-            revert Election__UnauthorizedAccountOnlyVutsEngineCanCallContract(
+            revert Election__UnauthorizedAccountOnlyVotsEngineCanCallContract(
                 _msgSender()
             );
         }
@@ -827,6 +841,7 @@ contract Election is Ownable {
             ElectionCandidate memory registeredCandidate = ElectionCandidate({
                 name: candidate.name,
                 votes: 0,
+                votesAgainst: 0,
                 state: CandidateState.REGISTERED
             });
             if (

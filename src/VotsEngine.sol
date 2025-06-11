@@ -3,7 +3,7 @@ pragma solidity ^0.8.21;
 import {Election} from "./Election.sol";
 
 /**
- * @title VutsEngine
+ * @title VotsEngine
  * @author Ayeni-yeniyan
  * @notice This is the core of the voting system.
  * This contract creates the election contract and tokenises the created contract address.
@@ -12,13 +12,13 @@ import {Election} from "./Election.sol";
  * An election contract is created with a unique name that is stored in memory and can be used to get the election address.
  * Each election is tokenised and the address is stored on chain to enable future access and reference.
  */
-contract VutsEngine {
+contract VotsEngine {
     // ====================================================================
     // Errors
     // ====================================================================
-    error VutsEngine__DuplicateElectionName(string electionName);
-    error VutsEngine__ElectionContractNotFound(uint256 electionTokenId);
-    error VutsEngine__ElectionNameCannotBeEmpty();
+    error VotsEngine__DuplicateElectionName(string electionName);
+    error VotsEngine__ElectionContractNotFound(uint256 electionTokenId);
+    error VotsEngine__ElectionNameCannotBeEmpty();
 
     // ====================================================================
     // Events
@@ -34,7 +34,7 @@ contract VutsEngine {
 
     modifier validElection(uint256 electionTokenId) {
         if (electionTokenToAddress[electionTokenId] == address(0)) {
-            revert VutsEngine__ElectionContractNotFound(electionTokenId);
+            revert VotsEngine__ElectionContractNotFound(electionTokenId);
         }
         _;
     }
@@ -58,10 +58,10 @@ contract VutsEngine {
         // Check that electionName is not duplicate
         uint256 tokenId = electionNameToTokenId[electionName];
         if (tokenId > 0) {
-            revert VutsEngine__DuplicateElectionName(electionName);
+            revert VotsEngine__DuplicateElectionName(electionName);
         }
         if (bytes(electionName).length == 0) {
-            revert VutsEngine__ElectionNameCannotBeEmpty();
+            revert VotsEngine__ElectionNameCannotBeEmpty();
         }
         // Generate tokenId for election
         uint256 newElectionTokenId = ++tokenIdCount;

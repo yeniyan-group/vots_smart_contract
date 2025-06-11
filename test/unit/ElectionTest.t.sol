@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
-import {Election} from "../../src/VutsEngine.sol";
+import {Election} from "../../src/VotsEngine.sol";
 
 contract ElectionTest is Test {
     address public creator = makeAddr("creator");
@@ -26,31 +26,41 @@ contract ElectionTest is Test {
         Election.CandidateInfoDTO({
             name: "Ayeni Samuel",
             matricNo: "CAND001",
-            category: "President"
+            category: "President",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateTwo =
         Election.CandidateInfoDTO({
             name: "Leumas Ineya",
             matricNo: "CAND002",
-            category: "President"
+            category: "President",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateThree =
         Election.CandidateInfoDTO({
             name: "Bob Johnson",
             matricNo: "CAND003",
-            category: "VicePresident"
+            category: "VicePresident",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateFour =
         Election.CandidateInfoDTO({
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
-            category: "VicePresident"
+            category: "VicePresident",
+            voteFor: 0,
+            voteAgainst: 0
         });
     Election.CandidateInfoDTO unknownCandidate =
         Election.CandidateInfoDTO({
             name: "Unknown Bob",
             matricNo: "CAND0088",
-            category: "UNKNOWNGUY"
+            category: "UNKNOWNGUY",
+            voteFor: 0,
+            voteAgainst: 0
         });
 
     Election.VoterInfoDTO voterOne =
@@ -496,7 +506,7 @@ contract ElectionTest is Test {
         vm.expectRevert(
             abi.encodeWithSelector(
                 Election
-                    .Election__UnauthorizedAccountOnlyVutsEngineCanCallContract
+                    .Election__UnauthorizedAccountOnlyVotsEngineCanCallContract
                     .selector,
                 unknownAddress
             )
@@ -694,7 +704,7 @@ contract ElectionTest is Test {
         vm.expectRevert(
             abi.encodeWithSelector(
                 Election
-                    .Election__UnauthorizedAccountOnlyVutsEngineCanCallContract
+                    .Election__UnauthorizedAccountOnlyVotsEngineCanCallContract
                     .selector,
                 unknownAddress
             )

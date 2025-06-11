@@ -1,12 +1,12 @@
-# VutsEngine - Decentralized Voting System
+# VotsEngine - Decentralized Voting System
 
 A comprehensive blockchain-based voting system built on Ethereum that ensures transparent, secure, and tamper-proof elections.
 
 ## 🚀 Overview
 
-VutsEngine is a smart contract-based voting platform that tokenizes elections and provides a complete end-to-end voting solution. The system consists of two main contracts:
+VotsEngine is a smart contract-based voting platform that tokenizes elections and provides a complete end-to-end voting solution. The system consists of two main contracts:
 
-- **VutsEngine**: Core contract that manages election creation and acts as a factory
+- **VotsEngine**: Core contract that manages election creation and acts as a factory
 - **Election**: Individual election contracts with comprehensive voting logic
 
 ## ✨ Features
@@ -45,7 +45,7 @@ VutsEngine is a smart contract-based voting platform that tokenizes elections an
 1. Clone the repository:
 ```bash
 git clone https://github.com/yeniyan-group/vuts_smart_contract.git
-cd vuts-engine
+cd vuts_smart_contract
 ```
 
 2. Install dependencies:
@@ -60,14 +60,14 @@ forge build
 
 ## 🌐 Live Deployment
 
-The VutsEngine contract is currently deployed and live on Sepolia testnet:
+The VotsEngine contract is currently deployed and live on Sepolia testnet:
 
-**Contract Address**: `0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf`
+**Contract Address**: `0x6F80D713af46533070dd021952ad402bE726E728`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
 - **RPC URL**: https://sepolia.infura.io/v3/YOUR-PROJECT-ID
-- **Block Explorer**: https://sepolia.etherscan.io/address/0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf
+- **Block Explorer**: https://sepolia.etherscan.io/address/0x6F80D713af46533070dd021952ad402bE726E728
 
 ### Interacting with the Live Contract
 
@@ -79,30 +79,30 @@ You can interact with the deployed contract using:
 
 ```javascript
 // Example using ethers.js
-const contractAddress = "0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf";
-const vutsEngine = new ethers.Contract(contractAddress, abi, signer);
+const contractAddress = "0x6F80D713af46533070dd021952ad402bE726E728";
+const VotsEngine = new ethers.Contract(contractAddress, abi, signer);
 
 // Get total elections count
-const totalElections = await vutsEngine.getTotalElectionsCount();
+const totalElections = await VotsEngine.getTotalElectionsCount();
 ```
 
 ## 📖 Usage
 
 ### Deploying the System
 
-The VutsEngine is already deployed on Sepolia testnet at `0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf`.
+The VotsEngine is already deployed on Sepolia testnet at `0x6F80D713af46533070dd021952ad402bE726E728`.
 
 For local development or custom deployments:
 ```solidity
-// Deploy VutsEngine contract
-VutsEngine vutsEngine = new VutsEngine();
+// Deploy VotsEngine contract
+VotsEngine VotsEngine = new VotsEngine();
 ```
 
 Or connect to the existing deployment:
 ```javascript
-const vutsEngine = new ethers.Contract(
-    "0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf", 
-    vutsEngineABI, 
+const VotsEngine = new ethers.Contract(
+    "0x6F80D713af46533070dd021952ad402bE726E728", 
+    VotsEngineABI, 
     provider
 );
 ```
@@ -126,7 +126,7 @@ address[] memory pollingOfficers = [0x789..., 0xabc...];
 string[] memory categories = ["President", "Vice President"];
 
 // Create election
-vutsEngine.createElection(
+VotsEngine.createElection(
     startTimestamp,
     endTimestamp,
     "Student Union Election 2024",
@@ -142,7 +142,7 @@ vutsEngine.createElection(
 
 1. **Accredit Voter** (Polling Officer):
 ```solidity
-vutsEngine.accrediteVoter("MAT001", electionTokenId);
+VotsEngine.accrediteVoter("MAT001", electionTokenId);
 ```
 
 2. **Cast Vote** (Polling Unit):
@@ -150,17 +150,17 @@ vutsEngine.accrediteVoter("MAT001", electionTokenId);
 CandidateInfoDTO[] memory votes = [
     CandidateInfoDTO("Alice Johnson", "CAN001", "President")
 ];
-vutsEngine.voteCandidates("MAT001", "John Doe", votes, electionTokenId);
+VotsEngine.voteCandidates("MAT001", "John Doe", votes, electionTokenId);
 ```
 
 3. **Get Results** (After election ends):
 ```solidity
-ElectionWinner[][] memory winners = vutsEngine.getEachCategoryWinner(electionTokenId);
+ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTokenId);
 ```
 
 ## 📊 Contract Architecture
 
-### VutsEngine Contract
+### VotsEngine Contract
 - Manages multiple elections
 - Acts as a factory for Election contracts
 - Provides unified interface for all election operations
@@ -175,7 +175,7 @@ ElectionWinner[][] memory winners = vutsEngine.getEachCategoryWinner(electionTok
 ## 🔐 Security Considerations
 
 ### Access Control
-- Only VutsEngine can interact with Election contracts
+- Only VotsEngine can interact with Election contracts
 - Polling officers can only accredit voters
 - Polling units can only process votes
 - Addresses cannot have multiple roles
@@ -194,7 +194,7 @@ ElectionWinner[][] memory winners = vutsEngine.getEachCategoryWinner(electionTok
 
 ## 📚 API Reference
 
-### VutsEngine Functions
+### VotsEngine Functions
 
 #### Election Management
 - `createElection()` - Create a new election

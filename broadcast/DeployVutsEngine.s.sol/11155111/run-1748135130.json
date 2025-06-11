@@ -3,7 +3,7 @@
     {
       "hash": "0x6885a446e1cc279e3eed1f5591e1f8685634c5622a96664c9b79f6cd5409f018",
       "transactionType": "CREATE",
-      "contractName": "VutsEngine",
+      "contractName": "VotsEngine",
       "contractAddress": "0xebffa0b1fe5878ee5f2bb87f9ef427abba6e07bf",
       "function": null,
       "arguments": null,
@@ -41,7 +41,7 @@
   "pending": [],
   "returns": {
     "0": {
-      "internal_type": "contract VutsEngine",
+      "internal_type": "contract VotsEngine",
       "value": "0xEBfFa0B1fe5878ee5f2BB87f9ef427aBbA6e07Bf"
     }
   },
