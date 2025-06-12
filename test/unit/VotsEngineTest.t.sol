@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {VotsEngine, Election} from "../../src/votsEngine.sol";
 import {DeployVotsEngine} from "../../script/DeployvotsEngine.s.sol";
 
@@ -32,7 +32,7 @@ contract VotsEngineTest is Test {
             name: "Ayeni Samuel",
             matricNo: "CAND001",
             category: "President",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateTwo =
@@ -40,7 +40,7 @@ contract VotsEngineTest is Test {
             name: "Leumas Ineya",
             matricNo: "CAND002",
             category: "President",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateThree =
@@ -48,7 +48,7 @@ contract VotsEngineTest is Test {
             name: "Bob Johnson",
             matricNo: "CAND003",
             category: "VicePresident",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateFour =
@@ -56,7 +56,7 @@ contract VotsEngineTest is Test {
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
             category: "VicePresident",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO unknownCandidate =
@@ -64,7 +64,7 @@ contract VotsEngineTest is Test {
             name: "Unknown Bob",
             matricNo: "CAND0088",
             category: "UNKNOWNGUY",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
 
@@ -123,21 +123,61 @@ contract VotsEngineTest is Test {
         duplicateCat = ["President", "VicePresident", "VicePresident"];
     }
 
+    function _createElectionWithDefaultValues() public {
+        // Create election
+        vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
+        votsEngine.createElection(
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
+        );
+    }
+
     // ====================================================================
     // Election Creation Tests
     // ====================================================================
 
     function testCreateElectionSuccess() public {
         vm.prank(creator);
+
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         // Verify election was created
@@ -156,30 +196,54 @@ contract VotsEngineTest is Test {
         emit VotsEngine.ElectionContractedCreated(1, ELECTION_NAME);
 
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
     }
 
     function testCreateElectionRevertOnDuplicateName() public {
-        // Create first election
         vm.prank(creator);
+        // Create first election
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         // Try to create duplicate
@@ -191,45 +255,81 @@ contract VotsEngineTest is Test {
         );
 
         vm.prank(creator);
+        Election.ElectionParams memory secondParams = Election.ElectionParams({
+            startTimeStamp: startTimestamp + 10 days,
+            endTimeStamp: endTimestamp + 10 days,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp + 10 days,
-            endTimestamp + 10 days,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            secondParams
+            // startTimestamp + 10 days,
+            // endTimestamp + 10 days,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
     }
 
     function testCreateMultipleElections() public {
         // Create first election
-        vm.prank(creator);
+        vm.startPrank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: "Election 1",
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            "Election 1",
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // "Election 1",
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         // Create second election
-        vm.prank(creator);
-        votsEngine.createElection(
-            startTimestamp + 10 days,
-            endTimestamp + 10 days,
-            "Election 2",
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
-        );
 
+        Election.ElectionParams memory secondParams = Election.ElectionParams({
+            startTimeStamp: startTimestamp + 10 days,
+            endTimeStamp: endTimestamp + 10 days,
+            electionName: "Election 2",
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
+        votsEngine.createElection(
+            secondParams
+            // startTimestamp + 10 days,
+            // endTimestamp + 10 days,
+            // "Election 2",
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
+        );
+        vm.stopPrank();
         assertEq(votsEngine.getTotalElectionsCount(), 2);
         assertTrue(votsEngine.electionExists("Election 1"));
         assertTrue(votsEngine.electionExists("Election 2"));
@@ -240,15 +340,27 @@ contract VotsEngineTest is Test {
             VotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector
         );
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: "",
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            "",
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // "",
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
     }
 
@@ -259,15 +371,27 @@ contract VotsEngineTest is Test {
     function testAccrediteVoterSuccess() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -286,15 +410,27 @@ contract VotsEngineTest is Test {
     function testAccrediteVoterRevertOnInvalidPollingOfficer() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -325,15 +461,27 @@ contract VotsEngineTest is Test {
     function testAccrediteVoterRevertBeforeElectionStart() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -358,15 +506,27 @@ contract VotsEngineTest is Test {
     function testVoteCandidatesSuccess() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -398,15 +558,27 @@ contract VotsEngineTest is Test {
     function testVoteCandidatesRevertOnInvalidPollingUnit() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -437,15 +609,27 @@ contract VotsEngineTest is Test {
     function testVoteCandidatesRevertOnUnaccreditedVoter() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -483,46 +667,65 @@ contract VotsEngineTest is Test {
     function testGetElectionInfo() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
-        (
-            address createdBy,
-            string memory electionName,
-            uint256 startTs,
-            uint256 endTs,
-            Election.ElectionState state
-        ) = votsEngine.getElectionInfo(tokenId);
+        VotsEngine.ElectionInformation memory electionInfo = votsEngine
+            .getElectionInfo(tokenId);
 
-        assertEq(createdBy, creator);
-        assertEq(electionName, ELECTION_NAME);
-        assertEq(startTs, startTimestamp);
-        assertEq(endTs, endTimestamp);
-        assertEq(uint(state), uint(Election.ElectionState.OPENED));
+        assertEq(electionInfo.createdBy, creator);
+        assertEq(electionInfo.electionName, ELECTION_NAME);
+        assertEq(electionInfo.startTimestamp, startTimestamp);
+        assertEq(electionInfo.endTimestamp, endTimestamp);
+        assertEq(uint(electionInfo.state), uint(Election.ElectionState.OPENED));
     }
 
     function testGetElectionStats() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -547,15 +750,27 @@ contract VotsEngineTest is Test {
     function testGetAllVoters() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -575,15 +790,27 @@ contract VotsEngineTest is Test {
     function testGetAllCandidatesInDto() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -595,32 +822,88 @@ contract VotsEngineTest is Test {
         assertEq(candidates[0].name, candidateOne.name);
         assertEq(candidates[0].matricNo, candidateOne.matricNo);
         assertEq(candidates[0].category, candidateOne.category);
+        console.log(
+            "candidates[0].name, candidateOne.name",
+            candidates[0].name,
+            candidateOne.name
+        );
+
+        assertEq(candidates[1].name, candidateTwo.name);
+        assertEq(candidates[1].matricNo, candidateTwo.matricNo);
+        assertEq(candidates[1].category, candidateTwo.category);
+        console.log(
+            "candidates[1].name, candidateTwo.name",
+            candidates[1].name,
+            candidateTwo.name
+        );
+
+        assertEq(candidates[2].name, candidateThree.name);
+        assertEq(candidates[2].matricNo, candidateThree.matricNo);
+        assertEq(candidates[2].category, candidateThree.category);
+        console.log(
+            "candidates[2].name, candidateThree.name",
+            candidates[2].name,
+            candidateThree.name
+        );
+
+        assertEq(candidates[3].name, candidateFour.name);
+        assertEq(candidates[3].matricNo, candidateFour.matricNo);
+        assertEq(candidates[3].category, candidateFour.category);
+        console.log(
+            "candidates[3].name, candidateFour.name",
+            candidates[3].name,
+            candidateFour.name
+        );
     }
 
     function testGetAllElectionsSummary() public {
         // Create multiple elections
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: "Election 1",
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            "Election 1",
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // "Election 1",
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         vm.prank(creator2);
+        Election.ElectionParams memory secondParams = Election.ElectionParams({
+            startTimeStamp: startTimestamp + 10 days,
+            endTimeStamp: endTimestamp + 10 days,
+            electionName: "Election 2",
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp + 10 days,
-            endTimestamp + 10 days,
-            "Election 2",
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            secondParams
+            // startTimestamp + 10 days,
+            // endTimestamp + 10 days,
+            // "Election 2",
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         VotsEngine.ElectionSummary[] memory summaries = votsEngine
@@ -707,15 +990,27 @@ contract VotsEngineTest is Test {
     function testGetElectionResultsAfterElectionEnds() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -785,15 +1080,27 @@ contract VotsEngineTest is Test {
     function testGetResultsRevertBeforeElectionEnds() public {
         // Create election
         vm.prank(creator);
+        Election.ElectionParams memory params = Election.ElectionParams({
+            startTimeStamp: startTimestamp,
+            endTimeStamp: endTimestamp,
+            electionName: ELECTION_NAME,
+            candidatesList: candidatesList,
+            votersList: votersList,
+            pollingUnitAddresses: pollingUnitAddresses,
+            pollingOfficerAddresses: pollingOfficerAddresses,
+            electionCategories: electionCategories
+        });
+
         votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
+            params
+            // startTimestamp,
+            // endTimestamp,
+            // ELECTION_NAME,
+            // candidatesList,
+            // votersList,
+            // pollingUnitAddresses,
+            // pollingOfficerAddresses,
+            // electionCategories
         );
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
@@ -815,37 +1122,50 @@ contract VotsEngineTest is Test {
 
     function testUpdateElectionState() public {
         // Create election
-        vm.prank(creator);
-        votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
-        );
+        // vm.prank(creator);
+        // votsEngine.createElection(
+        //     startTimestamp,
+        //     endTimestamp,
+        //     ELECTION_NAME,
+        //     candidatesList,
+        //     votersList,
+        //     pollingUnitAddresses,
+        //     pollingOfficerAddresses,
+        //     electionCategories
+        // );
+        _createElectionWithDefaultValues();
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // Initially OPENED
-        (, , , , Election.ElectionState state) = votsEngine.getElectionInfo(
-            tokenId
+
+        VotsEngine.ElectionInformation memory initElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint(initElectionInfo.state),
+            uint(Election.ElectionState.OPENED)
         );
-        assertEq(uint(state), uint(Election.ElectionState.OPENED));
 
         // Move to STARTED
         vm.warp(startTimestamp + 1);
         votsEngine.updateElectionState(tokenId);
-        (, , , , state) = votsEngine.getElectionInfo(tokenId);
-        assertEq(uint(state), uint(Election.ElectionState.STARTED));
+
+        VotsEngine.ElectionInformation memory midElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint(midElectionInfo.state),
+            uint(Election.ElectionState.STARTED)
+        );
 
         // Move to ENDED
         vm.warp(endTimestamp + 1);
         votsEngine.updateElectionState(tokenId);
-        (, , , , state) = votsEngine.getElectionInfo(tokenId);
-        assertEq(uint(state), uint(Election.ElectionState.ENDED));
+        VotsEngine.ElectionInformation memory endElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint(endElectionInfo.state),
+            uint(Election.ElectionState.ENDED)
+        );
     }
 
     // ====================================================================
@@ -854,18 +1174,19 @@ contract VotsEngineTest is Test {
 
     function testFullElectionFlow() public {
         // 1. Create election
-        vm.prank(creator);
-        votsEngine.createElection(
-            startTimestamp,
-            endTimestamp,
-            ELECTION_NAME,
-            candidatesList,
-            votersList,
-            pollingUnitAddresses,
-            pollingOfficerAddresses,
-            electionCategories
-        );
+        // vm.prank(creator);
+        // votsEngine.createElection(
+        //     startTimestamp,
+        //     endTimestamp,
+        //     ELECTION_NAME,
+        //     candidatesList,
+        //     votersList,
+        //     pollingUnitAddresses,
+        //     pollingOfficerAddresses,
+        //     electionCategories
+        // );
 
+        _createElectionWithDefaultValues();
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
         // 2. Verify initial state

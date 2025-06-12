@@ -16,6 +16,8 @@ build:; forge build
 
 test :; forge test 
 
+fork-test :; forge test --fork-url SEPOLIA_RPC_URL 
+
 snapshot :; forge snapshot
 
 format :; forge fmt

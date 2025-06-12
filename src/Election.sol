@@ -138,6 +138,17 @@ contract Election is Ownable {
         string category;
     }
 
+    struct ElectionParams {
+        uint256 startTimeStamp;
+        uint256 endTimeStamp;
+        string electionName;
+        Election.CandidateInfoDTO[] candidatesList;
+        Election.VoterInfoDTO[] votersList;
+        address[] pollingUnitAddresses;
+        address[] pollingOfficerAddresses;
+        string[] electionCategories;
+    }
+
     // ====================================================================
     // State variables
     // ====================================================================
@@ -272,46 +283,45 @@ contract Election is Ownable {
      * @dev Constructor to create a new election
      * @param createdBy Address of the creator
      * @param electionUniqueTokenId Unique identifier for this election
-     * @param startTimeStamp Start time of the election
-     * @param endTimeStamp End time of the election
-     * @param electionName Name of the election
-     * @param candidatesList List of candidates to register
-     * @param votersList List of voters to register
+     * @param params Election params
      */
     constructor(
         address createdBy,
         uint256 electionUniqueTokenId,
-        uint256 startTimeStamp,
-        uint256 endTimeStamp,
-        string memory electionName,
-        CandidateInfoDTO[] memory candidatesList,
-        VoterInfoDTO[] memory votersList,
-        address[] memory pollingUnitAddresses,
-        address[] memory pollingOfficerAddresses,
-        string[] memory electionCategories
-    ) Ownable(msg.sender) {
-        if (block.timestamp >= startTimeStamp) {
+        ElectionParams memory params
+    )
+        // uint256 startTimeStamp,
+        // uint256 endTimeStamp,
+        // string memory electionName,
+        // CandidateInfoDTO[] memory candidatesList,
+        // VoterInfoDTO[] memory votersList,
+        // address[] memory pollingUnitAddresses,
+        // address[] memory pollingOfficerAddresses,
+        // string[] memory electionCategories
+        Ownable(msg.sender)
+    {
+        if (block.timestamp >= params.startTimeStamp) {
             revert Election__InvalidStartTimeStamp();
         }
-        if (startTimeStamp >= endTimeStamp) {
+        if (params.startTimeStamp >= params.endTimeStamp) {
             revert Election__InvalidEndTimeStamp();
         }
         _createdBy = createdBy;
         _electionUniqueTokenId = electionUniqueTokenId;
-        _electionName = electionName;
+        _electionName = params.electionName;
 
-        _startTimeStamp = startTimeStamp;
-        _endTimeStamp = endTimeStamp;
+        _startTimeStamp = params.startTimeStamp;
+        _endTimeStamp = params.endTimeStamp;
 
         _electionState = ElectionState.OPENED;
 
-        _registerCandidates(candidatesList);
-        _registerVoters(votersList);
+        _registerCandidates(params.candidatesList);
+        _registerVoters(params.votersList);
         _registerOfficersAndUnits({
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            pollingUnitAddresses: pollingUnitAddresses
+            pollingOfficerAddresses: params.pollingOfficerAddresses,
+            pollingUnitAddresses: params.pollingUnitAddresses
         });
-        _validateCategories(electionCategories);
+        _validateCategories(params.electionCategories);
     }
 
     // ====================================================================

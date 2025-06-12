@@ -63,21 +63,22 @@ contract VotsEngine {
     }
 
     function createElection(
-        uint256 startTimeStamp,
-        uint256 endTimeStamp,
-        string calldata electionName,
-        Election.CandidateInfoDTO[] calldata candidatesList,
-        Election.VoterInfoDTO[] calldata votersList,
-        address[] calldata pollingUnitAddresses,
-        address[] calldata pollingOfficerAddresses,
-        string[] calldata electionCategories
+        // uint256 startTimeStamp,
+        // uint256 endTimeStamp,
+        // string calldata electionName,
+        // Election.CandidateInfoDTO[] calldata candidatesList,
+        // Election.VoterInfoDTO[] calldata votersList,
+        // address[] calldata pollingUnitAddresses,
+        // address[] calldata pollingOfficerAddresses,
+        // string[] calldata electionCategories
+        Election.ElectionParams calldata params
     ) public {
         // Check that electionName is not duplicate
-        uint256 tokenId = electionNameToTokenId[electionName];
+        uint256 tokenId = electionNameToTokenId[params.electionName];
         if (tokenId > 0) {
-            revert VotsEngine__DuplicateElectionName(electionName);
+            revert VotsEngine__DuplicateElectionName(params.electionName);
         }
-        if (bytes(electionName).length == 0) {
+        if (bytes(params.electionName).length == 0) {
             revert VotsEngine__ElectionNameCannotBeEmpty();
         }
         // Generate tokenId for election
@@ -86,23 +87,24 @@ contract VotsEngine {
         Election newElectionContract = new Election({
             createdBy: msg.sender,
             electionUniqueTokenId: newElectionTokenId,
-            startTimeStamp: startTimeStamp,
-            endTimeStamp: endTimeStamp,
-            electionName: electionName,
-            candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            electionCategories: electionCategories
+            params: params
+            // startTimeStamp: params.startTimeStamp,
+            // endTimeStamp: params.endTimeStamp,
+            // electionName: params.electionName,
+            // candidatesList:params. candidatesList,
+            // votersList:params. votersList,
+            // pollingUnitAddresses:params. pollingUnitAddresses,
+            // pollingOfficerAddresses:params. pollingOfficerAddresses,
+            // electionCategories:params. electionCategories
         });
         // Store election address
         electionTokenToAddress[newElectionTokenId] = address(
             newElectionContract
         );
         // Store election name
-        electionNameToTokenId[electionName] = newElectionTokenId;
+        electionNameToTokenId[params.electionName] = newElectionTokenId;
         // Emit creation event
-        emit ElectionContractedCreated(newElectionTokenId, electionName);
+        emit ElectionContractedCreated(newElectionTokenId, params.electionName);
     }
 
     function accrediteVoter(

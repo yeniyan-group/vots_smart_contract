@@ -27,7 +27,7 @@ contract ElectionTest is Test {
             name: "Ayeni Samuel",
             matricNo: "CAND001",
             category: "President",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateTwo =
@@ -35,7 +35,7 @@ contract ElectionTest is Test {
             name: "Leumas Ineya",
             matricNo: "CAND002",
             category: "President",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateThree =
@@ -43,7 +43,7 @@ contract ElectionTest is Test {
             name: "Bob Johnson",
             matricNo: "CAND003",
             category: "VicePresident",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO candidateFour =
@@ -51,7 +51,7 @@ contract ElectionTest is Test {
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
             category: "VicePresident",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
     Election.CandidateInfoDTO unknownCandidate =
@@ -59,7 +59,7 @@ contract ElectionTest is Test {
             name: "Unknown Bob",
             matricNo: "CAND0088",
             category: "UNKNOWNGUY",
-            voteFor: 0,
+            voteFor: 1,
             voteAgainst: 0
         });
 
@@ -83,9 +83,7 @@ contract ElectionTest is Test {
 
     function setUp() public {
         _setupTestData();
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -94,6 +92,11 @@ contract ElectionTest is Test {
             pollingUnitAddresses: pollingUnitAddresses,
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
+        });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
         });
     }
 
@@ -132,9 +135,19 @@ contract ElectionTest is Test {
     // Constructor Tests
     // ====================================================================
     function testElectionIsCreatedWithRightCredentials() public {
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // election = new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -144,7 +157,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
         // Verify basic properties
         assertEq(election.getCreatedBy(), creator);
         assertEq(election.getElectionUniqueTokenId(), ELECTION_TOKEN_ID);
@@ -177,9 +194,19 @@ contract ElectionTest is Test {
         uint256 pastTimestamp = startTimestamp - 1 hours;
 
         vm.expectRevert(Election.Election__InvalidStartTimeStamp.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: pastTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: pastTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -189,15 +216,30 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenInvalidEndTimeStamp() public {
         uint256 invalidEndTimestamp = startTimestamp - 1 hours;
 
         vm.expectRevert(Election.Election__InvalidEndTimeStamp.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: invalidEndTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: invalidEndTimestamp,
             electionName: ELECTION_NAME,
@@ -207,15 +249,30 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenEmptyVotersList() public {
         Election.VoterInfoDTO[] memory emptyVoters;
 
         vm.expectRevert(Election.Election__VoterInfoDTOCannotBeEmpty.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: emptyVoters,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -225,6 +282,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenEmptyCandidatesList() public {
@@ -233,9 +295,20 @@ contract ElectionTest is Test {
         vm.expectRevert(
             Election.Election__CandidatesInfoDTOCannotBeEmpty.selector
         );
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: emptyCandidates,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -245,6 +318,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenEmptyPollingOfficers() public {
@@ -253,9 +331,20 @@ contract ElectionTest is Test {
         vm.expectRevert(
             Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
         );
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: emptyOfficers,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -265,6 +354,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: emptyOfficers,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenEmptyPollingUnits() public {
@@ -273,9 +367,20 @@ contract ElectionTest is Test {
         vm.expectRevert(
             Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
         );
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: emptyPollingUnits,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -285,6 +390,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenCreatorHasMultipleRoles() public {
@@ -293,9 +403,20 @@ contract ElectionTest is Test {
         conflictingOfficers[0] = creator;
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: conflictingOfficers,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -305,13 +426,29 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: conflictingOfficers,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenCategoryHasDuplicate() public {
         vm.expectRevert(Election.Election__DuplicateCategory.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: duplicateCat
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -320,6 +457,11 @@ contract ElectionTest is Test {
             pollingUnitAddresses: pollingUnitAddresses,
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: duplicateCat
+        });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
         });
     }
 
@@ -335,9 +477,20 @@ contract ElectionTest is Test {
                 voterOne.matricNo
             )
         );
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: duplicateVoters,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -346,6 +499,11 @@ contract ElectionTest is Test {
             pollingUnitAddresses: pollingUnitAddresses,
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
+        });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
         });
     }
 
@@ -361,9 +519,20 @@ contract ElectionTest is Test {
                 candidateOne.matricNo
             )
         );
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: duplicateCandidates,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: pollingUnitAddresses,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -373,6 +542,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
     }
 
     function testElectionRevertWhenPollingOfficerIsAlsoPollingUnit() public {
@@ -380,9 +554,20 @@ contract ElectionTest is Test {
         conflictingUnits[0] = pollingOfficer1; // Same as polling officer
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
-        new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: candidatesList,
+        //     votersList: votersList,
+        //     pollingUnitAddresses: conflictingUnits,
+        //     pollingOfficerAddresses: pollingOfficerAddresses,
+        //     electionCategories: electionCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -391,6 +576,11 @@ contract ElectionTest is Test {
             pollingUnitAddresses: conflictingUnits,
             pollingOfficerAddresses: pollingOfficerAddresses,
             electionCategories: electionCategories
+        });
+        election = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
         });
     }
 
@@ -1150,9 +1340,20 @@ contract ElectionTest is Test {
         string[] memory minCategories = new string[](1);
         minCategories[0] = "President";
 
-        Election minElection = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
+        // Election minElection = new Election({
+        //     createdBy: creator,
+        //     electionUniqueTokenId: ELECTION_TOKEN_ID,
+        //     startTimeStamp: startTimestamp,
+        //     endTimeStamp: endTimestamp,
+        //     electionName: ELECTION_NAME,
+        //     candidatesList: minCandidates,
+        //     votersList: minVoters,
+        //     pollingUnitAddresses: minUnits,
+        //     pollingOfficerAddresses: minOfficers,
+        //     electionCategories: minCategories
+        // });
+
+        Election.ElectionParams memory params = Election.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
@@ -1162,7 +1363,11 @@ contract ElectionTest is Test {
             pollingOfficerAddresses: minOfficers,
             electionCategories: minCategories
         });
-
+        Election minElection = new Election({
+            createdBy: creator,
+            electionUniqueTokenId: ELECTION_TOKEN_ID,
+            params: params
+        });
         assertEq(minElection.getRegisteredVotersCount(), 1);
         assertEq(minElection.getRegisteredCandidatesCount(), 1);
     }
