@@ -60,6 +60,7 @@ contract Election is Ownable {
     error Election__DuplicateCandidate(string matricNo);
     error Election__DuplicateCategory();
     error Election__InvalidVote();
+    error Election__RegisterCategoriesMustBeCalledBeforeRegisterVoters();
     error Election__InvalidCategory(string categoryName);
 
     // ====================================================================
@@ -315,13 +316,13 @@ contract Election is Ownable {
 
         _electionState = ElectionState.OPENED;
 
+        _validateCategories(params.electionCategories);
         _registerCandidates(params.candidatesList);
         _registerVoters(params.votersList);
         _registerOfficersAndUnits({
             pollingOfficerAddresses: params.pollingOfficerAddresses,
             pollingUnitAddresses: params.pollingUnitAddresses
         });
-        _validateCategories(params.electionCategories);
     }
 
     // ====================================================================
@@ -858,18 +859,31 @@ contract Election is Ownable {
                 votesAgainst: 0,
                 state: CandidateState.REGISTERED
             });
-            if (
-                _candidatesMap[candidate.category][candidate.matricNo].state ==
-                CandidateState.UNKNOWN
-            ) {
-                // add to votersList
-                _candidatesMap[candidate.category][
-                    candidate.matricNo
-                ] = registeredCandidate;
-            } else {
-                revert Election__DuplicateCandidate(candidate.matricNo);
+            if (_electionCategories.length == 0) {
+                revert Election__RegisterCategoriesMustBeCalledBeforeRegisterVoters();
             }
-            _registeredCandidatesList.push(candidate.matricNo);
+            for (uint j = 0; j < _electionCategories.length; j++) {
+                if (
+                    compareStrings(_electionCategories[j], candidate.category)
+                ) {
+                    if (
+                        _candidatesMap[candidate.category][candidate.matricNo]
+                            .state == CandidateState.UNKNOWN
+                    ) {
+                        // add to votersList
+                        _candidatesMap[candidate.category][
+                            candidate.matricNo
+                        ] = registeredCandidate;
+                    } else {
+                        revert Election__DuplicateCandidate(candidate.matricNo);
+                    }
+                    _registeredCandidatesList.push(candidate.matricNo);
+                    break;
+                }
+                if (j + 1 == _electionCategories.length) {
+                    revert Election__InvalidCategory(candidate.category);
+                }
+            }
         }
     }
 

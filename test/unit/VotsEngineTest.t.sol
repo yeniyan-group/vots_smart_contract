@@ -47,7 +47,7 @@ contract VotsEngineTest is Test {
         Election.CandidateInfoDTO({
             name: "Bob Johnson",
             matricNo: "CAND003",
-            category: "VicePresident",
+            category: "Vice President",
             voteFor: 1,
             voteAgainst: 0
         });
@@ -55,7 +55,15 @@ contract VotsEngineTest is Test {
         Election.CandidateInfoDTO({
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
-            category: "VicePresident",
+            category: "Vice President",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    Election.CandidateInfoDTO candidateFive =
+        Election.CandidateInfoDTO({
+            name: "TEst Bob",
+            matricNo: "CAND005",
+            category: "General Secretary",
             voteFor: 1,
             voteAgainst: 0
         });
@@ -119,8 +127,8 @@ contract VotsEngineTest is Test {
         pollingUnitAddresses.push(pollingUnit2);
 
         //
-        electionCategories = ["President", "VicePresident"];
-        duplicateCat = ["President", "VicePresident", "VicePresident"];
+        electionCategories = ["President", "Vice President"];
+        duplicateCat = ["President", "Vice President", "Vice President"];
     }
 
     function _createElectionWithDefaultValues() public {
@@ -788,6 +796,13 @@ contract VotsEngineTest is Test {
     }
 
     function testGetAllCandidatesInDto() public {
+        candidatesList.push(candidateFive);
+
+        electionCategories = [
+            "President",
+            "Vice President",
+            "General Secretary"
+        ];
         // Create election
         vm.prank(creator);
         Election.ElectionParams memory params = Election.ElectionParams({
@@ -818,7 +833,7 @@ contract VotsEngineTest is Test {
         Election.CandidateInfoDTO[] memory candidates = votsEngine
             .getAllCandidatesInDto(tokenId);
 
-        assertEq(candidates.length, 4);
+        assertEq(candidates.length, 5);
         assertEq(candidates[0].name, candidateOne.name);
         assertEq(candidates[0].matricNo, candidateOne.matricNo);
         assertEq(candidates[0].category, candidateOne.category);
@@ -852,6 +867,15 @@ contract VotsEngineTest is Test {
         console.log(
             "candidates[3].name, candidateFour.name",
             candidates[3].name,
+            candidateFour.name
+        );
+
+        assertEq(candidates[4].name, candidateFive.name);
+        assertEq(candidates[4].matricNo, candidateFive.matricNo);
+        assertEq(candidates[4].category, candidateFive.category);
+        console.log(
+            "candidates[4].name, candidateFive.name",
+            candidates[4].name,
             candidateFour.name
         );
     }

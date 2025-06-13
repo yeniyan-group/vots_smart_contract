@@ -42,7 +42,7 @@ contract ElectionTest is Test {
         Election.CandidateInfoDTO({
             name: "Bob Johnson",
             matricNo: "CAND003",
-            category: "VicePresident",
+            category: "Vice President",
             voteFor: 1,
             voteAgainst: 0
         });
@@ -50,7 +50,7 @@ contract ElectionTest is Test {
         Election.CandidateInfoDTO({
             name: "Nosnhoj Bob",
             matricNo: "CAND004",
-            category: "VicePresident",
+            category: "Vice President",
             voteFor: 1,
             voteAgainst: 0
         });
@@ -127,8 +127,8 @@ contract ElectionTest is Test {
         pollingUnitAddresses.push(pollingUnit2);
 
         //
-        electionCategories = ["President", "VicePresident"];
-        duplicateCat = ["President", "VicePresident", "VicePresident"];
+        electionCategories = ["President", "Vice President"];
+        duplicateCat = ["President", "Vice President", "Vice President"];
     }
 
     // ====================================================================
