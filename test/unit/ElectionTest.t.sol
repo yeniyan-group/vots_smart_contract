@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
-import {Election} from "../../src/VotsEngine.sol";
+import {Election} from "../../src/Election.sol";
 
 contract ElectionTest is Test {
     address public creator = makeAddr("creator");

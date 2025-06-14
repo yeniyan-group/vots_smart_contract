@@ -2,8 +2,8 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {VotsEngine, Election} from "../../src/votsEngine.sol";
-import {DeployVotsEngine} from "../../script/DeployvotsEngine.s.sol";
+import {VotsEngine, Election} from "../../src/VotsEngine.sol";
+import {DeployVotsEngine} from "../../script/DeployVotsEngine.s.sol";
 
 contract VotsEngineTest is Test {
     VotsEngine public votsEngine;
