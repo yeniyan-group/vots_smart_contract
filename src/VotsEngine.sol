@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
+
 import {Election} from "./Election.sol";
 
 /**
@@ -23,10 +24,7 @@ contract VotsEngine {
     // ====================================================================
     // Events
     // ====================================================================
-    event ElectionContractedCreated(
-        uint256 newElectionTokenId,
-        string electionName
-    );
+    event ElectionContractedCreated(uint256 newElectionTokenId, string electionName);
 
     uint256 tokenIdCount;
     mapping(uint256 tokenId => address electionAddress) electionTokenToAddress;
@@ -84,38 +82,30 @@ contract VotsEngine {
         // Generate tokenId for election
         uint256 newElectionTokenId = ++tokenIdCount;
 
-        Election newElectionContract = new Election({
-            createdBy: msg.sender,
-            electionUniqueTokenId: newElectionTokenId,
-            params: params
-            // startTimeStamp: params.startTimeStamp,
-            // endTimeStamp: params.endTimeStamp,
-            // electionName: params.electionName,
-            // candidatesList:params. candidatesList,
-            // votersList:params. votersList,
-            // pollingUnitAddresses:params. pollingUnitAddresses,
-            // pollingOfficerAddresses:params. pollingOfficerAddresses,
-            // electionCategories:params. electionCategories
-        });
+        Election newElectionContract =
+            new Election({createdBy: msg.sender, electionUniqueTokenId: newElectionTokenId, params: params});
+        // startTimeStamp: params.startTimeStamp,
+        // endTimeStamp: params.endTimeStamp,
+        // electionName: params.electionName,
+        // candidatesList:params. candidatesList,
+        // votersList:params. votersList,
+        // pollingUnitAddresses:params. pollingUnitAddresses,
+        // pollingOfficerAddresses:params. pollingOfficerAddresses,
+        // electionCategories:params. electionCategories
         // Store election address
-        electionTokenToAddress[newElectionTokenId] = address(
-            newElectionContract
-        );
+        electionTokenToAddress[newElectionTokenId] = address(newElectionContract);
         // Store election name
         electionNameToTokenId[params.electionName] = newElectionTokenId;
         // Emit creation event
         emit ElectionContractedCreated(newElectionTokenId, params.electionName);
     }
 
-    function accrediteVoter(
-        string calldata voterMatricNo,
-        uint256 electionTokenId
-    ) public validElection(electionTokenId) {
+    function accrediteVoter(string calldata voterMatricNo, uint256 electionTokenId)
+        public
+        validElection(electionTokenId)
+    {
         // Call accredite function
-        Election(electionTokenToAddress[electionTokenId]).accrediteVoter(
-            voterMatricNo,
-            msg.sender
-        );
+        Election(electionTokenToAddress[electionTokenId]).accrediteVoter(voterMatricNo, msg.sender);
     }
 
     function voteCandidates(
@@ -126,37 +116,37 @@ contract VotsEngine {
     ) public validElection(electionTokenId) {
         // Call vote function
         Election(electionTokenToAddress[electionTokenId]).voteCandidates(
-            voterMatricNo,
-            voterName,
-            msg.sender,
-            candidatesList
+            voterMatricNo, voterName, msg.sender, candidatesList
         );
     }
 
-    function validateVoterForVoting(
-        string memory voterMatricNo,
-        string memory voterName,
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (bool) {
-        return
-            Election(electionTokenToAddress[electionTokenId])
-                .validateVoterForVoting(voterName, voterMatricNo, msg.sender);
+    function validateVoterForVoting(string memory voterMatricNo, string memory voterName, uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (bool)
+    {
+        return Election(electionTokenToAddress[electionTokenId]).validateVoterForVoting(
+            voterName, voterMatricNo, msg.sender
+        );
     }
 
-    function validateAddressAsPollingUnit(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (bool) {
-        return
-            Election(electionTokenToAddress[electionTokenId])
-                .validateAddressAsPollingUnit(msg.sender);
+    function validateAddressAsPollingUnit(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (bool)
+    {
+        return Election(electionTokenToAddress[electionTokenId]).validateAddressAsPollingUnit(msg.sender);
     }
 
-    function validateAddressAsPollingOfficer(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (bool) {
-        return
-            Election(electionTokenToAddress[electionTokenId])
-                .validateAddressAsPollingOfficer(msg.sender);
+    function validateAddressAsPollingOfficer(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (bool)
+    {
+        return Election(electionTokenToAddress[electionTokenId]).validateAddressAsPollingOfficer(msg.sender);
     }
 
     // ====================================================================
@@ -176,9 +166,7 @@ contract VotsEngine {
      * @param electionTokenId The token ID of the election
      * @return address Election contract address
      */
-    function getElectionAddress(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (address) {
+    function getElectionAddress(uint256 electionTokenId) public view validElection(electionTokenId) returns (address) {
         return electionTokenToAddress[electionTokenId];
     }
 
@@ -187,9 +175,7 @@ contract VotsEngine {
      * @param electionName The name of the election
      * @return uint256 Token ID (returns 0 if not found)
      */
-    function getElectionTokenId(
-        string calldata electionName
-    ) public view returns (uint256) {
+    function getElectionTokenId(string calldata electionName) public view returns (uint256) {
         return electionNameToTokenId[electionName];
     }
 
@@ -198,9 +184,7 @@ contract VotsEngine {
      * @param electionName The name of the election
      * @return bool True if election exists
      */
-    function electionExists(
-        string calldata electionName
-    ) public view returns (bool) {
+    function electionExists(string calldata electionName) public view returns (bool) {
         return electionNameToTokenId[electionName] > 0;
     }
 
@@ -209,9 +193,7 @@ contract VotsEngine {
      * @param electionTokenId The token ID of the election
      * @return bool True if election exists
      */
-    function electionExistsByTokenId(
-        uint256 electionTokenId
-    ) public view returns (bool) {
+    function electionExistsByTokenId(uint256 electionTokenId) public view returns (bool) {
         return electionTokenToAddress[electionTokenId] != address(0);
     }
 
@@ -223,38 +205,38 @@ contract VotsEngine {
      * @dev Returns basic election information
      * @param electionTokenId The token ID of the election
      */
-    function getElectionInfo(
-        uint256 electionTokenId
-    )
+    function getElectionInfo(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
         returns (ElectionInformation memory electionInformation)
     {
         Election election = Election(electionTokenToAddress[electionTokenId]);
-        return
-            ElectionInformation({
-                electionId: electionTokenId,
-                createdBy: election.getCreatedBy(),
-                electionName: election.getElectionName(),
-                state: election.getElectionState(),
-                startTimestamp: election.getStartTimeStamp(),
-                endTimestamp: election.getEndTimeStamp(),
-                registeredVotersCount: election.getRegisteredVotersCount(),
-                accreditedVotersCount: election.getAccreditedVotersCount(),
-                votedVotersCount: election.getVotedVotersCount(),
-                electionCategories: election.getElectionCategories(),
-                candidatesList: election.getAllCandidatesInDto()
-            });
+        return ElectionInformation({
+            electionId: electionTokenId,
+            createdBy: election.getCreatedBy(),
+            electionName: election.getElectionName(),
+            state: election.getElectionState(),
+            startTimestamp: election.getStartTimeStamp(),
+            endTimestamp: election.getEndTimeStamp(),
+            registeredVotersCount: election.getRegisteredVotersCount(),
+            accreditedVotersCount: election.getAccreditedVotersCount(),
+            votedVotersCount: election.getVotedVotersCount(),
+            electionCategories: election.getElectionCategories(),
+            candidatesList: election.getAllCandidatesInDto()
+        });
     }
 
     /**
      * @dev Returns the count of registered voters for an election
      * @param electionTokenId The token ID of the election
      */
-    function getRegisteredVotersCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getRegisteredVotersCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getRegisteredVotersCount();
     }
@@ -263,9 +245,12 @@ contract VotsEngine {
      * @dev Returns the count of accredited voters for an election
      * @param electionTokenId The token ID of the election
      */
-    function getAccreditedVotersCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getAccreditedVotersCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getAccreditedVotersCount();
     }
@@ -274,9 +259,12 @@ contract VotsEngine {
      * @dev Returns the count of voters who have voted for an election
      * @param electionTokenId The token ID of the election
      */
-    function getVotedVotersCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getVotedVotersCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getVotedVotersCount();
     }
@@ -285,9 +273,12 @@ contract VotsEngine {
      * @dev Returns the count of registered candidates for an election
      * @param electionTokenId The token ID of the election
      */
-    function getRegisteredCandidatesCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getRegisteredCandidatesCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getRegisteredCandidatesCount();
     }
@@ -296,9 +287,12 @@ contract VotsEngine {
      * @dev Returns the count of polling officers for an election
      * @param electionTokenId The token ID of the election
      */
-    function getPollingOfficerCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getPollingOfficerCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getPollingOfficerCount();
     }
@@ -307,9 +301,12 @@ contract VotsEngine {
      * @dev Returns the count of polling units for an election
      * @param electionTokenId The token ID of the election
      */
-    function getPollingUnitCount(
-        uint256 electionTokenId
-    ) public view validElection(electionTokenId) returns (uint256) {
+    function getPollingUnitCount(uint256 electionTokenId)
+        public
+        view
+        validElection(electionTokenId)
+        returns (uint256)
+    {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         return election.getPollingUnitCount();
     }
@@ -318,9 +315,7 @@ contract VotsEngine {
      * @dev Returns election statistics (original combined function)
      * @param electionTokenId The token ID of the election
      */
-    function getElectionStats(
-        uint256 electionTokenId
-    )
+    function getElectionStats(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
@@ -347,9 +342,7 @@ contract VotsEngine {
      * @dev Returns all voters for an election
      * @param electionTokenId The token ID of the election
      */
-    function getAllVoters(
-        uint256 electionTokenId
-    )
+    function getAllVoters(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
@@ -363,9 +356,7 @@ contract VotsEngine {
      * @dev Returns all accredited voters for an election
      * @param electionTokenId The token ID of the election
      */
-    function getAllAccreditedVoters(
-        uint256 electionTokenId
-    )
+    function getAllAccreditedVoters(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
@@ -379,9 +370,7 @@ contract VotsEngine {
      * @dev Returns all voters who have voted for an election
      * @param electionTokenId The token ID of the election
      */
-    function getAllVotedVoters(
-        uint256 electionTokenId
-    )
+    function getAllVotedVoters(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
@@ -395,9 +384,7 @@ contract VotsEngine {
      * @dev Returns all candidates for an election (as DTOs)
      * @param electionTokenId The token ID of the election
      */
-    function getAllCandidatesInDto(
-        uint256 electionTokenId
-    )
+    function getAllCandidatesInDto(uint256 electionTokenId)
         public
         view
         validElection(electionTokenId)
@@ -411,9 +398,7 @@ contract VotsEngine {
      * @dev Returns all candidates with vote counts (only after election ends)
      * @param electionTokenId The token ID of the election
      */
-    function getAllCandidates(
-        uint256 electionTokenId
-    )
+    function getAllCandidates(uint256 electionTokenId)
         public
         validElection(electionTokenId)
         returns (Election.ElectionCandidate[] memory)
@@ -426,9 +411,7 @@ contract VotsEngine {
      * @dev Returns winners for each category (handles ties)
      * @param electionTokenId The token ID of the election
      */
-    function getEachCategoryWinner(
-        uint256 electionTokenId
-    )
+    function getEachCategoryWinner(uint256 electionTokenId)
         public
         validElection(electionTokenId)
         returns (Election.ElectionWinner[][] memory)
@@ -445,9 +428,7 @@ contract VotsEngine {
      * @dev Updates election state for a specific election
      * @param electionTokenId The token ID of the election
      */
-    function updateElectionState(
-        uint256 electionTokenId
-    ) public validElection(electionTokenId) {
+    function updateElectionState(uint256 electionTokenId) public validElection(electionTokenId) {
         Election election = Election(electionTokenToAddress[electionTokenId]);
         election.updateElectionState();
     }
@@ -456,11 +437,7 @@ contract VotsEngine {
      * @dev Returns a summary of all elections (basic info only)
      * @return electionsSummaryList Array of the election summary
      */
-    function getAllElectionsSummary()
-        public
-        view
-        returns (ElectionSummary[] memory electionsSummaryList)
-    {
+    function getAllElectionsSummary() public view returns (ElectionSummary[] memory electionsSummaryList) {
         uint256 totalElections = tokenIdCount;
         electionsSummaryList = new ElectionSummary[](totalElections);
 
