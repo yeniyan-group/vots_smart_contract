@@ -40,6 +40,7 @@ contract VotsEngine {
     struct ElectionSummary {
         uint256 electionId;
         string electionName;
+        string electionDescription;
         Election.ElectionState state;
         uint256 startTimestamp;
         uint256 endTimestamp;
@@ -50,6 +51,7 @@ contract VotsEngine {
         uint256 electionId;
         address createdBy;
         string electionName;
+        string electionDescription;
         Election.ElectionState state;
         uint256 startTimestamp;
         uint256 endTimestamp;
@@ -216,6 +218,7 @@ contract VotsEngine {
             electionId: electionTokenId,
             createdBy: election.getCreatedBy(),
             electionName: election.getElectionName(),
+            electionDescription: election.getElectionDescription(),
             state: election.getElectionState(),
             startTimestamp: election.getStartTimeStamp(),
             endTimestamp: election.getEndTimeStamp(),
@@ -447,6 +450,7 @@ contract VotsEngine {
                 electionsSummaryList[i - 1] = ElectionSummary({
                     electionId: election.getElectionUniqueTokenId(),
                     electionName: election.getElectionName(),
+                    electionDescription: election.getElectionDescription(),
                     state: election.getElectionState(),
                     startTimestamp: election.getStartTimeStamp(),
                     endTimestamp: election.getEndTimeStamp(),
