@@ -9,8 +9,51 @@ contract DeployVotsEngine is Script {
 
     function run() external returns (VotsEngine) {
         vm.startBroadcast();
-        votsEngine = new VotsEngine();
+
+        HelperConfig helperConfig = new HelperConfig();
+        (address router, bytes32 donId) = helperConfig.activeNetworkConfig();
+        votsEngine = new VotsEngine(router, donId);
         vm.stopBroadcast();
         return votsEngine;
+    }
+}
+
+contract HelperConfig is Script {
+    NetworkConfig public activeNetworkConfig;
+    struct NetworkConfig {
+        address router;
+        bytes32 donId;
+    }
+    constructor() {
+        if (block.chainid == 11155111) {
+            activeNetworkConfig = getSepoliaEthConfig();
+        }
+        activeNetworkConfig = getOrCreateAnvilConfig();
+    }
+
+    function getSepoliaEthConfig()
+        public
+        pure
+        returns (NetworkConfig memory sepoliaNetworkConfig)
+    {
+        sepoliaNetworkConfig = NetworkConfig({
+            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
+            donId: "fun-ethereum-sepolia-1"
+        });
+    }
+
+    function getOrCreateAnvilConfig()
+        public
+        view
+        returns (NetworkConfig memory anvilNetworkConfig)
+    {
+        if (activeNetworkConfig.router != address(0)) {
+            return activeNetworkConfig;
+        }
+
+        anvilNetworkConfig = NetworkConfig({
+            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
+            donId: "fun-ethereum-sepolia-1"
+        });
     }
 }
