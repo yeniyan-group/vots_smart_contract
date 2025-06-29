@@ -8,6 +8,8 @@ VotsEngine is a **proof of concept** smart contract-based voting platform that m
 
 This proof of concept demonstrates how traditional electoral processes can be enhanced with blockchain technology, featuring integration with Chainlink Functions for off-chain voter data verification through external APIs. The current implementation connects to a sandbox environment of a verification provider's API to validate voter credentials.
 
+The election model mirrors traditional systems in that it has both **polling officers** and **polling units**. They are both expected to be **physical locations with physical computers customized to perform these operations**. The system **reduces the number of trust points (interception points)** that traditional election systems are attacked from. There is also **instant results when the election ends**.
+
 The system consists of multiple integrated contracts:
 
 - **VotsEngine**: Core contract that manages election creation and acts as a factory
@@ -22,18 +24,20 @@ The system consists of multiple integrated contracts:
 - **NFT Minting**: Automatic NFT minting to election creators as proof of ownership
 - **Voter Registration**: Register voters with matriculation numbers
 - **Candidate Registration**: Register candidates across multiple categories
-- **Voter Accreditation**: Polling officers can accredit registered voters with optional external verification
-- **Secure Voting**: Accredited voters can cast votes through polling units
-- **Real-time Results**: Track election statistics and results
+- **Voter Accreditation**: Polling officers at physical locations can accredit registered voters with optional external verification
+- **Secure Voting**: Accredited voters can cast votes through polling units at designated physical locations
+- **Instant Results**: Track election statistics and results with immediate availability when election ends
 - **Winner Determination**: Automatic winner calculation with tie handling
 
 ### Security Features
-- **Role-based Access Control**: Distinct roles for polling officers and units
+- **Role-based Access Control**: Distinct roles for polling officers and units at physical locations
 - **State Management**: Elections progress through OPENED → STARTED → ENDED states
 - **Duplicate Prevention**: Protection against duplicate voters and candidates
 - **Time-based Controls**: Elections automatically start and end based on timestamps
 - **Validation Checks**: Comprehensive input validation and error handling
 - **External Verification**: Optional integration with external identity verification systems
+- **Reduced Trust Points**: Minimizes traditional election attack vectors by eliminating multiple interception points
+- **Physical Infrastructure**: Utilizes customized computers at designated physical polling locations
 
 ### Advanced Features
 - **Multi-category Elections**: Support for elections with multiple position categories
@@ -44,6 +48,7 @@ The system consists of multiple integrated contracts:
 - **Event Logging**: All major actions emit events for transparency
 - **Chainlink Functions Integration**: Off-chain voter verification through external APIs
 - **Sandbox Environment**: Current implementation uses sandbox API environment for testing verification processes
+- **Instant Result Delivery**: Immediate result availability upon election conclusion without manual counting or compilation
 
 ## 📋 Prerequisites
 
@@ -116,6 +121,16 @@ const totalElections = await VotsEngineSepoliaClient.getTotalElectionsCount();
 ```
 
 ## 📖 Usage
+
+### Physical Infrastructure Requirements
+
+The VotsEngine system requires a **hybrid physical-digital infrastructure**:
+
+- **Polling Officers**: Stationed at physical locations with customized computers for voter accreditation
+- **Polling Units**: Separate physical locations with specialized hardware for vote casting
+- **Customized Hardware**: Dedicated computers configured specifically for election operations
+- **Secure Network**: Reliable internet connectivity at all polling locations
+- **Physical Security**: Standard election security measures at all designated locations
 
 ### Deploying the System
 
@@ -192,12 +207,12 @@ bytes32 requestId = VotsEngine.sendVerificationRequestForElection(
 
 ### Voting Process
 
-1. **Accredit Voter** (Polling Officer):
+1. **Accredit Voter** (Polling Officer at physical location):
 ```solidity
 VotsEngine.accrediteVoter("MAT001", electionTokenId);
 ```
 
-2. **Cast Vote** (Polling Unit):
+2. **Cast Vote** (Polling Unit at designated physical location):
 ```solidity
 IElection.CandidateInfoDTO[] memory votes = [
     IElection.CandidateInfoDTO("Alice Johnson", "CAN001", "President")
@@ -205,7 +220,7 @@ IElection.CandidateInfoDTO[] memory votes = [
 VotsEngine.voteCandidates("MAT001", "John Doe", votes, electionTokenId);
 ```
 
-3. **Get Results** (After election ends):
+3. **Get Instant Results** (Available immediately when election ends):
 ```solidity
 IElection.ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTokenId);
 ```
@@ -218,12 +233,14 @@ IElection.ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(e
 - Provides unified interface for all election operations
 - Maintains election registry with token IDs
 - Integrates with NFT contract for tokenization
+- Eliminates traditional trust points and interception vulnerabilities
 
 ### Election Contract
 - Handles individual election logic
 - Manages voters, candidates, and voting process
 - Implements state transitions and validations
 - Calculates results and determines winners
+- Provides instant result availability upon election conclusion
 
 ### VotsElectionNft Contract
 - ERC-721 compliant NFT contract
@@ -264,11 +281,19 @@ The system generates unique NFTs for each election with custom artwork:
 
 ## 🔐 Security Considerations
 
+### Trust Point Reduction
+The system significantly reduces traditional election vulnerabilities by:
+- **Eliminating ballot box tampering**: Votes are recorded directly on blockchain
+- **Removing manual counting errors**: Automated on-chain tallying
+- **Preventing result manipulation**: Immutable vote records
+- **Eliminating transmission vulnerabilities**: Direct blockchain storage
+- **Reducing human intervention points**: Automated processes where possible
+
 ### Access Control
 - Only VotsEngine can interact with Election contracts
 - Function client has specific permissions for verification
-- Polling officers can only accredit voters
-- Polling units can only process votes
+- Polling officers at physical locations can only accredit voters
+- Polling units at designated locations can only process votes
 - Addresses cannot have multiple roles
 
 ### Validation
@@ -284,6 +309,7 @@ The system generates unique NFTs for each election with custom artwork:
 - Public result verification
 - Open-source smart contracts
 - NFT proof of election creation
+- Instant result availability eliminates delayed reporting vulnerabilities
 
 ## 📚 API Reference
 
@@ -296,8 +322,8 @@ The system generates unique NFTs for each election with custom artwork:
 - `updateElectionState()` - Update election state based on timestamps
 
 #### Voting Operations
-- `accrediteVoter()` - Accredit a voter for voting
-- `voteCandidates()` - Cast votes for candidates
+- `accrediteVoter()` - Accredit a voter for voting (performed at physical polling officer location)
+- `voteCandidates()` - Cast votes for candidates (performed at physical polling unit location)
 - `sendVerificationRequestForElection()` - Request external voter verification
 
 #### Validation Functions
@@ -310,7 +336,7 @@ The system generates unique NFTs for each election with custom artwork:
 - `getElectionStats()` - Get comprehensive election statistics
 - `getAllVoters()` - Get all registered voters
 - `getAllCandidates()` - Get all candidates with results
-- `getEachCategoryWinner()` - Get winners for each category
+- `getEachCategoryWinner()` - Get winners for each category (available instantly when election ends)
 - `getElectionAddress()` - Get election contract address
 - `getElectionTokenId()` - Get token ID by election name
 
@@ -329,20 +355,20 @@ The system generates unique NFTs for each election with custom artwork:
 
 #### Results
 - `getAllCandidates()` - Get candidates with vote counts
-- `getEachCategoryWinner()` - Get category winners
+- `getEachCategoryWinner()` - Get category winners (instantly available)
 
 ## 🎯 Use Cases
 
 This proof of concept demonstrates potential applications across various sectors:
 
-- **Academic Institutions**: Student union elections, faculty elections
-- **Corporate Governance**: Board elections, shareholder voting
-- **Community Organizations**: Member elections, policy voting
-- **Political Elections**: Local government, party primaries (with production-ready verification APIs)
-- **DAO Governance**: Decentralized organization voting
-- **Collectible Elections**: NFT-backed election memorabilia
+- **Academic Institutions**: Student union elections, faculty elections with physical polling stations
+- **Corporate Governance**: Board elections, shareholder voting with designated voting locations
+- **Community Organizations**: Member elections, policy voting at community centers
+- **Political Elections**: Local government, party primaries (with production-ready verification APIs and secure polling infrastructure)
+- **DAO Governance**: Decentralized organization voting with hybrid physical-digital approach
+- **Collectible Elections**: NFT-backed election memorabilia with instant result delivery
 
-**Current Status**: The system is in proof of concept phase, utilizing sandbox APIs for verification testing. Production deployment would require integration with certified verification providers.
+**Current Status**: The system is in proof of concept phase, utilizing sandbox APIs for verification testing. Production deployment would require integration with certified verification providers and establishment of secure physical polling infrastructure.
 
 ## 🚨 Error Handling
 
@@ -356,6 +382,8 @@ The system includes comprehensive error handling for common scenarios:
 - Voting violations
 - Function client not set
 - Election not found
+- Physical location connectivity issues
+- Hardware authentication failures
 
 ## 🤝 Contributing
 
@@ -389,4 +417,4 @@ For questions, issues, or contributions, please:
 
 ---
 
-**Note**: This is a **proof of concept** smart contract system that demonstrates how traditional voting systems can be enhanced with blockchain technology and transparency. The system currently uses sandbox APIs for external verification testing. Please ensure comprehensive testing, security audits, and integration with production-grade verification services before considering any real-world deployment. The NFT integration adds a layer of tokenization and proof of ownership to the election system.
+**Note**: This is a **proof of concept** smart contract system that demonstrates how traditional voting systems can be enhanced with blockchain technology and transparency. The system mirrors traditional election infrastructure with physical polling officers and polling units using customized computers, while significantly reducing trust points and providing instant results. The system currently uses sandbox APIs for external verification testing. Please ensure comprehensive testing, security audits, establishment of secure physical polling infrastructure, and integration with production-grade verification services before considering any real-world deployment. The NFT integration adds a layer of tokenization and proof of ownership to the election system.
