@@ -18,10 +18,11 @@ library VotsEngineLib {
      * @param electionTokenId The token ID of the election
      * @return election The IElection contract instance
      */
-    function validateAndGetElection(
-        mapping(uint256 => address) storage tokenToAddress,
-        uint256 electionTokenId
-    ) internal view returns (IElection election) {
+    function validateAndGetElection(mapping(uint256 => address) storage tokenToAddress, uint256 electionTokenId)
+        internal
+        view
+        returns (IElection election)
+    {
         address electionAddr = tokenToAddress[electionTokenId];
         if (electionAddr == address(0)) revert VotsEngine__ElectionNotFound();
         return IElection(electionAddr);
@@ -32,10 +33,7 @@ library VotsEngineLib {
      * @param tokenToAddress Mapping from token ID to election address
      * @param electionTokenId The token ID of the election
      */
-    function getElectionStats(
-        mapping(uint256 => address) storage tokenToAddress,
-        uint256 electionTokenId
-    )
+    function getElectionStats(mapping(uint256 => address) storage tokenToAddress, uint256 electionTokenId)
         internal
         view
         returns (
@@ -47,10 +45,7 @@ library VotsEngineLib {
             uint256 pollingUnitCount
         )
     {
-        IElection election = validateAndGetElection(
-            tokenToAddress,
-            electionTokenId
-        );
+        IElection election = validateAndGetElection(tokenToAddress, electionTokenId);
         return (
             election.getRegisteredVotersCount(),
             election.getAccreditedVotersCount(),
@@ -66,19 +61,20 @@ library VotsEngineLib {
      * @param election The election contract instance
      * @return summary The election summary struct
      */
-    function createElectionSummary(
-        IElection election
-    ) internal view returns (IVotsEngine.ElectionSummary memory summary) {
-        return
-            IVotsEngine.ElectionSummary({
-                electionId: election.getElectionUniqueTokenId(),
-                electionName: election.getElectionName(),
-                electionDescription: election.getElectionDescription(),
-                state: election.getElectionState(),
-                startTimestamp: election.getStartTimeStamp(),
-                endTimestamp: election.getEndTimeStamp(),
-                registeredVotersCount: election.getRegisteredVotersCount()
-            });
+    function createElectionSummary(IElection election)
+        internal
+        view
+        returns (IVotsEngine.ElectionSummary memory summary)
+    {
+        return IVotsEngine.ElectionSummary({
+            electionId: election.getElectionUniqueTokenId(),
+            electionName: election.getElectionName(),
+            electionDescription: election.getElectionDescription(),
+            state: election.getElectionState(),
+            startTimestamp: election.getStartTimeStamp(),
+            endTimestamp: election.getEndTimeStamp(),
+            registeredVotersCount: election.getRegisteredVotersCount()
+        });
     }
 
     /**
@@ -86,26 +82,23 @@ library VotsEngineLib {
      * @param election The election contract instance
      * @return info The detailed election information struct
      */
-    function createElectionInfo(
-        IElection election
-    ) internal view returns (IVotsEngine.ElectionInfo memory info) {
-        return
-            IVotsEngine.ElectionInfo({
-                electionId: election.getElectionUniqueTokenId(),
-                createdBy: election.getCreatedBy(),
-                electionName: election.getElectionName(),
-                electionDescription: election.getElectionDescription(),
-                state: election.getElectionState(),
-                startTimestamp: election.getStartTimeStamp(),
-                endTimestamp: election.getEndTimeStamp(),
-                registeredVotersCount: election.getRegisteredVotersCount(),
-                accreditedVotersCount: election.getAccreditedVotersCount(),
-                votedVotersCount: election.getVotedVotersCount(),
-                electionCategories: election.getElectionCategories(),
-                candidatesList: election.getAllCandidatesInDto(),
-                pollingOfficers: election.getPollingOfficersAddresses(),
-                pollingUnits: election.getPollingUnitsAddresses()
-            });
+    function createElectionInfo(IElection election) internal view returns (IVotsEngine.ElectionInfo memory info) {
+        return IVotsEngine.ElectionInfo({
+            electionId: election.getElectionUniqueTokenId(),
+            createdBy: election.getCreatedBy(),
+            electionName: election.getElectionName(),
+            electionDescription: election.getElectionDescription(),
+            state: election.getElectionState(),
+            startTimestamp: election.getStartTimeStamp(),
+            endTimestamp: election.getEndTimeStamp(),
+            registeredVotersCount: election.getRegisteredVotersCount(),
+            accreditedVotersCount: election.getAccreditedVotersCount(),
+            votedVotersCount: election.getVotedVotersCount(),
+            electionCategories: election.getElectionCategories(),
+            candidatesList: election.getAllCandidatesInDto(),
+            pollingOfficers: election.getPollingOfficersAddresses(),
+            pollingUnits: election.getPollingUnitsAddresses()
+        });
     }
 
     /**
@@ -124,12 +117,8 @@ library VotsEngineLib {
         uint256 electionTokenId,
         address sender
     ) internal returns (bool isValid) {
-        IElection election = validateAndGetElection(
-            tokenToAddress,
-            electionTokenId
-        );
-        return
-            election.validateVoterForVoting(voterName, voterMatricNo, sender);
+        IElection election = validateAndGetElection(tokenToAddress, electionTokenId);
+        return election.validateVoterForVoting(voterName, voterMatricNo, sender);
     }
 
     /**
@@ -144,10 +133,7 @@ library VotsEngineLib {
         uint256 electionTokenId,
         address sender
     ) internal returns (bool isValid) {
-        IElection election = validateAndGetElection(
-            tokenToAddress,
-            electionTokenId
-        );
+        IElection election = validateAndGetElection(tokenToAddress, electionTokenId);
         return election.validateAddressAsPollingUnit(sender);
     }
 
@@ -163,10 +149,7 @@ library VotsEngineLib {
         uint256 electionTokenId,
         address sender
     ) internal returns (bool isValid) {
-        IElection election = validateAndGetElection(
-            tokenToAddress,
-            electionTokenId
-        );
+        IElection election = validateAndGetElection(tokenToAddress, electionTokenId);
         return election.validateAddressAsPollingOfficer(sender);
     }
 }

@@ -16,11 +16,7 @@ contract DeployVotsEngine is Script {
         (address router, bytes32 donId) = helperConfig.activeNetworkConfig();
         CreateElection createElection = new CreateElection();
         votsEngine = new VotsEngine(address(createElection));
-        VotsEngineFunctionClient functionClient = new VotsEngineFunctionClient(
-            router,
-            donId,
-            address(votsEngine)
-        );
+        VotsEngineFunctionClient functionClient = new VotsEngineFunctionClient(router, donId, address(votsEngine));
         votsEngine.setFunctionClient(address(functionClient));
         createElection.transferOwnership(address(votsEngine));
         vm.stopBroadcast();
@@ -30,10 +26,12 @@ contract DeployVotsEngine is Script {
 
 contract HelperConfig is Script {
     NetworkConfig public activeNetworkConfig;
+
     struct NetworkConfig {
         address router;
         bytes32 donId;
     }
+
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
@@ -41,29 +39,17 @@ contract HelperConfig is Script {
         activeNetworkConfig = getOrCreateAnvilConfig();
     }
 
-    function getSepoliaEthConfig()
-        public
-        pure
-        returns (NetworkConfig memory sepoliaNetworkConfig)
-    {
-        sepoliaNetworkConfig = NetworkConfig({
-            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
-            donId: "fun-ethereum-sepolia-1"
-        });
+    function getSepoliaEthConfig() public pure returns (NetworkConfig memory sepoliaNetworkConfig) {
+        sepoliaNetworkConfig =
+            NetworkConfig({router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, donId: "fun-ethereum-sepolia-1"});
     }
 
-    function getOrCreateAnvilConfig()
-        public
-        view
-        returns (NetworkConfig memory anvilNetworkConfig)
-    {
+    function getOrCreateAnvilConfig() public view returns (NetworkConfig memory anvilNetworkConfig) {
         if (activeNetworkConfig.router != address(0)) {
             return activeNetworkConfig;
         }
 
-        anvilNetworkConfig = NetworkConfig({
-            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
-            donId: "fun-ethereum-sepolia-1"
-        });
+        anvilNetworkConfig =
+            NetworkConfig({router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, donId: "fun-ethereum-sepolia-1"});
     }
 }

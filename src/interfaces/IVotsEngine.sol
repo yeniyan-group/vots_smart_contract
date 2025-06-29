@@ -23,25 +23,12 @@ interface IVotsEngine {
     // ====================================================================
     // Events
     // ====================================================================
-    event ElectionContractedCreated(
-        uint256 newElectionTokenId,
-        string electionName
-    );
+    event ElectionContractedCreated(uint256 newElectionTokenId, string electionName);
 
-    event FunctionClientUpdated(
-        address indexed oldClient,
-        address indexed newClient
-    );
-    event VaultAddressUpdated(
-        address indexed oldVaultAddress,
-        address indexed newVaultAddress
-    );
+    event FunctionClientUpdated(address indexed oldClient, address indexed newClient);
+    event VaultAddressUpdated(address indexed oldVaultAddress, address indexed newVaultAddress);
 
-    event VerificationRequestSent(
-        bytes32 indexed requestId,
-        string voterMatricNo,
-        uint256 electionTokenId
-    );
+    event VerificationRequestSent(bytes32 indexed requestId, string voterMatricNo, uint256 electionTokenId);
 
     // ====================================================================
     // Structs
@@ -94,10 +81,7 @@ interface IVotsEngine {
      * @param voterMatricNo Voter's matriculation number
      * @param electionTokenId Token ID of the election
      */
-    function accrediteVoter(
-        string calldata voterMatricNo,
-        uint256 electionTokenId
-    ) external;
+    function accrediteVoter(string calldata voterMatricNo, uint256 electionTokenId) external;
 
     /**
      * @dev Called by VotsEngineFunctionClient to fulfill voter accreditation
@@ -105,11 +89,8 @@ interface IVotsEngine {
      * @param electionTokenId The election token ID
      * @param messageSender The original message sender who initiated the request
      */
-    function fulfillVoterAccreditation(
-        string calldata voterMatricNo,
-        uint256 electionTokenId,
-        address messageSender
-    ) external;
+    function fulfillVoterAccreditation(string calldata voterMatricNo, uint256 electionTokenId, address messageSender)
+        external;
 
     /**
      * @dev Sends a verification request through the function client
@@ -159,29 +140,23 @@ interface IVotsEngine {
      * @param electionTokenId Token ID of the election
      * @return bool True if voter is valid for voting
      */
-    function validateVoterForVoting(
-        string memory voterMatricNo,
-        string memory voterName,
-        uint256 electionTokenId
-    ) external returns (bool);
+    function validateVoterForVoting(string memory voterMatricNo, string memory voterName, uint256 electionTokenId)
+        external
+        returns (bool);
 
     /**
      * @dev Validates an address as a polling unit
      * @param electionTokenId Token ID of the election
      * @return bool True if address is a valid polling unit
      */
-    function validateAddressAsPollingUnit(
-        uint256 electionTokenId
-    ) external returns (bool);
+    function validateAddressAsPollingUnit(uint256 electionTokenId) external returns (bool);
 
     /**
      * @dev Validates an address as a polling officer
      * @param electionTokenId Token ID of the election
      * @return bool True if address is a valid polling officer
      */
-    function validateAddressAsPollingOfficer(
-        uint256 electionTokenId
-    ) external returns (bool);
+    function validateAddressAsPollingOfficer(uint256 electionTokenId) external returns (bool);
 
     // ====================================================================
     // Getter Functions - Engine Level
@@ -198,27 +173,21 @@ interface IVotsEngine {
      * @param electionTokenId The token ID of the election
      * @return address Election contract address
      */
-    function getElectionAddress(
-        uint256 electionTokenId
-    ) external view returns (address);
+    function getElectionAddress(uint256 electionTokenId) external view returns (address);
 
     /**
      * @dev Returns the token ID for a given election name
      * @param electionName The name of the election
      * @return uint256 Token ID (returns 0 if not found)
      */
-    function getElectionTokenId(
-        string calldata electionName
-    ) external view returns (uint256);
+    function getElectionTokenId(string calldata electionName) external view returns (uint256);
 
     /**
      * @dev Checks if an election exists by token ID
      * @param electionTokenId The token ID of the election
      * @return bool True if election exists
      */
-    function electionExistsByTokenId(
-        uint256 electionTokenId
-    ) external view returns (bool);
+    function electionExistsByTokenId(uint256 electionTokenId) external view returns (bool);
 
     /**
      * @dev Returns the current owner of the contract
@@ -241,9 +210,7 @@ interface IVotsEngine {
      * @param electionTokenId The token ID of the election
      * @return ElectionInfo Election information
      */
-    function getElectionInfo(
-        uint256 electionTokenId
-    ) external view returns (ElectionInfo memory);
+    function getElectionInfo(uint256 electionTokenId) external view returns (ElectionInfo memory);
 
     /**
      * @dev Returns election statistics
@@ -255,9 +222,7 @@ interface IVotsEngine {
      * @return pollingOfficerCount Number of polling officers
      * @return pollingUnitCount Number of polling units
      */
-    function getElectionStats(
-        uint256 electionTokenId
-    )
+    function getElectionStats(uint256 electionTokenId)
         external
         view
         returns (
@@ -274,54 +239,45 @@ interface IVotsEngine {
      * @param electionTokenId The token ID of the election
      * @return IElection.ElectionVoter[] Array of voters
      */
-    function getAllVoters(
-        uint256 electionTokenId
-    ) external view returns (IElection.ElectionVoter[] memory);
+    function getAllVoters(uint256 electionTokenId) external view returns (IElection.ElectionVoter[] memory);
 
     /**
      * @dev Returns all accredited voters for an election
      * @param electionTokenId The token ID of the election
      * @return IElection.ElectionVoter[] Array of accredited voters
      */
-    function getAllAccreditedVoters(
-        uint256 electionTokenId
-    ) external view returns (IElection.ElectionVoter[] memory);
+    function getAllAccreditedVoters(uint256 electionTokenId) external view returns (IElection.ElectionVoter[] memory);
 
     /**
      * @dev Returns all voters who have voted for an election
      * @param electionTokenId The token ID of the election
      * @return IElection.ElectionVoter[] Array of voters who have voted
      */
-    function getAllVotedVoters(
-        uint256 electionTokenId
-    ) external view returns (IElection.ElectionVoter[] memory);
+    function getAllVotedVoters(uint256 electionTokenId) external view returns (IElection.ElectionVoter[] memory);
 
     /**
      * @dev Returns all candidates for an election (as DTOs)
      * @param electionTokenId The token ID of the election
      * @return IElection.CandidateInfoDTO[] Array of candidate DTOs
      */
-    function getAllCandidatesInDto(
-        uint256 electionTokenId
-    ) external view returns (IElection.CandidateInfoDTO[] memory);
+    function getAllCandidatesInDto(uint256 electionTokenId)
+        external
+        view
+        returns (IElection.CandidateInfoDTO[] memory);
 
     /**
      * @dev Returns all candidates with vote counts (only after election ends)
      * @param electionTokenId The token ID of the election
      * @return IElection.ElectionCandidate[] Array of candidates with vote counts
      */
-    function getAllCandidates(
-        uint256 electionTokenId
-    ) external returns (IElection.ElectionCandidate[] memory);
+    function getAllCandidates(uint256 electionTokenId) external returns (IElection.ElectionCandidate[] memory);
 
     /**
      * @dev Returns winners for each category (handles ties)
      * @param electionTokenId The token ID of the election
      * @return IElection.ElectionWinner[][] Array of winners for each category
      */
-    function getEachCategoryWinner(
-        uint256 electionTokenId
-    ) external returns (IElection.ElectionWinner[][] memory);
+    function getEachCategoryWinner(uint256 electionTokenId) external returns (IElection.ElectionWinner[][] memory);
 
     // ====================================================================
     // Utility Functions
@@ -337,8 +293,5 @@ interface IVotsEngine {
      * @dev Returns a summary of all elections (basic info only)
      * @return electionsSummaryList Array of election summaries
      */
-    function getAllElectionsSummary()
-        external
-        view
-        returns (ElectionSummary[] memory electionsSummaryList);
+    function getAllElectionsSummary() external view returns (ElectionSummary[] memory electionsSummaryList);
 }

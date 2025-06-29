@@ -17,17 +17,9 @@ interface IVotsEngineFunctionClient {
     // ====================================================================
     // Events
     // ====================================================================
-    event VerificationRequestSent(
-        bytes32 indexed requestId,
-        string voterMatricNo,
-        uint256 electionTokenId
-    );
+    event VerificationRequestSent(bytes32 indexed requestId, string voterMatricNo, uint256 electionTokenId);
 
-    event VerificationRequestFulfilled(
-        bytes32 indexed requestId,
-        string voterMatricNo,
-        uint256 electionTokenId
-    );
+    event VerificationRequestFulfilled(bytes32 indexed requestId, string voterMatricNo, uint256 electionTokenId);
 
     // ====================================================================
     // Structs
@@ -85,9 +77,7 @@ interface IVotsEngineFunctionClient {
      * @param requestId The request ID to query
      * @return RequestInfo The request information
      */
-    function getRequestInfo(
-        bytes32 requestId
-    ) external view returns (RequestInfo memory);
+    function getRequestInfo(bytes32 requestId) external view returns (RequestInfo memory);
 
     /**
      * @dev Checks if a request exists
