@@ -202,6 +202,8 @@ bytes32 requestId = VotsEngine.sendVerificationRequestForElection(
     subscriptionId   // Chainlink subscription ID
 );
 ```
+![VotsEngineFunctionClient](src/VotsEngineFunctionClient.sol)
+
 
 **Note**: The current implementation uses a sandbox environment for API verification, making it suitable for testing and demonstration purposes.
 
