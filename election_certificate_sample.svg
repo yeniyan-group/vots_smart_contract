@@ -11,7 +11,7 @@
     <text x="200" y="100" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">VotsEngine Creation Proof</text>
     <text x="50" y="145" font-family="Arial, sans-serif" font-size="14" fill="white">Election:</text>
     <text x="50" y="160" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Sample Election</text>
-    <text x="50" y="195" font-family="Arial, sans-serif" font-size="14" fill="white">Type:</text>
+    <text x="50" y="195" font-family="Arial, sans-serif" font-size="14" fill="white">Description:</text>
     <text x="50" y="220" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Ranked Choice</text>
     <text x="50" y="255" font-family="Arial, sans-serif" font-size="14" fill="white">Token ID:</text>
     <text x="50" y="280" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">#77</text>
