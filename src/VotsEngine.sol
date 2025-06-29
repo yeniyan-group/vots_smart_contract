@@ -2,6 +2,7 @@
 pragma solidity ^0.8.21;
 
 import {IElection} from "./interfaces/IElection.sol";
+import {ICreateElection} from "./interfaces/ICreateElection.sol";
 import {CreateElection} from "./CreateElection.sol";
 import {VotsEngineLib} from "./libraries/VotsEngineLib.sol";
 
@@ -24,7 +25,7 @@ contract VotsEngine is IVotsEngine {
     // ====================================================================
     // State Variables
     // ====================================================================
-    address private electionCreator;
+    address private immutable electionCreator;
     address public functionClient;
     address private owner;
     uint256 private tokenIdCount;
@@ -54,8 +55,9 @@ contract VotsEngine is IVotsEngine {
     // Modifiers
     // ====================================================================
 
-    constructor() {
+    constructor(address _electionCreator) {
         owner = msg.sender;
+        electionCreator = _electionCreator;
     }
 
     /**
@@ -79,11 +81,7 @@ contract VotsEngine is IVotsEngine {
         }
         // Generate tokenId for election
         uint256 newElectionTokenId = ++tokenIdCount;
-        if (electionCreator == address(0)) {
-            electionCreator = address(new CreateElection());
-        }
-
-        address electionAddress = CreateElection(electionCreator)
+        address electionAddress = ICreateElection(electionCreator)
             .createElection({
                 createdBy: msg.sender,
                 electionUniqueTokenId: newElectionTokenId,

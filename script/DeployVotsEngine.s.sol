@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {Script} from "forge-std/Script.sol";
 import {VotsEngine} from "../src/VotsEngine.sol";
+import {CreateElection} from "../src/CreateElection.sol";
 import {VotsEngineFunctionClient} from "../src/VotsEngineFunctionClient.sol";
 
 contract DeployVotsEngine is Script {
@@ -13,14 +14,15 @@ contract DeployVotsEngine is Script {
 
         HelperConfig helperConfig = new HelperConfig();
         (address router, bytes32 donId) = helperConfig.activeNetworkConfig();
-        votsEngine = new VotsEngine();
+        CreateElection createElection = new CreateElection();
+        votsEngine = new VotsEngine(address(createElection));
         VotsEngineFunctionClient functionClient = new VotsEngineFunctionClient(
             router,
             donId,
             address(votsEngine)
         );
         votsEngine.setFunctionClient(address(functionClient));
-
+        createElection.transferOwnership(address(votsEngine));
         vm.stopBroadcast();
         return votsEngine;
     }
