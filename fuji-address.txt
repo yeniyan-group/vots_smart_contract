@@ -1,0 +1,117 @@
+
+== Return ==
+0: contract VotsEngine 0xed7eA5221041A1982d9d257c9617B1448032838d
+
+## Setting up 1 EVM.
+==========================
+Simulated On-chain Traces:
+
+  [209264] → new HelperConfig@0xB3B369aC9e6adebd6FFc157ba418A683B092DA1c
+    └─ ← [Return] 712 bytes of code
+
+  [3088683] → new CreateElection@0x06D5a5F29beB9B04a4520ccaD869727e9EfC563b
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 15308 bytes of code
+
+  [2264850] → new VotsElectionNft@0x34E431C0A1802AA8D559ccd562e97b4906e77863
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 10969 bytes of code
+
+  [2504563] → new VotsEngine@0xed7eA5221041A1982d9d257c9617B1448032838d
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 12389 bytes of code
+
+  [1542915] → new VotsEngineFunctionClient@0x908Bee33F32fAa1657A9db600C127111465a6192
+    └─ ← [Return] 7704 bytes of code
+
+  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x908Bee33F32fAa1657A9db600C127111465a6192])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x908Bee33F32fAa1657A9db600C127111465a6192])
+    └─ ← [Return] 
+
+  [7036] CreateElection::transferOwnership(VotsEngine: [0xed7eA5221041A1982d9d257c9617B1448032838d])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xed7eA5221041A1982d9d257c9617B1448032838d])
+    └─ ← [Return] 
+
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0xed7eA5221041A1982d9d257c9617B1448032838d])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xed7eA5221041A1982d9d257c9617B1448032838d])
+    └─ ← [Stop] 
+
+
+==========================
+
+Chain 43113
+
+Estimated gas price: 0.000043925 gwei
+
+Estimated total gas used for script: 14000579
+
+Estimated amount required: 0.000000614975432575 ETH
+
+==========================
+
+##### fuji
+✅  [Success] Hash: 0x0d342ab6c528ad59629606317f77dd111aa44d68728af29f05c827f2d8a253d0
+Contract Address: 0xB3B369aC9e6adebd6FFc157ba418A683B092DA1c
+Block: 42700682
+Paid: 0.00000000691592018 ETH (282490 gas * 0.000024482 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0x44eb52fd66db88e7aa0af23b55836fd3be89cc59e449f44318090a5235e2d063
+Block: 42700684
+Paid: 0.00000000069793537 ETH (28906 gas * 0.000024145 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0x8495e43e8ee53e9dfe5df809070ab6d4abf7f96e8bc723edc8cbab7a6367dc75
+Contract Address: 0x06D5a5F29beB9B04a4520ccaD869727e9EfC563b
+Block: 42700684
+Paid: 0.000000081723895385 ETH (3384713 gas * 0.000024145 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0x1602cca42d5338fb76c619485bbb6e60d95241b17770000ca1f454ea0b0dba46
+Contract Address: 0x34E431C0A1802AA8D559ccd562e97b4906e77863
+Block: 42700684
+Paid: 0.00000006054822334 ETH (2507692 gas * 0.000024145 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0x691b724089bb40668dea23458fae1a8dda58037ee2158966a58e39cdb835a2e3
+Block: 42700684
+Paid: 0.00000000115065412 ETH (47656 gas * 0.000024145 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0xd23e90005f3c26513fb16d3c1613953159db00c1fa862f4031029ce4c5181601
+Contract Address: 0xed7eA5221041A1982d9d257c9617B1448032838d
+Block: 42700684
+Paid: 0.000000066642686935 ETH (2760103 gas * 0.000024145 gwei)
+
+
+##### fuji
+✅  [Success] Hash: 0x755a12b9e36d5239acc3bae8bdbc75dbe3577ad96af804b42fb152be4964b8e2
+Block: 42700684
+Paid: 0.00000000068735986 ETH (28468 gas * 0.000024145 gwei)
+
+⠄ Sequence #1 on fuji | Waiting for pending transactions
+    ⡀ [Pending] 0x1db5270a79cb6289a328357c772edd544ccaf6ab1743d6fdd6596e0a4275fc8a
+
+##### fuji
+✅  [Success] Hash: 0x1db5270a79cb6289a328357c772edd544ccaf6ab1743d6fdd6596e0a4275fc8a
+Contract Address: 0x908Bee33F32fAa1657A9db600C127111465a6192
+Block: 42700684
+Paid: 0.000000041560329745 ETH (1721281 gas * 0.000024145 gwei)
+
+✅ Sequence #1 on fuji | Total Paid: 0.000000259927004935 ETH (10761309 gas * avg 0.000024187 gwei)
+                                                                                                                                                                                     
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/broadcast/DeployVotsEngine.s.sol/43113/run-latest.json
+
+Sensitive values saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/cache/DeployVotsEngine.s.sol/43113/run-latest.json
+
+ayeniyeniyan@Samuels-MacBook-Pro vots_smart_contract % 

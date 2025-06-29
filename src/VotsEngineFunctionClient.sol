@@ -13,10 +13,7 @@ import {IVotsEngine} from "./interfaces/IVotsEngine.sol";
  * This contract is responsible for making HTTP requests to verification portals
  * and calling back to the main VotsEngine contract with the results
  */
-contract VotsEngineFunctionClient is
-    FunctionsClient,
-    IVotsEngineFunctionClient
-{
+contract VotsEngineFunctionClient is FunctionsClient, IVotsEngineFunctionClient {
     // ====================================================================
     // State Variables
     // ====================================================================
@@ -29,17 +26,14 @@ contract VotsEngineFunctionClient is
     // Api portal source - Shortened JavaScript source
     string private constant source =
         "const n=args[0]??'63184876213',f=args[1]??'Bunch',l=args[2]??'Dillon',v=args[3],"
-        "c=secrets.VERIFYME_CLIENT_ID,k=secrets.VERIFYME_TESTKEY;"
-        "if(!k||!c)throw Error('Missing secrets');"
+        "c=secrets.VERIFYME_CLIENT_ID,k=secrets.VERIFYME_TESTKEY;" "if(!k||!c)throw Error('Missing secrets');"
         "const a=await Functions.makeHttpRequest({method:'POST',url:'https://api.qoreid.com/token',"
         "data:{secret:k,clientId:c},headers:{'accept':'text/plain','content-type':'application/json'}});"
-        "if(a.error)throw Error('Auth failed');"
-        "const r=await Functions.makeHttpRequest({method:'POST',"
+        "if(a.error)throw Error('Auth failed');" "const r=await Functions.makeHttpRequest({method:'POST',"
         "url:`https://api.qoreid.com/v1/ng/identities/nin/${n}`,"
         "headers:{'accept':'application/json','content-type':'application/json',"
         "authorization:`Bearer ${a.data.accessToken}`},data:{firstname:f,lastname:l}});"
-        "if(r.error)throw Error('Request failed');"
-        "return Functions.encodeString(v);";
+        "if(r.error)throw Error('Request failed');" "return Functions.encodeString(v);";
 
     modifier onlyVotsEngine() {
         if (msg.sender != votsEngine) {
@@ -48,11 +42,7 @@ contract VotsEngineFunctionClient is
         _;
     }
 
-    constructor(
-        address _router,
-        bytes32 donID,
-        address _votsEngine
-    ) FunctionsClient(_router) {
+    constructor(address _router, bytes32 donID, address _votsEngine) FunctionsClient(_router) {
         _donID = donID;
         votsEngine = _votsEngine;
     }
@@ -93,19 +83,10 @@ contract VotsEngineFunctionClient is
         FunctionsRequest.setArgs(req, args);
 
         // Set DON-hosted secrets
-        FunctionsRequest.addDONHostedSecrets(
-            req,
-            uint8(slotId),
-            uint64(version)
-        );
+        FunctionsRequest.addDONHostedSecrets(req, uint8(slotId), uint64(version));
 
         // Send the request
-        requestId = _sendRequest(
-            FunctionsRequest.encodeCBOR(req),
-            subscriptionId,
-            300_000,
-            _donID
-        );
+        requestId = _sendRequest(FunctionsRequest.encodeCBOR(req), subscriptionId, 300_000, _donID);
 
         // Store request information
         s_requests[requestId] = RequestInfo({
@@ -124,11 +105,7 @@ contract VotsEngineFunctionClient is
      * @param response The response from the external API
      * @param err Any error that occurred during the request
      */
-    function fulfillRequest(
-        bytes32 requestId,
-        bytes memory response,
-        bytes memory err
-    ) internal override {
+    function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
         RequestInfo memory request = s_requests[requestId];
 
         if (!request.exists) {
@@ -155,17 +132,9 @@ contract VotsEngineFunctionClient is
         }
 
         // Call back to VotsEngine to fulfill the accreditation
-        IVotsEngine(votsEngine).fulfillVoterAccreditation(
-            voterMatricNo,
-            request.electionTokenId,
-            request.messageSender
-        );
+        IVotsEngine(votsEngine).fulfillVoterAccreditation(voterMatricNo, request.electionTokenId, request.messageSender);
 
-        emit VerificationRequestFulfilled(
-            requestId,
-            voterMatricNo,
-            request.electionTokenId
-        );
+        emit VerificationRequestFulfilled(requestId, voterMatricNo, request.electionTokenId);
     }
 
     /**
@@ -179,9 +148,7 @@ contract VotsEngineFunctionClient is
      * @dev Returns request information for a given request ID
      * @param requestId The request ID to query
      */
-    function getRequestInfo(
-        bytes32 requestId
-    ) external view returns (RequestInfo memory) {
+    function getRequestInfo(bytes32 requestId) external view returns (RequestInfo memory) {
         return s_requests[requestId];
     }
 

@@ -141,3 +141,9 @@ Paid: 0.00000010104164565 ETH (28906 gas * 0.003495525 gwei)
 ==========================
 
 ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Network Name: Avalanche C-Chain
+New RPC URL: https://api.avax-test.network/ext/bc/C/rpc
+ChainID: 43113
+Symbol: AVAX
+Explorer: https://testnet.snowtrace.io

@@ -24,6 +24,8 @@ format :; forge fmt
 
 deploy-votsengine :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${SEPOLIA_RPC_URL} --account vutsdefault --broadcast --verify  --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
 
+deploy-votsengine-fuji :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${FUJI_RPC_URL} --account vutsdefault --broadcast --verifier-url ${FUJI_VERIFIER_URL} --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
+
 verify-votsengine :;forge verify-contract --etherscan-api-key ${ETHERSCAN_API_KEY} --chain sepolia 0xbC9aFaB1b833427195F9674b0f34B501b408f810 "src/VotsEngine.sol:VotsEngine"
 
 verify-contract:

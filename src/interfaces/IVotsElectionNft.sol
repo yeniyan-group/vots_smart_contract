@@ -23,10 +23,7 @@ interface IVotsElectionNft {
      * @dev Event emitted when an election NFT is minted
      */
     event ElectionNftMinted(
-        uint256 indexed nftTokenId,
-        uint256 indexed electionTokenId,
-        address indexed creator,
-        string electionName
+        uint256 indexed nftTokenId, uint256 indexed electionTokenId, address indexed creator, string electionName
     );
 
     /**
@@ -49,28 +46,20 @@ interface IVotsElectionNft {
     /**
      * @dev Returns election data for a given NFT token ID
      */
-    function getElectionData(
-        uint256 nftTokenId
-    ) external view returns (ElectionNftData memory);
+    function getElectionData(uint256 nftTokenId) external view returns (ElectionNftData memory);
 
     /**
      * @dev Returns NFT token ID for a given election token ID
      */
-    function getNftTokenByElectionId(
-        uint256 electionTokenId
-    ) external view returns (uint256);
+    function getNftTokenByElectionId(uint256 electionTokenId) external view returns (uint256);
 
     /**
      * @dev Returns all NFTs owned by an address
      */
-    function getOwnedTokens(
-        address owner
-    ) external view returns (uint256[] memory);
+    function getOwnedTokens(address owner) external view returns (uint256[] memory);
 
     /**
      * @dev Checks if an NFT exists for a given election
      */
-    function electionNftExists(
-        uint256 electionTokenId
-    ) external view returns (bool);
+    function electionNftExists(uint256 electionTokenId) external view returns (bool);
 }

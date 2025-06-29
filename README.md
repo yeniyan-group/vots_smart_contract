@@ -1,21 +1,28 @@
 # VotsEngine - Decentralized Voting System
 
-A comprehensive blockchain-based voting system built on Ethereum that ensures transparent, secure, and tamper-proof elections.
+A comprehensive blockchain-based voting system built on Ethereum that ensures transparent, secure, and tamper-proof elections with NFT tokenization.
 
 ## 🚀 Overview
 
-VotsEngine is a smart contract-based voting platform that tokenizes elections and provides a complete end-to-end voting solution. The system consists of two main contracts:
+VotsEngine is a **proof of concept** smart contract-based voting platform that mirrors traditional voting systems while adding blockchain transparency and security. The system tokenizes elections and provides a complete end-to-end voting solution with external verification capabilities.
+
+This proof of concept demonstrates how traditional electoral processes can be enhanced with blockchain technology, featuring integration with Chainlink Functions for off-chain voter data verification through external APIs. The current implementation connects to a sandbox environment of a verification provider's API to validate voter credentials.
+
+The system consists of multiple integrated contracts:
 
 - **VotsEngine**: Core contract that manages election creation and acts as a factory
 - **Election**: Individual election contracts with comprehensive voting logic
+- **VotsElectionNft**: NFT contract that mints commemorative tokens for election creators
+- **VotsEngineFunctionClient**: Handles external verification requests using Chainlink Functions
 
 ## ✨ Features
 
 ### Core Functionality
 - **Election Creation**: Create multiple elections with unique identifiers
+- **NFT Minting**: Automatic NFT minting to election creators as proof of ownership
 - **Voter Registration**: Register voters with matriculation numbers
 - **Candidate Registration**: Register candidates across multiple categories
-- **Voter Accreditation**: Polling officers can accredit registered voters
+- **Voter Accreditation**: Polling officers can accredit registered voters with optional external verification
 - **Secure Voting**: Accredited voters can cast votes through polling units
 - **Real-time Results**: Track election statistics and results
 - **Winner Determination**: Automatic winner calculation with tie handling
@@ -26,19 +33,24 @@ VotsEngine is a smart contract-based voting platform that tokenizes elections an
 - **Duplicate Prevention**: Protection against duplicate voters and candidates
 - **Time-based Controls**: Elections automatically start and end based on timestamps
 - **Validation Checks**: Comprehensive input validation and error handling
+- **External Verification**: Optional integration with external identity verification systems
 
 ### Advanced Features
 - **Multi-category Elections**: Support for elections with multiple position categories
 - **Tie Handling**: Automatic detection and reporting of tied results
 - **Election Tokenization**: Each election gets a unique token ID for reference
+- **NFT Integration**: Election creators receive commemorative NFTs with election metadata
 - **Comprehensive Statistics**: Detailed voter and candidate analytics
 - **Event Logging**: All major actions emit events for transparency
+- **Chainlink Functions Integration**: Off-chain voter verification through external APIs
+- **Sandbox Environment**: Current implementation uses sandbox API environment for testing verification processes
 
 ## 📋 Prerequisites
 
 - Solidity ^0.8.21
 - OpenZeppelin Contracts (for Ownable functionality)
 - Ethereum development environment (foundry)
+- Chainlink Functions (for external verification)
 
 ## 🛠 Installation
 
@@ -60,16 +72,27 @@ forge build
 
 ## 🌐 Live Deployment
 
-The VotsEngine contract is currently deployed and live on Sepolia testnet:
+The VotsEngine contract is currently deployed and live on multiple testnets:
 
-**Contract Address**: `0xbC9aFaB1b833427195F9674b0f34B501b408f810 `
+### Sepolia Testnet
+**VotsEngine Contract**: `0xbC9aFaB1b833427195F9674b0f34B501b408f810`
 
-**NftContract Address**: `0x7b80Dcda97907eFF4D99655223437E4689E559c6`
+**NFT Contract**: `0x7b80Dcda97907eFF4D99655223437E4689E559c6`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
-- **Block Explorer**: https://sepolia.etherscan.io/address/0xbC9aFaB1b833427195F9674b0f34B501b408f810
-- **NftContract Block Explorer**: https://sepolia.etherscan.io/address/0x7b80Dcda97907eFF4D99655223437E4689E559c6
+- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0xbC9aFaB1b833427195F9674b0f34B501b408f810
+- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x7b80Dcda97907eFF4D99655223437E4689E559c6
+
+### Fuji Testnet (Avalanche)
+**VotsEngine Contract**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
+
+**NFT Contract**: `0x34E431C0A1802AA8D559ccd562e97b4906e77863`
+
+**Network**: Fuji Testnet
+- **Chain ID**: 43113
+- **VotsEngine Block Explorer**: https://testnet.snowtrace.io/address/0xed7eA5221041A1982d9d257c9617B1448032838d
+- **NFT Contract Block Explorer**: https://testnet.snowtrace.io/address/0x34E431C0A1802AA8D559ccd562e97b4906e77863
 
 ### Interacting with the Live Contract
 
@@ -80,66 +103,92 @@ You can interact with the deployed contract using:
 3. **Frontend Applications**: Build dApps that interact with the contract
 
 ```javascript
-// Example using ethers.js
-const contractAddress = "0xbC9aFaB1b833427195F9674b0f34B501b408f810";
-const VotsEngine = new ethers.Contract(contractAddress, abi, signer);
+// Example using ethers.js with Sepolia
+const sepoliaContractAddress = "0xbC9aFaB1b833427195F9674b0f34B501b408f810";
+const VotsEngineSepoliaClient = new ethers.Contract(sepoliaContractAddress, abi, sepoliaProvider);
+
+// Example using ethers.js with Fuji
+const fujiContractAddress = "0xed7eA5221041A1982d9d257c9617B1448032838d";
+const VotsEngineFujiClient = new ethers.Contract(fujiContractAddress, abi, fujiProvider);
 
 // Get total elections count
-const totalElections = await VotsEngine.getTotalElectionsCount();
+const totalElections = await VotsEngineSepoliaClient.getTotalElectionsCount();
 ```
 
 ## 📖 Usage
 
 ### Deploying the System
 
-The VotsEngine is already deployed on Sepolia testnet at `0xbC9aFaB1b833427195F9674b0f34B501b408f810`.
+The VotsEngine is already deployed on multiple testnets:
+- **Sepolia**: `0xbC9aFaB1b833427195F9674b0f34B501b408f810`
+- **Fuji (Avalanche)**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
 
 For local development or custom deployments:
 ```solidity
-// Deploy VotsEngine contract
-VotsEngine VotsEngine = new VotsEngine();
+// Deploy the complete system
+VotsElectionNft nftContract = new VotsElectionNft();
+CreateElection electionCreator = new CreateElection();
+VotsEngine votsEngine = new VotsEngine(address(electionCreator), address(nftContract));
 ```
 
-Or connect to the existing deployment:
+Or connect to the existing deployments:
 ```javascript
-const VotsEngine = new ethers.Contract(
+// Connect to Sepolia deployment
+const VotsEngineSepoliaClient = new ethers.Contract(
     "0xbC9aFaB1b833427195F9674b0f34B501b408f810", 
     VotsEngineABI, 
-    provider
+    sepoliaProvider
+);
+
+// Connect to Fuji deployment
+const VotsEngineFujiClient = new ethers.Contract(
+    "0xed7eA5221041A1982d9d257c9617B1448032838d", 
+    VotsEngineABI, 
+    fujiProvider
 );
 ```
 
 ### Creating an Election
 
+When you create an election, you automatically receive an NFT as proof of ownership:
+
 ```solidity
-// Prepare election data
-VoterInfoDTO[] memory voters = [
-    VoterInfoDTO("John Doe", "MAT001"),
-    VoterInfoDTO("Jane Smith", "MAT002")
-];
+// Prepare election parameters
+IElection.ElectionParams memory params = IElection.ElectionParams({
+    startTimeStamp: startTimestamp,
+    endTimeStamp: endTimestamp,
+    electionName: "Student Union Election 2024",
+    description: "Annual student union election for leadership positions",
+    candidates: candidates,
+    voters: voters,
+    pollingUnits: pollingUnits,
+    pollingOfficers: pollingOfficers,
+    categories: categories
+});
 
-CandidateInfoDTO[] memory candidates = [
-    CandidateInfoDTO("Alice Johnson", "CAN001", "President"),
-    CandidateInfoDTO("Bob Wilson", "CAN002", "President")
-];
+// Create election (NFT is automatically minted to msg.sender)
+VotsEngine.createElection(params);
+```
 
-address[] memory pollingUnits = [0x123..., 0x456...];
-address[] memory pollingOfficers = [0x789..., 0xabc...];
-string[] memory categories = ["President", "Vice President"];
+### External Verification Integration
 
-// Create election
-VotsEngine.createElection(
-    startTimestamp,
-    endTimestamp,
-    "Student Union Election 2024",
-    "Student Union Election 2024 description",
-    candidates,
-    voters,
-    pollingUnits,
-    pollingOfficers,
-    categories
+The system supports external verification through Chainlink Functions, demonstrating how traditional voter validation can be integrated with blockchain systems:
+
+```solidity
+// Send verification request for voter (connects to sandbox API)
+bytes32 requestId = VotsEngine.sendVerificationRequestForElection(
+    ninNumber,        // National ID number
+    firstName,        // Voter's first name
+    lastName,         // Voter's last name
+    voterMatricNo,    // Voter's matriculation number
+    slotId,          // Chainlink Functions slot ID
+    version,         // Chainlink Functions version
+    electionTokenId, // Election token ID
+    subscriptionId   // Chainlink subscription ID
 );
 ```
+
+**Note**: The current implementation uses a sandbox environment for API verification, making it suitable for testing and demonstration purposes.
 
 ### Voting Process
 
@@ -150,15 +199,15 @@ VotsEngine.accrediteVoter("MAT001", electionTokenId);
 
 2. **Cast Vote** (Polling Unit):
 ```solidity
-CandidateInfoDTO[] memory votes = [
-    CandidateInfoDTO("Alice Johnson", "CAN001", "President")
+IElection.CandidateInfoDTO[] memory votes = [
+    IElection.CandidateInfoDTO("Alice Johnson", "CAN001", "President")
 ];
 VotsEngine.voteCandidates("MAT001", "John Doe", votes, electionTokenId);
 ```
 
 3. **Get Results** (After election ends):
 ```solidity
-ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTokenId);
+IElection.ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTokenId);
 ```
 
 ## 📊 Contract Architecture
@@ -168,6 +217,7 @@ ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTok
 - Acts as a factory for Election contracts
 - Provides unified interface for all election operations
 - Maintains election registry with token IDs
+- Integrates with NFT contract for tokenization
 
 ### Election Contract
 - Handles individual election logic
@@ -175,10 +225,48 @@ ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTok
 - Implements state transitions and validations
 - Calculates results and determines winners
 
+### VotsElectionNft Contract
+- ERC-721 compliant NFT contract
+- Mints commemorative tokens for election creators
+- Stores election metadata on-chain
+- Provides proof of election ownership
+
+### VotsEngineFunctionClient Contract
+- Handles Chainlink Functions integration
+- Manages external verification requests through off-chain APIs
+- Processes verification responses from external systems
+- Bridges on-chain and off-chain data validation
+- **Current Implementation**: Connected to sandbox environment of verification API for proof of concept testing
+
+## 🎨 NFT Features
+
+### Automatic Minting
+- NFTs are automatically minted when elections are created
+- Each NFT represents ownership of a specific election
+- Metadata includes election name, description, and timestamps
+
+### NFT Design Sample
+The system generates unique NFTs for each election with custom artwork:
+
+![NFT Sample](election_certificate_sample.svg)
+
+### Metadata Structure
+```json
+{
+  "name": "Election NFT #1",
+  "description": "Student Union Election 2024",
+  "election_name": "Student Union Election 2024",
+  "start_time": 1703980800,
+  "end_time": 1704067200,
+  "token_id": 1
+}
+```
+
 ## 🔐 Security Considerations
 
 ### Access Control
 - Only VotsEngine can interact with Election contracts
+- Function client has specific permissions for verification
 - Polling officers can only accredit voters
 - Polling units can only process votes
 - Addresses cannot have multiple roles
@@ -188,25 +276,34 @@ ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTok
 - Duplicate prevention mechanisms
 - State-based operation restrictions
 - Time-based access controls
+- External verification integration
 
 ### Transparency
 - All operations emit events
 - Immutable vote records
 - Public result verification
 - Open-source smart contracts
+- NFT proof of election creation
 
 ## 📚 API Reference
 
 ### VotsEngine Functions
 
 #### Election Management
-- `createElection()` - Create a new election
+- `createElection()` - Create a new election (mints NFT automatically)
 - `getTotalElectionsCount()` - Get total number of elections
 - `getAllElectionsSummary()` - Get summary of all elections
+- `updateElectionState()` - Update election state based on timestamps
 
 #### Voting Operations
 - `accrediteVoter()` - Accredit a voter for voting
 - `voteCandidates()` - Cast votes for candidates
+- `sendVerificationRequestForElection()` - Request external voter verification
+
+#### Validation Functions
+- `validateVoterForVoting()` - Validate voter eligibility
+- `validateAddressAsPollingUnit()` - Check polling unit authorization
+- `validateAddressAsPollingOfficer()` - Check polling officer authorization
 
 #### Data Retrieval
 - `getElectionInfo()` - Get basic election information
@@ -214,6 +311,14 @@ ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTok
 - `getAllVoters()` - Get all registered voters
 - `getAllCandidates()` - Get all candidates with results
 - `getEachCategoryWinner()` - Get winners for each category
+- `getElectionAddress()` - Get election contract address
+- `getElectionTokenId()` - Get token ID by election name
+
+#### Administrative Functions
+- `setFunctionClient()` - Set the function client address (owner only)
+- `getOwner()` - Get contract owner
+- `getFunctionClient()` - Get function client address
+- `getNFTAddres()` - Get NFT contract address
 
 ### Election Functions
 
@@ -228,11 +333,16 @@ ElectionWinner[][] memory winners = VotsEngine.getEachCategoryWinner(electionTok
 
 ## 🎯 Use Cases
 
+This proof of concept demonstrates potential applications across various sectors:
+
 - **Academic Institutions**: Student union elections, faculty elections
 - **Corporate Governance**: Board elections, shareholder voting
 - **Community Organizations**: Member elections, policy voting
-- **Political Elections**: Local government, party primaries
+- **Political Elections**: Local government, party primaries (with production-ready verification APIs)
 - **DAO Governance**: Decentralized organization voting
+- **Collectible Elections**: NFT-backed election memorabilia
+
+**Current Status**: The system is in proof of concept phase, utilizing sandbox APIs for verification testing. Production deployment would require integration with certified verification providers.
 
 ## 🚨 Error Handling
 
@@ -244,6 +354,8 @@ The system includes comprehensive error handling for common scenarios:
 - Invalid election states
 - Missing required data
 - Voting violations
+- Function client not set
+- Election not found
 
 ## 🤝 Contributing
 
@@ -264,6 +376,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - OpenZeppelin for secure contract templates
+- Chainlink for decentralized oracle network
 - Ethereum community for development tools
 - Contributors and testers
 
@@ -276,4 +389,4 @@ For questions, issues, or contributions, please:
 
 ---
 
-**Note**: This is a smart contract system that handles sensitive voting data. Please ensure proper testing and security audits before deploying to mainnet.
+**Note**: This is a **proof of concept** smart contract system that demonstrates how traditional voting systems can be enhanced with blockchain technology and transparency. The system currently uses sandbox APIs for external verification testing. Please ensure comprehensive testing, security audits, and integration with production-grade verification services before considering any real-world deployment. The NFT integration adds a layer of tokenization and proof of ownership to the election system.

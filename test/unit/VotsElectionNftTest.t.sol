@@ -42,14 +42,8 @@ contract VotsElectionNftTest is Test {
 
     function test_MintElectionNft_Success() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         // Check return value
         assertEq(nftTokenId, 1);
@@ -63,9 +57,7 @@ contract VotsElectionNftTest is Test {
         assertEq(nft.electionTokenToNftToken(ELECTION_TOKEN_ID), nftTokenId);
 
         // Check election data
-        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(
-            nftTokenId
-        );
+        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(nftTokenId);
         assertEq(data.electionTokenId, ELECTION_TOKEN_ID);
         assertEq(data.electionName, ELECTION_NAME);
         assertEq(data.creator, creator);
@@ -85,46 +77,22 @@ contract VotsElectionNftTest is Test {
 
     function test_MintElectionNft_EmitsEvent() public {
         vm.expectEmit(true, true, true, true);
-        emit IVotsElectionNft.ElectionNftMinted(
-            1,
-            ELECTION_TOKEN_ID,
-            creator,
-            ELECTION_NAME
-        );
+        emit IVotsElectionNft.ElectionNftMinted(1, ELECTION_TOKEN_ID, creator, ELECTION_NAME);
 
         vm.prank(owner);
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
     }
 
     function test_MintElectionNft_MultipleElections() public {
         // Mint first NFT
         vm.prank(owner);
-        uint256 firstNftId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 firstNftId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         // Mint second NFT
         vm.prank(owner);
-        uint256 secondNftId = nft.mintElectionNft(
-            user,
-            2,
-            "Local Election",
-            "Municipal Election",
-            START_TIME + 1000,
-            END_TIME + 1000
-        );
+        uint256 secondNftId =
+            nft.mintElectionNft(user, 2, "Local Election", "Municipal Election", START_TIME + 1000, END_TIME + 1000);
 
         assertEq(firstNftId, 1);
         assertEq(secondNftId, 2);
@@ -135,76 +103,31 @@ contract VotsElectionNftTest is Test {
 
     function test_MintElectionNft_RevertWhen_CreatorIsZeroAddress() public {
         vm.prank(owner);
-        vm.expectRevert(
-            VotsElectionNft.VotsElectionNft__CreatorCannotBeZeroAddress.selector
-        );
-        nft.mintElectionNft(
-            address(0),
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        vm.expectRevert(VotsElectionNft.VotsElectionNft__CreatorCannotBeZeroAddress.selector);
+        nft.mintElectionNft(address(0), ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
     }
 
     function test_MintElectionNft_RevertWhen_ElectionNameIsEmpty() public {
         vm.prank(owner);
-        vm.expectRevert(
-            VotsElectionNft.VotsElectionNft__ElectionNameCannotBeEmpty.selector
-        );
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            "",
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        vm.expectRevert(VotsElectionNft.VotsElectionNft__ElectionNameCannotBeEmpty.selector);
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, "", ELECTION_DESCRIPTION, START_TIME, END_TIME);
     }
 
-    function test_MintElectionNft_RevertWhen_NftAlreadyMintedForElection()
-        public
-    {
+    function test_MintElectionNft_RevertWhen_NftAlreadyMintedForElection() public {
         // Mint first NFT
         vm.prank(owner);
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         // Try to mint another NFT for the same election
         vm.prank(owner);
-        vm.expectRevert(
-            VotsElectionNft
-                .VotsElectionNft__NftAlreadyMintedForElection
-                .selector
-        );
-        nft.mintElectionNft(
-            user,
-            ELECTION_TOKEN_ID,
-            "Another Election",
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        vm.expectRevert(VotsElectionNft.VotsElectionNft__NftAlreadyMintedForElection.selector);
+        nft.mintElectionNft(user, ELECTION_TOKEN_ID, "Another Election", ELECTION_DESCRIPTION, START_TIME, END_TIME);
     }
 
     function test_MintElectionNft_RevertWhen_NotOwner() public {
         vm.prank(user);
         vm.expectRevert();
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
     }
 
     // ====================================================================
@@ -213,18 +136,10 @@ contract VotsElectionNftTest is Test {
 
     function test_GetElectionData_Success() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
-        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(
-            nftTokenId
-        );
+        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(nftTokenId);
 
         assertEq(data.electionTokenId, ELECTION_TOKEN_ID);
         assertEq(data.electionName, ELECTION_NAME);
@@ -236,22 +151,14 @@ contract VotsElectionNftTest is Test {
     }
 
     function test_GetElectionData_RevertWhen_TokenDoesNotExist() public {
-        vm.expectRevert(
-            VotsElectionNft.VotsElectionNft__TokenDoesNotExist.selector
-        );
+        vm.expectRevert(VotsElectionNft.VotsElectionNft__TokenDoesNotExist.selector);
         nft.getElectionData(999);
     }
 
     function test_GetNftTokenByElectionId() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         assertEq(nft.getNftTokenByElectionId(ELECTION_TOKEN_ID), nftTokenId);
         assertEq(nft.getNftTokenByElectionId(999), 0); // Non-existent election
@@ -259,14 +166,8 @@ contract VotsElectionNftTest is Test {
 
     function test_GetOwnedTokens_SingleToken() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         uint256[] memory ownedTokens = nft.getOwnedTokens(creator);
         assertEq(ownedTokens.length, 1);
@@ -281,23 +182,11 @@ contract VotsElectionNftTest is Test {
         // Mint multiple NFTs to the same creator
         vm.startPrank(owner);
 
-        uint256 firstNftId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 firstNftId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
-        uint256 secondNftId = nft.mintElectionNft(
-            creator,
-            2,
-            "Second Election",
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 secondNftId =
+            nft.mintElectionNft(creator, 2, "Second Election", ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         vm.stopPrank();
 
@@ -319,14 +208,7 @@ contract VotsElectionNftTest is Test {
         assertFalse(nft.electionNftExists(ELECTION_TOKEN_ID));
 
         vm.prank(owner);
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         assertTrue(nft.electionNftExists(ELECTION_TOKEN_ID));
         assertFalse(nft.electionNftExists(999));
@@ -337,24 +219,10 @@ contract VotsElectionNftTest is Test {
 
         vm.startPrank(owner);
 
-        nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
         assertEq(nft.totalSupply(), 1);
 
-        nft.mintElectionNft(
-            user,
-            2,
-            "Second Election",
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        nft.mintElectionNft(user, 2, "Second Election", ELECTION_DESCRIPTION, START_TIME, END_TIME);
         assertEq(nft.totalSupply(), 2);
 
         vm.stopPrank();
@@ -366,14 +234,8 @@ contract VotsElectionNftTest is Test {
 
     function test_TokenURI_ContainsExpectedData() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         string memory tokenURI = nft.tokenURI(nftTokenId);
 
@@ -392,14 +254,8 @@ contract VotsElectionNftTest is Test {
 
     function test_ERC721_Transfer() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         // Transfer from creator to user
         vm.prank(creator);
@@ -412,14 +268,8 @@ contract VotsElectionNftTest is Test {
 
     function test_ERC721_Approve() public {
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            creator,
-            ELECTION_TOKEN_ID,
-            ELECTION_NAME,
-            ELECTION_DESCRIPTION,
-            START_TIME,
-            END_TIME
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(creator, ELECTION_TOKEN_ID, ELECTION_NAME, ELECTION_DESCRIPTION, START_TIME, END_TIME);
 
         // Approve user to transfer the NFT
         vm.prank(creator);
@@ -462,22 +312,14 @@ contract VotsElectionNftTest is Test {
         vm.assume(bytes(_electionDescription).length <= 200); // Reasonable limit
 
         vm.prank(owner);
-        uint256 nftTokenId = nft.mintElectionNft(
-            _creator,
-            _electionTokenId,
-            _electionName,
-            _electionDescription,
-            _startTime,
-            _endTime
-        );
+        uint256 nftTokenId =
+            nft.mintElectionNft(_creator, _electionTokenId, _electionName, _electionDescription, _startTime, _endTime);
 
         assertEq(nft.ownerOf(nftTokenId), _creator);
         assertEq(nft.electionTokenToNftToken(_electionTokenId), nftTokenId);
         assertTrue(nft.electionNftExists(_electionTokenId));
 
-        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(
-            nftTokenId
-        );
+        IVotsElectionNft.ElectionNftData memory data = nft.getElectionData(nftTokenId);
         assertEq(data.creator, _creator);
         assertEq(data.electionTokenId, _electionTokenId);
         assertEq(data.electionName, _electionName);
@@ -490,10 +332,7 @@ contract VotsElectionNftTest is Test {
     // Helper Functions
     // ====================================================================
 
-    function _contains(
-        string memory str,
-        string memory substring
-    ) internal pure returns (bool) {
+    function _contains(string memory str, string memory substring) internal pure returns (bool) {
         bytes memory strBytes = bytes(str);
         bytes memory subBytes = bytes(substring);
 

@@ -38,13 +38,25 @@ contract HelperConfig is Script {
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
+        } else if (block.chainid == 43113) {
+            activeNetworkConfig = getFujiC_ChainConfig();
+        } else {
+            activeNetworkConfig = getOrCreateAnvilConfig();
         }
-        activeNetworkConfig = getOrCreateAnvilConfig();
     }
 
     function getSepoliaEthConfig() public pure returns (NetworkConfig memory sepoliaNetworkConfig) {
-        sepoliaNetworkConfig =
-            NetworkConfig({router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, donId: "fun-ethereum-sepolia-1"});
+        sepoliaNetworkConfig = NetworkConfig({
+            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
+            donId: 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000
+        });
+    }
+
+    function getFujiC_ChainConfig() public pure returns (NetworkConfig memory sepoliaNetworkConfig) {
+        sepoliaNetworkConfig = NetworkConfig({
+            router: 0xA9d587a00A31A52Ed70D6026794a8FC5E2F5dCb0,
+            donId: 0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000
+        });
     }
 
     function getOrCreateAnvilConfig() public view returns (NetworkConfig memory anvilNetworkConfig) {
