@@ -583,7 +583,12 @@ contract ElectionTest is Test {
     function testAccrediteVoterRevertWhenUnauthorizedPollingOfficer() public {
         vm.warp(startTimestamp);
 
-        vm.expectRevert(Election.Election__OnlyPollingOfficerAllowed.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingOfficerAllowed.selector,
+                unknownAddress
+            )
+        );
 
         election.accrediteVoter(voterOne.matricNo, unknownAddress);
     }
@@ -771,7 +776,12 @@ contract ElectionTest is Test {
         votingCandidates[0] = candidatesList[0];
         votingCandidates[1] = candidatesList[2];
 
-        vm.expectRevert(Election.Election__OnlyPollingUnitAllowed.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingUnitAllowed.selector,
+                unknownAddress
+            )
+        );
 
         election.voteCandidates(
             voterOne.matricNo,

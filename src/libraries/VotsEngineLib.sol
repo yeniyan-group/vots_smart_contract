@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 import {IElection} from "../interfaces/IElection.sol";
-import {VotsEngine} from "../VotsEngine.sol";
+import {IVotsEngine} from "../interfaces/IVotsEngine.sol";
 
 /**
  * @title VotsEngineLib
@@ -68,9 +68,9 @@ library VotsEngineLib {
      */
     function createElectionSummary(
         IElection election
-    ) internal view returns (VotsEngine.ElectionSummary memory summary) {
+    ) internal view returns (IVotsEngine.ElectionSummary memory summary) {
         return
-            VotsEngine.ElectionSummary({
+            IVotsEngine.ElectionSummary({
                 electionId: election.getElectionUniqueTokenId(),
                 electionName: election.getElectionName(),
                 electionDescription: election.getElectionDescription(),
@@ -88,9 +88,9 @@ library VotsEngineLib {
      */
     function createElectionInfo(
         IElection election
-    ) internal view returns (VotsEngine.ElectionInfo memory info) {
+    ) internal view returns (IVotsEngine.ElectionInfo memory info) {
         return
-            VotsEngine.ElectionInfo({
+            IVotsEngine.ElectionInfo({
                 electionId: election.getElectionUniqueTokenId(),
                 createdBy: election.getCreatedBy(),
                 electionName: election.getElectionName(),
