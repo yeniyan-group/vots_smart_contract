@@ -5,6 +5,7 @@ import {Script} from "forge-std/Script.sol";
 import {VotsEngine} from "../src/VotsEngine.sol";
 import {CreateElection} from "../src/CreateElection.sol";
 import {VotsEngineFunctionClient} from "../src/VotsEngineFunctionClient.sol";
+import {VotsElectionNft} from "../src/VotsElectionNft.sol";
 
 contract DeployVotsEngine is Script {
     VotsEngine public votsEngine;
@@ -15,10 +16,19 @@ contract DeployVotsEngine is Script {
         HelperConfig helperConfig = new HelperConfig();
         (address router, bytes32 donId) = helperConfig.activeNetworkConfig();
         CreateElection createElection = new CreateElection();
-        votsEngine = new VotsEngine(address(createElection));
-        VotsEngineFunctionClient functionClient = new VotsEngineFunctionClient(router, donId, address(votsEngine));
+        VotsElectionNft electionNft = new VotsElectionNft();
+        votsEngine = new VotsEngine({
+            _electionCreator: address(createElection),
+            _nftAddress: address(electionNft)
+        });
+        VotsEngineFunctionClient functionClient = new VotsEngineFunctionClient(
+            router,
+            donId,
+            address(votsEngine)
+        );
         votsEngine.setFunctionClient(address(functionClient));
         createElection.transferOwnership(address(votsEngine));
+        electionNft.transferOwnership(address(votsEngine));
         vm.stopBroadcast();
         return votsEngine;
     }
@@ -39,17 +49,29 @@ contract HelperConfig is Script {
         activeNetworkConfig = getOrCreateAnvilConfig();
     }
 
-    function getSepoliaEthConfig() public pure returns (NetworkConfig memory sepoliaNetworkConfig) {
-        sepoliaNetworkConfig =
-            NetworkConfig({router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, donId: "fun-ethereum-sepolia-1"});
+    function getSepoliaEthConfig()
+        public
+        pure
+        returns (NetworkConfig memory sepoliaNetworkConfig)
+    {
+        sepoliaNetworkConfig = NetworkConfig({
+            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
+            donId: "fun-ethereum-sepolia-1"
+        });
     }
 
-    function getOrCreateAnvilConfig() public view returns (NetworkConfig memory anvilNetworkConfig) {
+    function getOrCreateAnvilConfig()
+        public
+        view
+        returns (NetworkConfig memory anvilNetworkConfig)
+    {
         if (activeNetworkConfig.router != address(0)) {
             return activeNetworkConfig;
         }
 
-        anvilNetworkConfig =
-            NetworkConfig({router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, donId: "fun-ethereum-sepolia-1"});
+        anvilNetworkConfig = NetworkConfig({
+            router: 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0,
+            donId: "fun-ethereum-sepolia-1"
+        });
     }
 }

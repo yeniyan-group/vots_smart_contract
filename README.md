@@ -130,6 +130,7 @@ VotsEngine.createElection(
     startTimestamp,
     endTimestamp,
     "Student Union Election 2024",
+    "Student Union Election 2024 description",
     candidates,
     voters,
     pollingUnits,
