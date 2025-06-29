@@ -17,6 +17,17 @@ The system consists of multiple integrated contracts:
 - **VotsElectionNft**: NFT contract that mints commemorative tokens for election creators
 - **VotsEngineFunctionClient**: Handles external verification requests using Chainlink Functions
 
+## 🔗 Chainlink Integration Files
+
+The following files implement Chainlink Functions for external voter verification:
+
+- **[VotsEngineFunctionClient.sol](src/VotsEngineFunctionClient.sol)** - Main Chainlink Functions client contract
+- **[IVotsEngineFunctionClient.sol](src/interfaces/IVotsEngineFunctionClient.sol)** - Interface for the function client
+- **[source.js](server/source.js)** - JavaScript code executed by Chainlink Functions
+- **[upload-secrets-1.js](server/upload-secrets-1.js)** - Configuration for Chainlink Functions secrets
+
+> **Note**: The system uses Chainlink Functions to connect with external APIs for voter verification in a sandbox environment.
+
 ## ✨ Features
 
 ### Core Functionality
@@ -202,10 +213,10 @@ bytes32 requestId = VotsEngine.sendVerificationRequestForElection(
     subscriptionId   // Chainlink subscription ID
 );
 ```
-![VotsEngineFunctionClient](src/VotsEngineFunctionClient.sol)
-
 
 **Note**: The current implementation uses a sandbox environment for API verification, making it suitable for testing and demonstration purposes.
+
+For detailed Chainlink Functions setup, see the [Chainlink integration files](#🔗-chainlink-integration-files) listed above.
 
 ### Voting Process
 
