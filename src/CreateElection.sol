@@ -3,8 +3,10 @@ pragma solidity ^0.8.20;
 
 import {Election} from "../src/Election.sol";
 import {IElection} from "../src/interfaces/IElection.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract CreateElection {
+contract CreateElection is Ownable {
+    constructor() Ownable(msg.sender) {}
     function createElection(
         address createdBy,
         uint256 electionUniqueTokenId,
@@ -15,6 +17,7 @@ contract CreateElection {
             electionUniqueTokenId: electionUniqueTokenId,
             params: params
         });
+        newElection.transferOwnership(owner());
         return address(newElection);
     }
 }

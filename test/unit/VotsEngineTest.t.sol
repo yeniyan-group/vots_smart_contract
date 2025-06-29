@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {VotsEngine} from "../../src/VotsEngine.sol";
+import {VotsEngine, IVotsEngine} from "../../src/VotsEngine.sol";
 import {Election, IElection} from "../../src/Election.sol";
 import {DeployVotsEngine} from "../../script/DeployVotsEngine.s.sol";
 
@@ -201,7 +201,7 @@ contract VotsEngineTest is Test {
 
     function testCreateElectionEmitsEvent() public {
         vm.expectEmit(true, true, false, true);
-        emit VotsEngine.ElectionContractedCreated(1, ELECTION_NAME);
+        emit IVotsEngine.ElectionContractedCreated(1, ELECTION_NAME);
 
         vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
@@ -253,12 +253,7 @@ contract VotsEngineTest is Test {
         // electionCategories
 
         // Try to create duplicate
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                VotsEngine.VotsEngine__DuplicateElectionName.selector,
-                ELECTION_NAME
-            )
-        );
+        vm.expectRevert(IVotsEngine.VotsEngine__DuplicateElectionName.selector);
 
         vm.prank(creator);
         IElection.ElectionParams memory secondParams = IElection
@@ -351,7 +346,7 @@ contract VotsEngineTest is Test {
 
     function testCreateElectionRevertOnEmptyElectionName() public {
         vm.expectRevert(
-            VotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector
+            IVotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector
         );
         vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
@@ -454,7 +449,12 @@ contract VotsEngineTest is Test {
         vm.warp(startTimestamp + 1);
 
         // Try to accredite with invalid officer
-        vm.expectRevert(Election.Election__OnlyPollingOfficerAllowed.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingOfficerAllowed.selector,
+                unknownAddress
+            )
+        );
         vm.prank(unknownAddress); // user2 is not a polling officer
         votsEngine.accrediteVoter(voterFive.name, tokenId);
     }
@@ -462,7 +462,7 @@ contract VotsEngineTest is Test {
     function testAccrediteVoterRevertOnInvalidElection() public {
         uint256 invalidTokenId = 999;
 
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
 
         vm.prank(pollingOfficer1);
         votsEngine.accrediteVoter(voterOne.name, invalidTokenId);
@@ -607,7 +607,12 @@ contract VotsEngineTest is Test {
         votes[1] = candidateThree;
 
         // Try to vote with invalid polling unit
-        vm.expectRevert(Election.Election__OnlyPollingUnitAllowed.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingUnitAllowed.selector,
+                creator
+            )
+        );
         vm.prank(creator); // creator is not a polling unit
         votsEngine.voteCandidates(
             voterOne.matricNo,
@@ -941,27 +946,27 @@ contract VotsEngineTest is Test {
     }
 
     function testGetElectionInfoRevertOnInvalidTokenId() public {
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getElectionInfo(999);
     }
 
     function testGetElectionStatsRevertOnInvalidTokenId() public {
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getElectionStats(999);
     }
 
     function testGetAllVotersRevertOnInvalidTokenId() public {
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getAllVoters(999);
     }
 
     function testGetAllCandidatesInDtoRevertOnInvalidTokenId() public {
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getAllCandidatesInDto(999);
     }
 
     function testGetEachCategoryWinnerRevertOnInvalidTokenId() public {
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getEachCategoryWinner(999);
     }
 
@@ -973,7 +978,7 @@ contract VotsEngineTest is Test {
         // Test that token ID 0 is treated as non-existent
         assertFalse(votsEngine.electionExistsByTokenId(0));
 
-        vm.expectRevert(VotsEngine.VotsEngine__ElectionNotFound.selector);
+        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNotFound.selector);
         votsEngine.getElectionAddress(0);
     }
 
