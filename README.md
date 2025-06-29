@@ -62,13 +62,14 @@ forge build
 
 The VotsEngine contract is currently deployed and live on Sepolia testnet:
 
-**Contract Address**: `0x7b80Dcda97907eFF4D99655223437E4689E559c6`
+**Contract Address**: `0xbC9aFaB1b833427195F9674b0f34B501b408f810 `
+
 **NftContract Address**: `0x7b80Dcda97907eFF4D99655223437E4689E559c6`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
-- **RPC URL**: https://sepolia.infura.io/v3/YOUR-PROJECT-ID
-- **Block Explorer**: https://sepolia.etherscan.io/address/0x7b80Dcda97907eFF4D99655223437E4689E559c6
+- **Block Explorer**: https://sepolia.etherscan.io/address/0xbC9aFaB1b833427195F9674b0f34B501b408f810
+- **NftContract Block Explorer**: https://sepolia.etherscan.io/address/0x7b80Dcda97907eFF4D99655223437E4689E559c6
 
 ### Interacting with the Live Contract
 
@@ -80,7 +81,7 @@ You can interact with the deployed contract using:
 
 ```javascript
 // Example using ethers.js
-const contractAddress = "0x7b80Dcda97907eFF4D99655223437E4689E559c6";
+const contractAddress = "0xbC9aFaB1b833427195F9674b0f34B501b408f810";
 const VotsEngine = new ethers.Contract(contractAddress, abi, signer);
 
 // Get total elections count
@@ -91,7 +92,7 @@ const totalElections = await VotsEngine.getTotalElectionsCount();
 
 ### Deploying the System
 
-The VotsEngine is already deployed on Sepolia testnet at `0x7b80Dcda97907eFF4D99655223437E4689E559c6`.
+The VotsEngine is already deployed on Sepolia testnet at `0xbC9aFaB1b833427195F9674b0f34B501b408f810`.
 
 For local development or custom deployments:
 ```solidity
@@ -102,7 +103,7 @@ VotsEngine VotsEngine = new VotsEngine();
 Or connect to the existing deployment:
 ```javascript
 const VotsEngine = new ethers.Contract(
-    "0x7b80Dcda97907eFF4D99655223437E4689E559c6", 
+    "0xbC9aFaB1b833427195F9674b0f34B501b408f810", 
     VotsEngineABI, 
     provider
 );
