@@ -362,10 +362,26 @@ contract Election is IElection, Ownable {
         public
         view
         onElectionEnded
-        returns (ElectionCandidate[] memory)
+        returns (CandidateInfoDTO[] memory)
     {
+        // uint256 candidateCount;
+        // ElectionCandidate[] memory all = new ElectionCandidate[](
+        //     _registeredCandidatesList.length
+        // );
+        // for (uint256 i = 0; i < _electionCategories.length; i++) {
+        //     for (uint256 j = 0; j < _registeredCandidatesList.length; j++) {
+        //         ElectionCandidate memory candidate = _candidatesMap[
+        //             _electionCategories[i]
+        //         ][_registeredCandidatesList[j]];
+        //         if (candidate.state == CandidateState.REGISTERED) {
+        //             all[candidateCount] = candidate;
+        //             candidateCount++;
+        //         }
+        //     }
+        // }
+        // return all;
         uint256 candidateCount;
-        ElectionCandidate[] memory all = new ElectionCandidate[](
+        CandidateInfoDTO[] memory all = new CandidateInfoDTO[](
             _registeredCandidatesList.length
         );
         for (uint256 i = 0; i < _electionCategories.length; i++) {
@@ -374,7 +390,13 @@ contract Election is IElection, Ownable {
                     _electionCategories[i]
                 ][_registeredCandidatesList[j]];
                 if (candidate.state == CandidateState.REGISTERED) {
-                    all[candidateCount] = candidate;
+                    all[candidateCount] = CandidateInfoDTO({
+                        name: candidate.name,
+                        matricNo: _registeredCandidatesList[j],
+                        category: _electionCategories[i],
+                        voteFor: candidate.votes,
+                        voteAgainst: candidate.votesAgainst
+                    });
                     candidateCount++;
                 }
             }

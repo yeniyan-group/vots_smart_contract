@@ -287,7 +287,7 @@ interface IElection {
     function getAllCandidates()
         external
         view
-        returns (ElectionCandidate[] memory);
+        returns (CandidateInfoDTO[] memory);
 
     /**
      * @dev Returns winners for each category (handles ties)

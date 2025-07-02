@@ -383,7 +383,7 @@ contract VotsEngine is IVotsEngine, Ownable {
         external
         view
         validElection(electionTokenId)
-        returns (IElection.ElectionCandidate[] memory)
+        returns (IElection.CandidateInfoDTO[] memory)
     {
         IElection election = IElection(s_tokenToAddress[electionTokenId]);
         return election.getAllCandidates();
