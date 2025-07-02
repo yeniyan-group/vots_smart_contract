@@ -1,41 +1,38 @@
-
-Script ran successfully.
-
 == Return ==
-0: contract VotsEngine 0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287
+0: contract VotsEngine 0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B
 
 ## Setting up 1 EVM.
 ==========================
 Simulated On-chain Traces:
 
-  [209289] → new HelperConfig@0x0B6125c22371CF45e1CCF6748A2E6f3bFF1Edf70
+  [209289] → new HelperConfig@0xbF68EB26922Ae466f0bC306A0032cb8b9F126e58
     └─ ← [Return] 712 bytes of code
 
-  [3095891] → new CreateElection@0x3d2782408633558f3e8b5a6d64d18441AAE8cED6
+  [3112315] → new CreateElection@0x6b98b9BAa0eDa68784572A3bdAa609931d0aa09d
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 15344 bytes of code
+    └─ ← [Return] 15426 bytes of code
 
-  [2266250] → new VotsElectionNft@0x8f10FA6bDA8bE2Ebd7A905d3D9EF81A360B5aA92
+  [2266250] → new VotsElectionNft@0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
     └─ ← [Return] 10976 bytes of code
 
-  [2507763] → new VotsEngine@0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287
+  [2507763] → new VotsEngine@0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
     └─ ← [Return] 12405 bytes of code
 
-  [1542915] → new VotsEngineFunctionClient@0x650342835765142b7bBafA0f1e503963ae46f773
+  [1542915] → new VotsEngineFunctionClient@0x0F2973Cdef957253baEBB69d94d6aE7E92BC3918
     └─ ← [Return] 7704 bytes of code
 
-  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x650342835765142b7bBafA0f1e503963ae46f773])
-    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x650342835765142b7bBafA0f1e503963ae46f773])
+  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x0F2973Cdef957253baEBB69d94d6aE7E92BC3918])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x0F2973Cdef957253baEBB69d94d6aE7E92BC3918])
     └─ ← [Return] 
 
-  [7036] CreateElection::transferOwnership(VotsEngine: [0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287])
+  [7036] CreateElection::transferOwnership(VotsEngine: [0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B])
     └─ ← [Return] 
 
-  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287])
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B])
     └─ ← [Stop] 
 
 
@@ -43,67 +40,65 @@ Simulated On-chain Traces:
 
 Chain 11155111
 
-Estimated gas price: 50.826595772 gwei
+Estimated gas price: 4.562544858 gwei
 
-Estimated total gas used for script: 14016178
+Estimated total gas used for script: 14039302
 
-Estimated amount required: 0.712394613474399416 ETH
-
-==========================
-
-##### sepolia
-✅  [Success] Hash: 0x5985c9c02f2ee52e8a48dfdb27280efcf82c326fdb3872d050e7c667f58e82c6
-Block: 8670449
-Paid: 0.000727156966777522 ETH (28906 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0xc06a2912e8ec19537a8451815a5128671dce66e480a8965e24e9889412eb499e
-Contract Address: 0x8f10FA6bDA8bE2Ebd7A905d3D9EF81A360B5aA92
-Block: 8670449
-Paid: 0.063122537646178324 ETH (2509252 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0xc37696578b6b8df27b45a86451d3f9ca7d34833c5e9d7c28292561e340cd177d
-Block: 8670449
-Paid: 0.001198830429971272 ETH (47656 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x51a96c7336e5002f2358a01ba01bf7f054786f5e5d8c39c9e5017ce8ac432682
-Block: 8670449
-Paid: 0.000716138674677316 ETH (28468 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0xc6323766798e3ead51f3330c79280341841b3e939908125aa1a9d0d1d6ddde75
-Contract Address: 0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287
-Block: 8670449
-Paid: 0.069519561823397239 ETH (2763547 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x8fcc734c7dbf9319a77cb1e8b397d93857d129c3243dbe7a9b3e0d2aa141f141
-Contract Address: 0x650342835765142b7bBafA0f1e503963ae46f773
-Block: 8670449
-Paid: 0.043301007496678285 ETH (1721305 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0xd61b9d895e3efd3ea03867784b1600e6cff765f4bd4dce90f3ac51b72288da33
-Contract Address: 0x0B6125c22371CF45e1CCF6748A2E6f3bFF1Edf70
-Block: 8670449
-Paid: 0.007106924184223055 ETH (282515 gas * 25.155918037 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x10360f77c122a0bab187cda3259b0375f22cf9e7b8386bc86dbdcafca219bdb8
-Contract Address: 0x3d2782408633558f3e8b5a6d64d18441AAE8cED6
-Block: 8670449
-Paid: 0.085320295813453383 ETH (3391659 gas * 25.155918037 gwei)
-
-✅ Sequence #1 on sepolia | Total Paid: 0.271012453035356396 ETH (10773308 gas * avg 25.155918037 gwei)
-                                                                                                                                                                                     
+Estimated amount required: 0.064054945150009116 ETH
 
 ==========================
+
+##### sepolia
+✅  [Success] Hash: 0x8d87c69ec85e3acd70c42482541a3846cfcfeaf3eb0f627751ea4f5185fce943
+Block: 8678160
+Paid: 0.000104566915245464 ETH (47656 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x3ed5b2f00c78e874df0967a5ab41ee2d7e1c4549adddaead00f2bb87e2c807ff
+Contract Address: 0x0F2973Cdef957253baEBB69d94d6aE7E92BC3918
+Block: 8678160
+Paid: 0.003776891766967295 ETH (1721305 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x20714ebfcc15170ec1b436fd096a2bd553d18b00220192a54fb6dfbd2f0a1ce9
+Contract Address: 0x6b98b9BAa0eDa68784572A3bdAa609931d0aa09d
+Block: 8678160
+Paid: 0.007481043526227221 ETH (3409459 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x9568c1ad343445aa720d93b6456144304601e9ccf04db1d6d881aad948b04bd8
+Block: 8678160
+Paid: 0.000062464557310892 ETH (28468 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xb09cfa0a3f3790687a8cd21f9aa91fd20d1f3447b544a2c6ef89d3b4d1c0d03b
+Contract Address: 0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F
+Block: 8678160
+Paid: 0.005505807059205788 ETH (2509252 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x4e9d66f32c95c6a57e99c86d33557c8fc937a8ab79e57852c77a087ce8f8315f
+Block: 8678160
+Paid: 0.000063425618014214 ETH (28906 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xf86daeb402663050a4e6fddc6b696f3fbbe4e1224be6277949700e1f02698dfc
+Contract Address: 0xbF68EB26922Ae466f0bC306A0032cb8b9F126e58
+Block: 8678160
+Paid: 0.000619895124655285 ETH (282515 gas * 2.194202519 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xd461c025829fbef83c3fba9ea947f1e1eb82571b1de45e8688d268758196dc9e
+Contract Address: 0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B
+Block: 8678160
+Paid: 0.006063755458344665 ETH (2763535 gas * 2.194202519 gwei)
+
+✅ Sequence #1 on sepolia | Total Paid: 0.023677850025970824 ETH (10791096 gas * avg 2.194202519 gwei)
+                                                                                                       

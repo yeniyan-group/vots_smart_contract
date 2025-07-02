@@ -91,14 +91,14 @@ forge build
 The VotsEngine contract is currently deployed and live on multiple testnets:
 
 ### Sepolia Testnet
-**VotsEngine Contract**: `0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287..`
+**VotsEngine Contract**: `0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....`
 
-**NFT Contract**: `0x8f10FA6bDA8bE2Ebd7A905d3D9EF81A360B5aA92.`
+**NFT Contract**: `0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F...`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
-- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287..
-- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x8f10FA6bDA8bE2Ebd7A905d3D9EF81A360B5aA92.
+- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....
+- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F...
 
 ### Fuji Testnet (Avalanche)
 **VotsEngine Contract**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
@@ -120,7 +120,7 @@ You can interact with the deployed contract using:
 
 ```javascript
 // Example using ethers.js with Sepolia
-const sepoliaContractAddress = "0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287..";
+const sepoliaContractAddress = "0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....";
 const VotsEngineSepoliaClient = new ethers.Contract(sepoliaContractAddress, abi, sepoliaProvider);
 
 // Example using ethers.js with Fuji
@@ -146,7 +146,7 @@ The VotsEngine system requires a **hybrid physical-digital infrastructure**:
 ### Deploying the System
 
 The VotsEngine is already deployed on multiple testnets:
-- **Sepolia**: `0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287..`
+- **Sepolia**: `0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....`
 - **Fuji (Avalanche)**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
 
 For local development or custom deployments:
@@ -161,7 +161,7 @@ Or connect to the existing deployments:
 ```javascript
 // Connect to Sepolia deployment
 const VotsEngineSepoliaClient = new ethers.Contract(
-    "0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287..", 
+    "0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....", 
     VotsEngineABI, 
     sepoliaProvider
 );

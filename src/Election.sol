@@ -241,7 +241,12 @@ contract Election is IElection, Ownable {
         string memory name,
         string memory matricNo,
         address pollingUnitAddress
-    ) public pollingUnitOnly(pollingUnitAddress) returns (bool validAddress) {
+    )
+        public
+        pollingUnitOnly(pollingUnitAddress)
+        noUnknown(matricNo)
+        returns (bool validAddress)
+    {
         ElectionVoter memory voter = _votersMap[matricNo];
         emit ValidateAddressResult(validAddress);
         return

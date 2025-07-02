@@ -22,11 +22,11 @@ snapshot :; forge snapshot
 
 format :; forge fmt
 
-deploy-votsengine :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${SEPOLIA_RPC_URL} --account vutsdefault --broadcast --verify  --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
+deploy-votsengine :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${SEPOLIA_RPC_URL} --chain sepolia --account vutsdefault --broadcast --verify  --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
 
 deploy-votsengine-fuji :; @forge script script/DeployVotsEngine.s.sol:DeployVotsEngine --rpc-url ${FUJI_RPC_URL} --account vutsdefault --broadcast --verifier-url ${FUJI_VERIFIER_URL} --etherscan-api-key ${ETHERSCAN_API_KEY} -vvvv
 
-verify-votsengine :;forge verify-contract --etherscan-api-key ${ETHERSCAN_API_KEY} --chain sepolia 0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287 "src/VotsEngine.sol:VotsEngine"
+verify-votsengine :; @forge verify-contract --etherscan-api-key ${ETHERSCAN_API_KEY} --chain sepolia --watch 0x41A221CF6CD0d4BA6FDf18b6F492fFD048CbA287 "src/VotsEngine.sol:VotsEngine" --show-standard-json-input > standard-input2.json
 
 verify-contract:
 	@echo "Enter contract address:"
