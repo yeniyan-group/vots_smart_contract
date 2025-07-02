@@ -91,14 +91,14 @@ forge build
 The VotsEngine contract is currently deployed and live on multiple testnets:
 
 ### Sepolia Testnet
-**VotsEngine Contract**: `0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....`
+**VotsEngine Contract**: `0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B`
 
-**NFT Contract**: `0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F...`
+**NFT Contract**: `0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
-- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B....
-- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F...
+- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0x774E6542baEb7Fc4B9d592b878dC1C6BfB8B3E2B
+- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x9875e21B296370782C3a2F8d6Aaef45C6db2a75F
 
 ### Fuji Testnet (Avalanche)
 **VotsEngine Contract**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
