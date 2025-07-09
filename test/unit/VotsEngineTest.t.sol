@@ -79,22 +79,46 @@ contract VotsEngineTest is Test {
         });
 
     IElection.VoterInfoDTO voterOne =
-        IElection.VoterInfoDTO({name: "Voter1", matricNo: "VOT001"});
+        IElection.VoterInfoDTO({
+            name: "Voter1",
+            matricNo: "VOT001",
+            level: 100
+        });
     IElection.VoterInfoDTO voterTwo =
-        IElection.VoterInfoDTO({name: "Voter2", matricNo: "VOT002"});
+        IElection.VoterInfoDTO({
+            name: "Voter2",
+            matricNo: "VOT002",
+            level: 100
+        });
     IElection.VoterInfoDTO voterThree =
-        IElection.VoterInfoDTO({name: "Voter3", matricNo: "VOT003"});
+        IElection.VoterInfoDTO({
+            name: "Voter3",
+            matricNo: "VOT003",
+            level: 100
+        });
     IElection.VoterInfoDTO voterFour =
-        IElection.VoterInfoDTO({name: "Voter4", matricNo: "VOT004"});
+        IElection.VoterInfoDTO({
+            name: "Voter4",
+            matricNo: "VOT004",
+            level: 100
+        });
     IElection.VoterInfoDTO voterFive =
-        IElection.VoterInfoDTO({name: "Voter5", matricNo: "VOT005"});
+        IElection.VoterInfoDTO({
+            name: "Voter5",
+            matricNo: "VOT005",
+            level: 100
+        });
     IElection.VoterInfoDTO unknownVoter =
-        IElection.VoterInfoDTO({name: "This Unknown", matricNo: "VOT007"});
+        IElection.VoterInfoDTO({
+            name: "This Unknown",
+            matricNo: "VOT007",
+            level: 100
+        });
 
     IElection.CandidateInfoDTO[] candidatesList;
     IElection.VoterInfoDTO[] votersList;
-    address[] pollingOfficerAddresses;
-    address[] pollingUnitAddresses;
+    IElection.PollIdentifier[] pollingOfficerAddresses;
+    IElection.PollIdentifier[] pollingUnitAddresses;
 
     function setUp() public {
         _setupTestData();
@@ -121,12 +145,32 @@ contract VotsEngineTest is Test {
         votersList.push(voterFive);
 
         // Setup polling addresses
-        pollingOfficerAddresses.push(pollingOfficer1);
-        pollingOfficerAddresses.push(pollingOfficer2);
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer1,
+                pollRoleName: "pollingOfficer1"
+            })
+        );
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer2,
+                pollRoleName: "pollingOfficer2"
+            })
+        );
 
         // Setup polling unit addresses
-        pollingUnitAddresses.push(pollingUnit1);
-        pollingUnitAddresses.push(pollingUnit2);
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit1,
+                pollRoleName: "pollingUnit1"
+            })
+        );
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit2,
+                pollRoleName: "pollingUnit2"
+            })
+        );
 
         //
         electionCategories = ["President", "Vice President"];
@@ -143,8 +187,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -173,8 +217,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -211,8 +255,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -237,8 +281,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -264,8 +308,8 @@ contract VotsEngineTest is Test {
                 description: ELECTION_DESCRIPTION,
                 candidatesList: candidatesList,
                 votersList: votersList,
-                pollingUnitAddresses: pollingUnitAddresses,
-                pollingOfficerAddresses: pollingOfficerAddresses,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
                 electionCategories: electionCategories
             });
 
@@ -290,8 +334,8 @@ contract VotsEngineTest is Test {
             candidatesList: candidatesList,
             description: ELECTION_DESCRIPTION,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -315,8 +359,8 @@ contract VotsEngineTest is Test {
                 candidatesList: candidatesList,
                 description: ELECTION_DESCRIPTION,
                 votersList: votersList,
-                pollingUnitAddresses: pollingUnitAddresses,
-                pollingOfficerAddresses: pollingOfficerAddresses,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
                 electionCategories: electionCategories
             });
 
@@ -356,8 +400,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -386,8 +430,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -428,8 +472,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -478,8 +522,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -522,8 +566,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -577,8 +621,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -632,8 +676,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -689,8 +733,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -729,8 +773,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -773,8 +817,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -789,6 +833,7 @@ contract VotsEngineTest is Test {
         // electionCategories
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+        vm.warp(endTimestamp + 1);
 
         IElection.ElectionVoter[] memory voters = votsEngine.getAllVoters(
             tokenId
@@ -819,8 +864,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -896,8 +941,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -920,8 +965,8 @@ contract VotsEngineTest is Test {
                 description: ELECTION_DESCRIPTION,
                 candidatesList: candidatesList,
                 votersList: votersList,
-                pollingUnitAddresses: pollingUnitAddresses,
-                pollingOfficerAddresses: pollingOfficerAddresses,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
                 electionCategories: electionCategories
             });
 
@@ -996,8 +1041,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -1085,8 +1130,8 @@ contract VotsEngineTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 

@@ -1,38 +1,73 @@
 
-0: contract VotsEngine 0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb
+  [10110888] DeployVotsEngine::run()
+    ├─ [0] VM::startBroadcast()
+    │   └─ ← [Return] 
+    ├─ [209289] → new HelperConfig@0x7D03Fa5368861a658e05d9bEBF968d3EB478770a
+    │   └─ ← [Return] 712 bytes of code
+    ├─ [428] HelperConfig::activeNetworkConfig() [staticcall]
+    │   └─ ← [Return] 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000
+    ├─ [3346602] → new CreateElection@0x0277e47b8D9caBf03884Ed1D3Ef916F6EdeD0011
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 16596 bytes of code
+    ├─ [2266250] → new VotsElectionNft@0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 10976 bytes of code
+    ├─ [2534593] → new VotsEngine@0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 12539 bytes of code
+    ├─ [1542915] → new VotsEngineFunctionClient@0x43Ab47B029f69ab229B0de8898dC10eA93be72c9
+    │   └─ ← [Return] 7704 bytes of code
+    ├─ [24246] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
+    │   ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
+    │   └─ ← [Return] 
+    ├─ [2225] CreateElection::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    │   └─ ← [Return] 
+    ├─ [2674] VotsElectionNft::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    │   └─ ← [Stop] 
+    ├─ [0] VM::stopBroadcast()
+    │   └─ ← [Return] 
+    └─ ← [Return] VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06]
+
+
+Script ran successfully.
+
+== Return ==
+0: contract VotsEngine 0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
 
 ## Setting up 1 EVM.
 ==========================
 Simulated On-chain Traces:
 
-  [209289] → new HelperConfig@0xd7447426AB17F6164F6baFB356756FA00544794e
+  [209289] → new HelperConfig@0x7D03Fa5368861a658e05d9bEBF968d3EB478770a
     └─ ← [Return] 712 bytes of code
 
-  [3104899] → new CreateElection@0x67826Da7D8E82C1F710F3d16344F6a5578BB9784
+  [3346602] → new CreateElection@0x0277e47b8D9caBf03884Ed1D3Ef916F6EdeD0011
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 15389 bytes of code
+    └─ ← [Return] 16596 bytes of code
 
-  [2266250] → new VotsElectionNft@0x162383aeC53af803F0FdC7b481E5EFa1eBFD46a9
+  [2266250] → new VotsElectionNft@0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
     └─ ← [Return] 10976 bytes of code
 
-  [2460110] → new VotsEngine@0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb
+  [2534593] → new VotsEngine@0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 12167 bytes of code
+    └─ ← [Return] 12539 bytes of code
 
-  [1542915] → new VotsEngineFunctionClient@0x7bcFDB96b5c60f95eA2fB64002A12Ae54205b376
+  [1542915] → new VotsEngineFunctionClient@0x43Ab47B029f69ab229B0de8898dC10eA93be72c9
     └─ ← [Return] 7704 bytes of code
 
-  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x7bcFDB96b5c60f95eA2fB64002A12Ae54205b376])
-    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x7bcFDB96b5c60f95eA2fB64002A12Ae54205b376])
+  [26246] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
     └─ ← [Return] 
 
-  [7036] CreateElection::transferOwnership(VotsEngine: [0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb])
+  [7025] CreateElection::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
     └─ ← [Return] 
 
-  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb])
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
     └─ ← [Stop] 
 
 
@@ -40,64 +75,8 @@ Simulated On-chain Traces:
 
 Chain 11155111
 
-Estimated gas price: 0.073979278 gwei
+Estimated gas price: 0.001001938 gwei
 
-Estimated total gas used for script: 13962034
+Estimated total gas used for script: 14406832
 
-Estimated amount required: 0.001032901194731452 ETH
-
-==========================
-
-##### sepolia
-✅  [Success] Hash: 0x8d5c225574f08e569df43320341c7dde865a95c8e19d3f291224300e15f7a435
-Block: 8678755
-Paid: 0.000001745604920024 ETH (47656 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x2dc636559fa6659f853437b895b5a8ba361a6b58f62ddc1be2e6ab33cf5a6bb9
-Contract Address: 0x67826Da7D8E82C1F710F3d16344F6a5578BB9784
-Block: 8678755
-Paid: 0.000124592624425271 ETH (3401449 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x4b3a92921190778cdefff148676d1e43f23f2dfed7564f8f1de75e517f307b49
-Contract Address: 0x7bcFDB96b5c60f95eA2fB64002A12Ae54205b376
-Block: 8678755
-Paid: 0.000063050161089095 ETH (1721305 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x19e10dbb0e730a7316d75ec1d1212a50847d734c2c2a3a9c6e630cbd402703ee
-Block: 8678755
-Paid: 0.000001058805938774 ETH (28906 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0xefc324099b47e6427989754d9d6e013459e6d121b1db27254ea4cac2ceb8e19e
-Contract Address: 0x162383aeC53af803F0FdC7b481E5EFa1eBFD46a9
-Block: 8678755
-Paid: 0.000091912091589308 ETH (2509252 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x7ce5b13952194963a1259481b95b1bcd176f79ef87dab0a0f4ab5e197dc2b694
-Contract Address: 0x87e69Ff0c1c989cc139EDc6C85b6a3Ae7bbBfaAb
-Block: 8678755
-Paid: 0.000099342560610132 ETH (2712108 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x686b3623f7e308aa0a5f948fca1c62db0a4f8c0c1daf273116cdf44f62004afa
-Contract Address: 0xd7447426AB17F6164F6baFB356756FA00544794e
-Block: 8678755
-Paid: 0.000010348320756685 ETH (282515 gas * 0.036629279 gwei)
-
-
-##### sepolia
-✅  [Success] Hash: 0x65d2356c58a4ac425bdc64677de2241a8bac51cab08dd500cfb448a699003c37
-Block: 8678755
-Paid: 0.000001042762314572 ETH (28468 gas * 0.036629279 gwei)
-
-✅ Sequence #1 on sepolia | Total Paid: 0.000393092931643861 ETH (10731659 gas * avg 0.036629279 gwei)
+Estimated amount required: 0.000014434752440416 ETH

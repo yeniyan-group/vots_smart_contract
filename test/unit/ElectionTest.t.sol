@@ -65,22 +65,46 @@ contract ElectionTest is Test {
         });
 
     IElection.VoterInfoDTO voterOne =
-        IElection.VoterInfoDTO({name: "Voter1", matricNo: "VOT001"});
+        IElection.VoterInfoDTO({
+            name: "Voter1",
+            matricNo: "VOT001",
+            level: 100
+        });
     IElection.VoterInfoDTO voterTwo =
-        IElection.VoterInfoDTO({name: "Voter2", matricNo: "VOT002"});
+        IElection.VoterInfoDTO({
+            name: "Voter2",
+            matricNo: "VOT002",
+            level: 100
+        });
     IElection.VoterInfoDTO voterThree =
-        IElection.VoterInfoDTO({name: "Voter3", matricNo: "VOT003"});
+        IElection.VoterInfoDTO({
+            name: "Voter3",
+            matricNo: "VOT003",
+            level: 100
+        });
     IElection.VoterInfoDTO voterFour =
-        IElection.VoterInfoDTO({name: "Voter4", matricNo: "VOT004"});
+        IElection.VoterInfoDTO({
+            name: "Voter4",
+            matricNo: "VOT004",
+            level: 100
+        });
     IElection.VoterInfoDTO voterFive =
-        IElection.VoterInfoDTO({name: "Voter5", matricNo: "VOT005"});
+        IElection.VoterInfoDTO({
+            name: "Voter5",
+            matricNo: "VOT005",
+            level: 100
+        });
     IElection.VoterInfoDTO unknownVoter =
-        IElection.VoterInfoDTO({name: "This Unknown", matricNo: "VOT007"});
+        IElection.VoterInfoDTO({
+            name: "This Unknown",
+            matricNo: "VOT007",
+            level: 100
+        });
 
     IElection.CandidateInfoDTO[] candidatesList;
     IElection.VoterInfoDTO[] votersList;
-    address[] pollingOfficerAddresses;
-    address[] pollingUnitAddresses;
+    IElection.PollIdentifier[] pollingOfficerAddresses;
+    IElection.PollIdentifier[] pollingUnitAddresses;
 
     function setUp() public {
         _setupTestData();
@@ -91,8 +115,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -121,12 +145,32 @@ contract ElectionTest is Test {
         votersList.push(voterFive);
 
         // Setup polling addresses
-        pollingOfficerAddresses.push(pollingOfficer1);
-        pollingOfficerAddresses.push(pollingOfficer2);
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer1,
+                pollRoleName: "pollingOfficer1"
+            })
+        );
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer2,
+                pollRoleName: "pollingOfficer2"
+            })
+        );
 
         // Setup polling unit addresses
-        pollingUnitAddresses.push(pollingUnit1);
-        pollingUnitAddresses.push(pollingUnit2);
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit1,
+                pollRoleName: "pollingUnit1"
+            })
+        );
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit2,
+                pollRoleName: "pollingUnit2"
+            })
+        );
 
         //
         electionCategories = ["President", "Vice President"];
@@ -144,8 +188,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -193,8 +237,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -216,8 +260,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -239,8 +283,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: emptyVoters,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -264,8 +308,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: emptyCandidates,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -276,7 +320,7 @@ contract ElectionTest is Test {
     }
 
     function testElectionRevertWhenEmptyPollingOfficers() public {
-        address[] memory emptyOfficers;
+        IElection.PollIdentifier[] memory emptyOfficers;
 
         vm.expectRevert(
             Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
@@ -289,8 +333,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: emptyOfficers,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: emptyOfficers,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -301,7 +345,7 @@ contract ElectionTest is Test {
     }
 
     function testElectionRevertWhenEmptyPollingUnits() public {
-        address[] memory emptyPollingUnits;
+        IElection.PollIdentifier[] memory emptyPollingUnits;
 
         vm.expectRevert(
             Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
@@ -314,8 +358,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: emptyPollingUnits,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: emptyPollingUnits,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -327,8 +371,12 @@ contract ElectionTest is Test {
 
     function testElectionRevertWhenCreatorHasMultipleRoles() public {
         // Make creator also a polling officer
-        address[] memory conflictingOfficers = new address[](1);
-        conflictingOfficers[0] = creator;
+        IElection.PollIdentifier[]
+            memory conflictingOfficers = new IElection.PollIdentifier[](1);
+        conflictingOfficers[0] = IElection.PollIdentifier({
+            pollAddress: creator,
+            pollRoleName: "creator"
+        });
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
 
@@ -339,8 +387,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: conflictingOfficers,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: conflictingOfficers,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -360,8 +408,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: duplicateCat
         });
         election = new Election({
@@ -390,8 +438,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: duplicateVoters,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -420,8 +468,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: duplicateCandidates,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -432,8 +480,12 @@ contract ElectionTest is Test {
     }
 
     function testElectionRevertWhenPollingOfficerIsAlsoPollingUnit() public {
-        address[] memory conflictingUnits = new address[](1);
-        conflictingUnits[0] = pollingOfficer1; // Same as polling officer
+        IElection.PollIdentifier[]
+            memory conflictingUnits = new IElection.PollIdentifier[](1);
+        conflictingUnits[0] = IElection.PollIdentifier({
+            pollAddress: pollingOfficer1,
+            pollRoleName: "pollingOfficer1"
+        });
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
 
@@ -444,8 +496,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: conflictingUnits,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: conflictingUnits,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -471,8 +523,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
             votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
         election = new Election({
@@ -941,7 +993,8 @@ contract ElectionTest is Test {
     // Getter Functions
     // ====================================================================
 
-    function testGetAllVotersReturnsCorrectData() public view {
+    function testGetAllVotersReturnsCorrectData() public {
+        vm.warp(endTimestamp + 1);
         Election.ElectionVoter[] memory allVoters = election.getAllVoters();
         assertEq(allVoters.length, votersList.length);
 
@@ -953,16 +1006,16 @@ contract ElectionTest is Test {
         );
     }
 
-    function testGetAllAccreditedVotersInitiallyEmpty() public view {
+    function testGetAllAccreditedVotersInitiallyEmpty() public {
+        vm.warp(endTimestamp + 1);
         Election.ElectionVoter[] memory accreditedVoters = election
             .getAllAccreditedVoters();
         assertEq(accreditedVoters.length, 0);
     }
-
     function testGetAllAccreditedVotersAfterAccreditation() public {
         vm.warp(startTimestamp);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
-
+        vm.warp(endTimestamp + 1);
         Election.ElectionVoter[] memory accreditedVoters = election
             .getAllAccreditedVoters();
         assertEq(accreditedVoters.length, 1);
@@ -973,7 +1026,8 @@ contract ElectionTest is Test {
         );
     }
 
-    function testGetAllVotedVotersInitiallyEmpty() public view {
+    function testGetAllVotedVotersInitiallyEmpty() public {
+        vm.warp(endTimestamp + 1);
         Election.ElectionVoter[] memory votedVoters = election
             .getAllVotedVoters();
         assertEq(votedVoters.length, 0);
@@ -995,6 +1049,7 @@ contract ElectionTest is Test {
             votingCandidates
         );
 
+        vm.warp(endTimestamp + 1);
         Election.ElectionVoter[] memory votedVoters = election
             .getAllVotedVoters();
         assertEq(votedVoters.length, 1);
@@ -1027,7 +1082,7 @@ contract ElectionTest is Test {
             abi.encodeWithSelector(
                 Election.Election__InvalidElectionState.selector,
                 IElection.ElectionState.ENDED,
-                IElection.ElectionState.STARTED
+                IElection.ElectionState.OPENED
             )
         );
         election.getAllCandidates();
@@ -1048,7 +1103,7 @@ contract ElectionTest is Test {
             abi.encodeWithSelector(
                 Election.Election__InvalidElectionState.selector,
                 IElection.ElectionState.ENDED,
-                IElection.ElectionState.STARTED
+                IElection.ElectionState.OPENED
             )
         );
         election.getEachCategoryWinner();
@@ -1238,11 +1293,19 @@ contract ElectionTest is Test {
             memory minVoters = new IElection.VoterInfoDTO[](1);
         minVoters[0] = voterOne;
 
-        address[] memory minOfficers = new address[](1);
-        minOfficers[0] = pollingOfficer1;
+        IElection.PollIdentifier[]
+            memory minOfficers = new IElection.PollIdentifier[](1);
+        minOfficers[0] = IElection.PollIdentifier({
+            pollAddress: pollingOfficer1,
+            pollRoleName: "pollingOfficer1"
+        });
 
-        address[] memory minUnits = new address[](1);
-        minUnits[0] = pollingUnit1;
+        IElection.PollIdentifier[]
+            memory minUnits = new IElection.PollIdentifier[](1);
+        minUnits[0] = IElection.PollIdentifier({
+            pollAddress: pollingUnit1,
+            pollRoleName: "pollingUnit1"
+        });
 
         string[] memory minCategories = new string[](1);
         minCategories[0] = "President";
@@ -1255,8 +1318,8 @@ contract ElectionTest is Test {
         //     electionName: ELECTION_NAME,
         //     candidatesList: minCandidates,
         //     votersList: minVoters,
-        //     pollingUnitAddresses: minUnits,
-        //     pollingOfficerAddresses: minOfficers,
+        //     pollingUnits: minUnits,
+        //     pollingOfficers: minOfficers,
         //     electionCategories: minCategories
         // });
 
@@ -1267,8 +1330,8 @@ contract ElectionTest is Test {
             description: ELECTION_DESCRIPTION,
             candidatesList: minCandidates,
             votersList: minVoters,
-            pollingUnitAddresses: minUnits,
-            pollingOfficerAddresses: minOfficers,
+            pollingUnits: minUnits,
+            pollingOfficers: minOfficers,
             electionCategories: minCategories
         });
         Election minElection = new Election({

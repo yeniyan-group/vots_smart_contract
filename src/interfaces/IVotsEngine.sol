@@ -68,8 +68,8 @@ interface IVotsEngine {
         uint256 accreditedVotersCount;
         uint256 votedVotersCount;
         string[] electionCategories;
-        address[] pollingOfficers;
-        address[] pollingUnits;
+        IElection.PollIdentifier[] pollingOfficers;
+        IElection.PollIdentifier[] pollingUnits;
         IElection.CandidateInfoDTO[] candidatesList;
     }
 

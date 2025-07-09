@@ -40,8 +40,8 @@ interface IElection {
         string description;
         CandidateInfoDTO[] candidatesList;
         VoterInfoDTO[] votersList;
-        address[] pollingUnitAddresses;
-        address[] pollingOfficerAddresses;
+        PollIdentifier[] pollingUnits;
+        PollIdentifier[] pollingOfficers;
         string[] electionCategories;
     }
 
@@ -62,6 +62,7 @@ interface IElection {
     struct VoterInfoDTO {
         string name;
         string matricNo;
+        uint256 level;
     }
 
     /**
@@ -69,6 +70,7 @@ interface IElection {
      */
     struct ElectionVoter {
         string name;
+        uint256 level;
         VoterState voterState;
     }
 
@@ -89,6 +91,14 @@ interface IElection {
         string matricNo;
         ElectionCandidate electionCandidate;
         string category;
+    }
+
+    /**
+     * @dev Structure for Polling Unit Identifier
+     */
+    struct PollIdentifier {
+        string pollRoleName;
+        address pollAddress;
     }
 
     // ====================================================================
@@ -305,7 +315,7 @@ interface IElection {
     function getPollingOfficersAddresses()
         external
         view
-        returns (address[] memory);
+        returns (PollIdentifier[] memory);
 
     /**
      * @dev Returns polling units addresses
@@ -314,7 +324,7 @@ interface IElection {
     function getPollingUnitsAddresses()
         external
         view
-        returns (address[] memory);
+        returns (PollIdentifier[] memory);
 
     // ====================================================================
     // State Management

@@ -41,6 +41,7 @@ contract Election is IElection, Ownable {
     error Election__OnlyPollingUnitAllowed(address errorAddress);
     error Election__OnlyPollingOfficerAllowed(address errorAddress);
     error Election__AddressCanOnlyHaveOneRole();
+    error Election__PollingOfficerOrUnitNameEmpty();
     error Election__CandidatesInfoDTOCannotBeEmpty();
     error Election__AllCategoriesMustHaveOnlyOneVotedCandidate();
     error Election__InvalidStartTimeStamp();
@@ -107,10 +108,10 @@ contract Election is IElection, Ownable {
         private _allowedPollingUnits;
 
     /// Store polling officer addresses
-    address[] private _pollingOfficersAddressList;
+    PollIdentifier[] private _pollingOfficersAddressList;
 
     /// Store polling unit addresses
-    address[] private _pollingUnitsAddressList;
+    PollIdentifier[] private _pollingUnitsAddressList;
 
     /// @dev mapping of valid polling officer addresses
     mapping(address pollingOfficerAddress => bool isValid)
@@ -229,8 +230,8 @@ contract Election is IElection, Ownable {
         _registerCandidates(params.candidatesList);
         _registerVoters(params.votersList);
         _registerOfficersAndUnits({
-            pollingOfficerAddresses: params.pollingOfficerAddresses,
-            pollingUnitAddresses: params.pollingUnitAddresses
+            pollingOfficerAddresses: params.pollingOfficers,
+            pollingUnitAddresses: params.pollingUnits
         });
     }
 
@@ -247,6 +248,7 @@ contract Election is IElection, Ownable {
         noUnknown(matricNo)
         returns (bool validAddress)
     {
+        _updateElectionState();
         ElectionVoter memory voter = _votersMap[matricNo];
         emit ValidateAddressResult(validAddress);
         return
@@ -257,6 +259,7 @@ contract Election is IElection, Ownable {
     function validateAddressAsPollingUnit(
         address pollingUnitAddress
     ) public pollingUnitOnly(pollingUnitAddress) returns (bool validAddress) {
+        _updateElectionState();
         validAddress = _allowedPollingUnits[pollingUnitAddress];
         emit ValidateAddressResult(validAddress);
     }
@@ -268,6 +271,7 @@ contract Election is IElection, Ownable {
         pollingOfficerOnly(pollingUnitAddress)
         returns (bool validAddress)
     {
+        _updateElectionState();
         validAddress = _allowedPollingOfficers[pollingUnitAddress];
         emit ValidateAddressResult(validAddress);
     }
@@ -275,7 +279,12 @@ contract Election is IElection, Ownable {
     /**
      * @dev Returns Returns a list of all voters
      */
-    function getAllVoters() public view returns (ElectionVoter[] memory) {
+    function getAllVoters()
+        public
+        view
+        onElectionEnded
+        returns (ElectionVoter[] memory)
+    {
         ElectionVoter[] memory all = new ElectionVoter[](
             _registeredVotersList.length
         );
@@ -291,6 +300,7 @@ contract Election is IElection, Ownable {
     function getAllAccreditedVoters()
         public
         view
+        onElectionEnded
         returns (ElectionVoter[] memory)
     {
         uint256 voterCount;
@@ -310,7 +320,12 @@ contract Election is IElection, Ownable {
     /**
      * @dev Returns Returns a list of all Voted voters
      */
-    function getAllVotedVoters() public view returns (ElectionVoter[] memory) {
+    function getAllVotedVoters()
+        public
+        view
+        onElectionEnded
+        returns (ElectionVoter[] memory)
+    {
         uint256 voterCount;
         ElectionVoter[] memory all = new ElectionVoter[](_votedVotersCount);
         for (uint256 i = 0; i < _registeredVotersList.length; i++) {
@@ -602,8 +617,11 @@ contract Election is IElection, Ownable {
     function getPollingOfficersAddresses()
         public
         view
-        returns (address[] memory)
+        returns (PollIdentifier[] memory)
     {
+        // PollIdentifier[] memory pollingOfficersAddressList = new PollIdentifier[](
+        //     _pollingOfficersAddressList.length
+        // );
         return _pollingOfficersAddressList;
     }
 
@@ -611,7 +629,11 @@ contract Election is IElection, Ownable {
      * @dev Returns the address of polling units
      * @return uint256 Number of polling units
      */
-    function getPollingUnitsAddresses() public view returns (address[] memory) {
+    function getPollingUnitsAddresses()
+        public
+        view
+        returns (PollIdentifier[] memory)
+    {
         return _pollingUnitsAddressList;
     }
 
@@ -795,6 +817,7 @@ contract Election is IElection, Ownable {
             // create an electionVoter from voter
             ElectionVoter memory registeredVoter = ElectionVoter({
                 name: voter.name,
+                level: voter.level,
                 voterState: VoterState.REGISTERED
             });
             // add to votersList if the state is unknown
@@ -862,8 +885,8 @@ contract Election is IElection, Ownable {
      * @param pollingUnitAddresses Array of polling unit addresses
      */
     function _registerOfficersAndUnits(
-        address[] memory pollingOfficerAddresses,
-        address[] memory pollingUnitAddresses
+        PollIdentifier[] memory pollingOfficerAddresses,
+        PollIdentifier[] memory pollingUnitAddresses
     ) internal onlyOwner {
         if (
             pollingOfficerAddresses.length < 1 ||
@@ -873,19 +896,28 @@ contract Election is IElection, Ownable {
         }
 
         for (uint256 i = 0; i < pollingOfficerAddresses.length; i++) {
-            address officerAddress = pollingOfficerAddresses[i];
+            PollIdentifier memory pollingOfficer = pollingOfficerAddresses[i];
+            address officerAddress = pollingOfficer.pollAddress;
             if (officerAddress == _createdBy) {
                 revert Election__AddressCanOnlyHaveOneRole();
+            }
+            if (compareStrings(pollingOfficer.pollRoleName, "")) {
+                revert Election__PollingOfficerOrUnitNameEmpty();
             }
             _allowedPollingOfficers[officerAddress] = true;
         }
         for (uint256 i = 0; i < pollingUnitAddresses.length; i++) {
-            address unitAddress = pollingUnitAddresses[i];
+            PollIdentifier memory pollingUnit = pollingUnitAddresses[i];
+            address unitAddress = pollingUnit.pollAddress;
             if (
                 unitAddress == _createdBy ||
                 _allowedPollingOfficers[unitAddress]
             ) {
                 revert Election__AddressCanOnlyHaveOneRole();
+            }
+
+            if (compareStrings(pollingUnit.pollRoleName, "")) {
+                revert Election__PollingOfficerOrUnitNameEmpty();
             }
             _allowedPollingUnits[unitAddress] = true;
         }
