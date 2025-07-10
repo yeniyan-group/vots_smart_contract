@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Test} from "forge-std/Test.sol";
+import {Test} from "lib/forge-std/src/Test.sol";
 import {Election, IElection} from "../../src/Election.sol";
 
 contract ElectionTest is Test {
@@ -66,7 +66,7 @@ contract ElectionTest is Test {
 
     IElection.VoterInfoDTO voterOne =
         IElection.VoterInfoDTO({
-            name: "Voter1",
+            name: "Voter1 Surname",
             matricNo: "VOT001",
             department: "Computer Science",
             level: 100
@@ -690,6 +690,28 @@ contract ElectionTest is Test {
     // ====================================================================
     // Voting Tests
     // ====================================================================
+
+    function testValidateVoterSuccessWithFirstWordOfFullName() public {
+        vm.warp(startTimestamp);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        election.validateVoterForVoting(
+            "Voter1",
+            voterOne.matricNo,
+            pollingUnit1
+        );
+    }
+    function testValidateVoterFailsWithFullName() public {
+        vm.warp(startTimestamp);
+        election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
+
+        vm.expectRevert(Election.Election__VoterCannotBeValidated.selector);
+        election.validateVoterForVoting(
+            voterOne.name,
+            voterOne.matricNo,
+            pollingUnit1
+        );
+    }
 
     function testVoteCandidatesSuccess() public {
         vm.warp(startTimestamp);

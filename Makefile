@@ -7,7 +7,7 @@
 clean  :; forge clean
 
 
-install :; forge install OpenZeppelin/openzeppelin-contracts@v5.3.0 --no-commit && forge install smartcontractkit/chainlink@v2.24.0 --no-commit
+install :; forge install OpenZeppelin/openzeppelin-contracts@v5.3.0 --no-commit && forge install smartcontractkit/chainlink@v2.24.0 --no-commit && forge install Arachnid/solidity-stringutils --no-commit
 
 # Update Dependencies
 update:; forge update

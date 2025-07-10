@@ -25,6 +25,7 @@ pragma solidity ^0.8.21;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IElection} from "./interfaces/IElection.sol";
 import {FunctionsClient} from "chainlink/contracts/src/v0.8/functions/v1_3_0/FunctionsClient.sol";
+import {strings} from "lib/solidity-stringutils/src/strings.sol";
 
 /**
  * @title Election
@@ -33,6 +34,7 @@ import {FunctionsClient} from "chainlink/contracts/src/v0.8/functions/v1_3_0/Fun
  * Each election is owned by the VotsEngine. It holds a createdBy field which keeps the information of the election creator
  */
 contract Election is IElection, Ownable {
+    using strings for *;
     // ====================================================================
     // Errors
     // ====================================================================
@@ -238,6 +240,13 @@ contract Election is IElection, Ownable {
     // ====================================================================
     // Public functions
     // ====================================================================
+    /**
+     * @dev Validates a voter for voting
+     * @param name the first word of the fullname
+     * @param matricNo Matric number of the voter
+     * @param pollingUnitAddress Address of the polling unit
+     * @return validAddress True if the voter is valid, false otherwise
+     */
     function validateVoterForVoting(
         string memory name,
         string memory matricNo,
@@ -246,14 +255,19 @@ contract Election is IElection, Ownable {
         public
         pollingUnitOnly(pollingUnitAddress)
         noUnknown(matricNo)
+        accreditedVoterOnly(matricNo)
         returns (bool validAddress)
     {
         _updateElectionState();
         ElectionVoter memory voter = _votersMap[matricNo];
         emit ValidateAddressResult(validAddress);
-        return
-            compareStrings(voter.name, name) &&
+        string memory voterLastName = getfirstWord(voter.name);
+        bool isValidVoter = compareStrings(voterLastName, name) &&
             voter.voterState == VoterState.ACCREDITED;
+        if (!isValidVoter) {
+            revert Election__VoterCannotBeValidated();
+        }
+        return isValidVoter;
     }
 
     function validateAddressAsPollingUnit(
@@ -941,5 +955,12 @@ contract Election is IElection, Ownable {
         return
             keccak256(abi.encodePacked(first)) ==
             keccak256(abi.encodePacked(second));
+    }
+
+    function getfirstWord(
+        string memory fullName
+    ) public pure returns (string memory firstWord) {
+        strings.slice memory s = fullName.toSlice();
+        firstWord = s.split(" ".toSlice()).toString();
     }
 }
