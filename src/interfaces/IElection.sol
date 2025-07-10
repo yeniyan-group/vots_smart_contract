@@ -62,6 +62,7 @@ interface IElection {
     struct VoterInfoDTO {
         string name;
         string matricNo;
+        string department;
         uint256 level;
     }
 
@@ -70,6 +71,7 @@ interface IElection {
      */
     struct ElectionVoter {
         string name;
+        string department;
         uint256 level;
         VoterState voterState;
     }

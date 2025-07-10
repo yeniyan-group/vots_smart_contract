@@ -279,17 +279,18 @@ contract Election is IElection, Ownable {
     /**
      * @dev Returns Returns a list of all voters
      */
-    function getAllVoters()
-        public
-        view
-        onElectionEnded
-        returns (ElectionVoter[] memory)
-    {
+    function getAllVoters() public view returns (ElectionVoter[] memory) {
         ElectionVoter[] memory all = new ElectionVoter[](
             _registeredVotersList.length
         );
         for (uint256 i = 0; i < _registeredVotersList.length; i++) {
-            all[i] = _votersMap[_registeredVotersList[i]];
+            ElectionVoter memory voter = _votersMap[_registeredVotersList[i]];
+            all[i] = ElectionVoter({
+                name: voter.name,
+                level: voter.level,
+                department: voter.department,
+                voterState: VoterState.REGISTERED
+            });
         }
         return all;
     }
@@ -818,6 +819,7 @@ contract Election is IElection, Ownable {
             ElectionVoter memory registeredVoter = ElectionVoter({
                 name: voter.name,
                 level: voter.level,
+                department: voter.department,
                 voterState: VoterState.REGISTERED
             });
             // add to votersList if the state is unknown

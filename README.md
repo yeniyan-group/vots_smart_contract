@@ -91,14 +91,14 @@ forge build
 The VotsEngine contract is currently deployed and live on multiple testnets:
 
 ### Sepolia Testnet
-**VotsEngine Contract**: `0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06`
+**VotsEngine Contract**: `0x95935ceb316E5585E493602a1c2ADCEf832848c7`
 
-**NFT Contract**: `0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921`
+**NFT Contract**: `0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1`
 
 **Network**: Sepolia Testnet
 - **Chain ID**: 11155111
-- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
-- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921
+- **VotsEngine Block Explorer**: https://sepolia.etherscan.io/address/0x95935ceb316E5585E493602a1c2ADCEf832848c7
+- **NFT Contract Block Explorer**: https://sepolia.etherscan.io/address/0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1
 
 ### Fuji Testnet (Avalanche)
 **VotsEngine Contract**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
@@ -120,7 +120,7 @@ You can interact with the deployed contract using:
 
 ```javascript
 // Example using ethers.js with Sepolia
-const sepoliaContractAddress = "0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06....";
+const sepoliaContractAddress = "0x95935ceb316E5585E493602a1c2ADCEf832848c7....";
 const VotsEngineSepoliaClient = new ethers.Contract(sepoliaContractAddress, abi, sepoliaProvider);
 
 // Example using ethers.js with Fuji
@@ -146,7 +146,7 @@ The VotsEngine system requires a **hybrid physical-digital infrastructure**:
 ### Deploying the System
 
 The VotsEngine is already deployed on multiple testnets:
-- **Sepolia**: `0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06....`
+- **Sepolia**: `0x95935ceb316E5585E493602a1c2ADCEf832848c7....`
 - **Fuji (Avalanche)**: `0xed7eA5221041A1982d9d257c9617B1448032838d`
 
 For local development or custom deployments:
@@ -161,7 +161,7 @@ Or connect to the existing deployments:
 ```javascript
 // Connect to Sepolia deployment
 const VotsEngineSepoliaClient = new ethers.Contract(
-    "0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06....", 
+    "0x95935ceb316E5585E493602a1c2ADCEf832848c7....", 
     VotsEngineABI, 
     sepoliaProvider
 );

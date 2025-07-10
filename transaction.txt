@@ -1,73 +1,73 @@
 
-  [10110888] DeployVotsEngine::run()
+  [10132900] DeployVotsEngine::run()
     ├─ [0] VM::startBroadcast()
     │   └─ ← [Return] 
-    ├─ [209289] → new HelperConfig@0x7D03Fa5368861a658e05d9bEBF968d3EB478770a
+    ├─ [209289] → new HelperConfig@0x41F80a06b4c5F95F2419407F165833e3Caf4DC12
     │   └─ ← [Return] 712 bytes of code
     ├─ [428] HelperConfig::activeNetworkConfig() [staticcall]
     │   └─ ← [Return] 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000
-    ├─ [3346602] → new CreateElection@0x0277e47b8D9caBf03884Ed1D3Ef916F6EdeD0011
+    ├─ [3323978] → new CreateElection@0x74b46A75Ef3b84A1E2925734e302851855172d47
     │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 16596 bytes of code
-    ├─ [2266250] → new VotsElectionNft@0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921
+    │   └─ ← [Return] 16483 bytes of code
+    ├─ [2303694] → new VotsElectionNft@0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1
     │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 10976 bytes of code
-    ├─ [2534593] → new VotsEngine@0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
+    │   └─ ← [Return] 11163 bytes of code
+    ├─ [2541801] → new VotsEngine@0x95935ceb316E5585E493602a1c2ADCEf832848c7
     │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 12539 bytes of code
-    ├─ [1542915] → new VotsEngineFunctionClient@0x43Ab47B029f69ab229B0de8898dC10eA93be72c9
+    │   └─ ← [Return] 12575 bytes of code
+    ├─ [1542915] → new VotsEngineFunctionClient@0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f
     │   └─ ← [Return] 7704 bytes of code
-    ├─ [24246] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
-    │   ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
+    ├─ [24224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f])
+    │   ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f])
     │   └─ ← [Return] 
-    ├─ [2225] CreateElection::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    ├─ [2236] CreateElection::transferOwnership(VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
     │   └─ ← [Return] 
-    ├─ [2674] VotsElectionNft::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+    ├─ [2674] VotsElectionNft::transferOwnership(VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
     │   └─ ← [Stop] 
     ├─ [0] VM::stopBroadcast()
     │   └─ ← [Return] 
-    └─ ← [Return] VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06]
+    └─ ← [Return] VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7]
 
 
 Script ran successfully.
 
 == Return ==
-0: contract VotsEngine 0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
+0: contract VotsEngine 0x95935ceb316E5585E493602a1c2ADCEf832848c7
 
 ## Setting up 1 EVM.
 ==========================
 Simulated On-chain Traces:
 
-  [209289] → new HelperConfig@0x7D03Fa5368861a658e05d9bEBF968d3EB478770a
+  [209289] → new HelperConfig@0x41F80a06b4c5F95F2419407F165833e3Caf4DC12
     └─ ← [Return] 712 bytes of code
 
-  [3346602] → new CreateElection@0x0277e47b8D9caBf03884Ed1D3Ef916F6EdeD0011
+  [3323978] → new CreateElection@0x74b46A75Ef3b84A1E2925734e302851855172d47
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 16596 bytes of code
+    └─ ← [Return] 16483 bytes of code
 
-  [2266250] → new VotsElectionNft@0x9e1dbfAD78De1ef5BCbF8fA912BdA4B581663921
+  [2303694] → new VotsElectionNft@0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 10976 bytes of code
+    └─ ← [Return] 11163 bytes of code
 
-  [2534593] → new VotsEngine@0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06
+  [2541801] → new VotsEngine@0x95935ceb316E5585E493602a1c2ADCEf832848c7
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 12539 bytes of code
+    └─ ← [Return] 12575 bytes of code
 
-  [1542915] → new VotsEngineFunctionClient@0x43Ab47B029f69ab229B0de8898dC10eA93be72c9
+  [1542915] → new VotsEngineFunctionClient@0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f
     └─ ← [Return] 7704 bytes of code
 
-  [26246] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
-    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x43Ab47B029f69ab229B0de8898dC10eA93be72c9])
+  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f])
     └─ ← [Return] 
 
-  [7025] CreateElection::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+  [7036] CreateElection::transferOwnership(VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
     └─ ← [Return] 
 
-  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xda115D0e2F8e24c2F4E487bd9590AC56Fb750D06])
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x95935ceb316E5585E493602a1c2ADCEf832848c7])
     └─ ← [Stop] 
 
 
@@ -75,8 +75,167 @@ Simulated On-chain Traces:
 
 Chain 11155111
 
-Estimated gas price: 0.001001938 gwei
+Estimated gas price: 0.002814866 gwei
 
-Estimated total gas used for script: 14406832
+Estimated total gas used for script: 14435984
 
-Estimated amount required: 0.000014434752440416 ETH
+Estimated amount required: 0.000040635360538144 ETH
+
+==========================
+
+##### sepolia
+✅  [Success] Hash: 0xb8d0115dafb212499ce682ae1b7c71ee48bd7c6c2c0403d367d6d592379b1bc3
+Block: 8732376
+Paid: 0.000000051905448188 ETH (28468 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x74a3f06ca63d1b639d8b0c581b2de8deed27c48197aa451eee0fe4d769ef0c89
+Contract Address: 0x74b46A75Ef3b84A1E2925734e302851855172d47
+Block: 8732376
+Paid: 0.000006631936579104 ETH (3637344 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x73942aafce82ac30c4ea3e228cbae81c316c465dcaebcd26b50e27f06455dc59
+Block: 8732376
+Paid: 0.000000086890755896 ETH (47656 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xb03ad10c7985249f0490797ddcd9d0b16736d77b60e91609ef16f5e16286985a
+Contract Address: 0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1
+Block: 8732376
+Paid: 0.000004648888821684 ETH (2549724 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x16c656a99977df09d5f3c34693ee4b1f2aabad7e0ba1ff0a6aa45ccb4ec698fe
+Contract Address: 0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f
+Block: 8732376
+Paid: 0.000003138439914755 ETH (1721305 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xb97b50a37d1c0c7c80e2dc8b3140b2d617bc83a0623e214c82b924a76da20736
+Contract Address: 0x95935ceb316E5585E493602a1c2ADCEf832848c7
+Block: 8732376
+Paid: 0.000005105792783247 ETH (2800317 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x37a89f020c4a5f95d459fb945086300c678603de5025393c92693e1ac14613e8
+Contract Address: 0x41F80a06b4c5F95F2419407F165833e3Caf4DC12
+Block: 8732376
+Paid: 0.000000515107056865 ETH (282515 gas * 0.001823291 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xda541615023208427bd9f26cb16f00c25601e3bb4053524e9d96ddaddab6579c
+Block: 8732376
+Paid: 0.000000052704049646 ETH (28906 gas * 0.001823291 gwei)
+
+✅ Sequence #1 on sepolia | Total Paid: 0.000020231665409385 ETH (11096235 gas * avg 0.001823291 gwei)
+                                                                                                                                                                                       
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+##
+Start verification for (5) contracts
+Start verifying contract `0x41F80a06b4c5F95F2419407F165833e3Caf4DC12` deployed on sepolia
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [script/DeployVotsEngine.s.sol:HelperConfig] 0x41F80a06b4c5F95F2419407F165833e3Caf4DC12.
+Warning: Etherscan could not detect the deployment.; waiting 5 seconds before trying again (4 tries remaining)
+
+Submitting verification for [script/DeployVotsEngine.s.sol:HelperConfig] 0x41F80a06b4c5F95F2419407F165833e3Caf4DC12.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `23pni2uylzp6ngbw1upqzdg38rsnhyq8geae5iivkyrhetrkuh`
+        URL: https://sepolia.etherscan.io/address/0x41f80a06b4c5f95f2419407f165833e3caf4dc12
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0x74b46A75Ef3b84A1E2925734e302851855172d47` deployed on sepolia
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0x74b46A75Ef3b84A1E2925734e302851855172d47.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `ebezdpmmgtbffd9gqz6mrhbu5sdynfzgtzufuhclth3qkfhc8y`
+        URL: https://sepolia.etherscan.io/address/0x74b46a75ef3b84a1e2925734e302851855172d47
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `NOTOK`
+Details: `Already Verified`
+Contract source code already verified
+Start verifying contract `0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1` deployed on sepolia
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [src/VotsElectionNft.sol:VotsElectionNft] 0x34bc2AbA1C4A49e22E83D99e36602FC332aD56C1.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `t3telwmjek74l52ayifmts8l5duvkgpey9v78cwfmihntln9qr`
+        URL: https://sepolia.etherscan.io/address/0x34bc2aba1c4a49e22e83d99e36602fc332ad56c1
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `NOTOK`
+Details: `Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.`
+Error: Failed to verify contract: Checking verification result failed; Contract failed to verify.
+Start verifying contract `0x95935ceb316E5585E493602a1c2ADCEf832848c7` deployed on sepolia
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 00000000000000000000000074b46a75ef3b84a1e2925734e302851855172d4700000000000000000000000034bc2aba1c4a49e22e83d99e36602fc332ad56c1
+
+Submitting verification for [src/VotsEngine.sol:VotsEngine] 0x95935ceb316E5585E493602a1c2ADCEf832848c7.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `gbawpimnanianr9gielibhzvi2timu1rjkcdbdwisuefm3ccmw`
+        URL: https://sepolia.etherscan.io/address/0x95935ceb316e5585e493602a1c2adcef832848c7
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f` deployed on sepolia
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 000000000000000000000000b83e47c2bc239b3bf370bc41e1459a34b41238d066756e2d657468657265756d2d7365706f6c69612d310000000000000000000000000000000000000000000095935ceb316e5585e493602a1c2adcef832848c7
+
+Submitting verification for [src/VotsEngineFunctionClient.sol:VotsEngineFunctionClient] 0xFC29Ed7E17Ce69869b88141082DD2e5dE7Fe7C8f.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `nvzjnzc5lnq3bfmiruev66itqhtjagphxq66raxc26rzuqjyt3`
+        URL: https://sepolia.etherscan.io/address/0xfc29ed7e17ce69869b88141082dd2e5de7fe7c8f
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+
+Transactions saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/broadcast/DeployVotsEngine.s.sol/11155111/run-latest.json
+
+Sensitive values saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/cache/DeployVotsEngine.s.sol/11155111/run-latest.json
+
+Error: Not all (4 / 5) contracts were verified!

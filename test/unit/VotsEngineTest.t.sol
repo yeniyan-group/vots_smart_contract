@@ -82,36 +82,42 @@ contract VotsEngineTest is Test {
         IElection.VoterInfoDTO({
             name: "Voter1",
             matricNo: "VOT001",
+            department: "Computer Science",
             level: 100
         });
     IElection.VoterInfoDTO voterTwo =
         IElection.VoterInfoDTO({
             name: "Voter2",
             matricNo: "VOT002",
+            department: "Computer Science",
             level: 100
         });
     IElection.VoterInfoDTO voterThree =
         IElection.VoterInfoDTO({
             name: "Voter3",
             matricNo: "VOT003",
+            department: "Computer Science",
             level: 100
         });
     IElection.VoterInfoDTO voterFour =
         IElection.VoterInfoDTO({
             name: "Voter4",
             matricNo: "VOT004",
+            department: "Computer Science",
             level: 100
         });
     IElection.VoterInfoDTO voterFive =
         IElection.VoterInfoDTO({
             name: "Voter5",
             matricNo: "VOT005",
+            department: "Computer Science",
             level: 100
         });
     IElection.VoterInfoDTO unknownVoter =
         IElection.VoterInfoDTO({
             name: "This Unknown",
             matricNo: "VOT007",
+            department: "Computer Science",
             level: 100
         });
 
