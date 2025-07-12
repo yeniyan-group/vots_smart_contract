@@ -730,7 +730,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -818,7 +818,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             emptyCandidates
         );
@@ -891,7 +891,7 @@ contract ElectionTest is Test {
         vm.prank(unknownAddress);
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -917,7 +917,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -936,7 +936,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -949,7 +949,7 @@ contract ElectionTest is Test {
         );
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit2,
             votingCandidates
         );
@@ -971,7 +971,7 @@ contract ElectionTest is Test {
         );
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -992,7 +992,7 @@ contract ElectionTest is Test {
         // Vote with both voters
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -1072,7 +1072,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             votingCandidates
         );
@@ -1166,7 +1166,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             vote1
         );
@@ -1205,7 +1205,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             vote1
         );
@@ -1277,7 +1277,7 @@ contract ElectionTest is Test {
 
         election.voteCandidates(
             voterOne.matricNo,
-            voterOne.name,
+            "Voter1",
             pollingUnit1,
             vote1
         );

@@ -713,7 +713,11 @@ contract Election is IElection, Ownable {
         if (candidatesList.length != _electionCategories.length) {
             revert Election__AllCategoriesMustHaveOnlyOneVotedCandidate();
         }
-        if (!compareStrings(voterName, _votersMap[voterMatricNo].name)) {
+
+        string memory voterLastName = getfirstWord(
+            _votersMap[voterMatricNo].name
+        );
+        if (!compareStrings(voterName, voterLastName)) {
             revert Election__VoterCannotBeValidated();
         }
         for (uint256 i = 0; i < candidatesList.length; i++) {
