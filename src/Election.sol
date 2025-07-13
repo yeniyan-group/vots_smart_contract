@@ -324,7 +324,7 @@ contract Election is IElection, Ownable {
         );
         for (uint256 i = 0; i < _registeredVotersList.length; i++) {
             ElectionVoter memory voter = _votersMap[_registeredVotersList[i]];
-            if (voter.voterState == VoterState.ACCREDITED) {
+            if (voter.voterState == VoterState.ACCREDITED||voter.voterState == VoterState.VOTED) {
                 all[voterCount] = voter;
                 voterCount++;
             }
