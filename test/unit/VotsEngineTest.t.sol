@@ -29,60 +29,102 @@ contract VotsEngineTest is Test {
     string[] public electionCategories;
     string[] public duplicateCat;
 
-    IElection.CandidateInfoDTO candidateOne = IElection.CandidateInfoDTO({
-        name: "Ayeni Samuel",
-        matricNo: "CAND001",
-        category: "President",
-        voteFor: 1,
-        voteAgainst: 0
-    });
-    IElection.CandidateInfoDTO candidateTwo = IElection.CandidateInfoDTO({
-        name: "Leumas Ineya",
-        matricNo: "CAND002",
-        category: "President",
-        voteFor: 1,
-        voteAgainst: 0
-    });
-    IElection.CandidateInfoDTO candidateThree = IElection.CandidateInfoDTO({
-        name: "Bob Johnson",
-        matricNo: "CAND003",
-        category: "Vice President",
-        voteFor: 1,
-        voteAgainst: 0
-    });
-    IElection.CandidateInfoDTO candidateFour = IElection.CandidateInfoDTO({
-        name: "Nosnhoj Bob",
-        matricNo: "CAND004",
-        category: "Vice President",
-        voteFor: 1,
-        voteAgainst: 0
-    });
-    IElection.CandidateInfoDTO candidateFive = IElection.CandidateInfoDTO({
-        name: "TEst Bob",
-        matricNo: "CAND005",
-        category: "General Secretary",
-        voteFor: 1,
-        voteAgainst: 0
-    });
-    IElection.CandidateInfoDTO unknownCandidate = IElection.CandidateInfoDTO({
-        name: "Unknown Bob",
-        matricNo: "CAND0088",
-        category: "UNKNOWNGUY",
-        voteFor: 1,
-        voteAgainst: 0
-    });
+    IElection.CandidateInfoDTO candidateOne =
+        IElection.CandidateInfoDTO({
+            name: "Ayeni Samuel",
+            matricNo: "CAND001",
+            category: "President",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    IElection.CandidateInfoDTO candidateTwo =
+        IElection.CandidateInfoDTO({
+            name: "Leumas Ineya",
+            matricNo: "CAND002",
+            category: "President",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    IElection.CandidateInfoDTO candidateThree =
+        IElection.CandidateInfoDTO({
+            name: "Bob Johnson",
+            matricNo: "CAND003",
+            category: "Vice President",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    IElection.CandidateInfoDTO candidateFour =
+        IElection.CandidateInfoDTO({
+            name: "Nosnhoj Bob",
+            matricNo: "CAND004",
+            category: "Vice President",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    IElection.CandidateInfoDTO candidateFive =
+        IElection.CandidateInfoDTO({
+            name: "TEst Bob",
+            matricNo: "CAND005",
+            category: "General Secretary",
+            voteFor: 1,
+            voteAgainst: 0
+        });
+    IElection.CandidateInfoDTO unknownCandidate =
+        IElection.CandidateInfoDTO({
+            name: "Unknown Bob",
+            matricNo: "CAND0088",
+            category: "UNKNOWNGUY",
+            voteFor: 1,
+            voteAgainst: 0
+        });
 
-    IElection.VoterInfoDTO voterOne = IElection.VoterInfoDTO({name: "Voter1", matricNo: "VOT001"});
-    IElection.VoterInfoDTO voterTwo = IElection.VoterInfoDTO({name: "Voter2", matricNo: "VOT002"});
-    IElection.VoterInfoDTO voterThree = IElection.VoterInfoDTO({name: "Voter3", matricNo: "VOT003"});
-    IElection.VoterInfoDTO voterFour = IElection.VoterInfoDTO({name: "Voter4", matricNo: "VOT004"});
-    IElection.VoterInfoDTO voterFive = IElection.VoterInfoDTO({name: "Voter5", matricNo: "VOT005"});
-    IElection.VoterInfoDTO unknownVoter = IElection.VoterInfoDTO({name: "This Unknown", matricNo: "VOT007"});
+    IElection.VoterInfoDTO voterOne =
+        IElection.VoterInfoDTO({
+            name: "Voter1",
+            matricNo: "VOT001",
+            department: "Computer Science",
+            level: 100
+        });
+    IElection.VoterInfoDTO voterTwo =
+        IElection.VoterInfoDTO({
+            name: "Voter2",
+            matricNo: "VOT002",
+            department: "Computer Science",
+            level: 100
+        });
+    IElection.VoterInfoDTO voterThree =
+        IElection.VoterInfoDTO({
+            name: "Voter3",
+            matricNo: "VOT003",
+            department: "Computer Science",
+            level: 100
+        });
+    IElection.VoterInfoDTO voterFour =
+        IElection.VoterInfoDTO({
+            name: "Voter4",
+            matricNo: "VOT004",
+            department: "Computer Science",
+            level: 100
+        });
+    IElection.VoterInfoDTO voterFive =
+        IElection.VoterInfoDTO({
+            name: "Voter5",
+            matricNo: "VOT005",
+            department: "Computer Science",
+            level: 100
+        });
+    IElection.VoterInfoDTO unknownVoter =
+        IElection.VoterInfoDTO({
+            name: "This Unknown",
+            matricNo: "VOT007",
+            department: "Computer Science",
+            level: 100
+        });
 
     IElection.CandidateInfoDTO[] candidatesList;
     IElection.VoterInfoDTO[] votersList;
-    address[] pollingOfficerAddresses;
-    address[] pollingUnitAddresses;
+    IElection.PollIdentifier[] pollingOfficerAddresses;
+    IElection.PollIdentifier[] pollingUnitAddresses;
 
     function setUp() public {
         _setupTestData();
@@ -109,12 +151,32 @@ contract VotsEngineTest is Test {
         votersList.push(voterFive);
 
         // Setup polling addresses
-        pollingOfficerAddresses.push(pollingOfficer1);
-        pollingOfficerAddresses.push(pollingOfficer2);
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer1,
+                pollRoleName: "pollingOfficer1"
+            })
+        );
+        pollingOfficerAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingOfficer2,
+                pollRoleName: "pollingOfficer2"
+            })
+        );
 
         // Setup polling unit addresses
-        pollingUnitAddresses.push(pollingUnit1);
-        pollingUnitAddresses.push(pollingUnit2);
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit1,
+                pollRoleName: "pollingUnit1"
+            })
+        );
+        pollingUnitAddresses.push(
+            IElection.PollIdentifier({
+                pollAddress: pollingUnit2,
+                pollRoleName: "pollingUnit2"
+            })
+        );
 
         //
         electionCategories = ["President", "Vice President"];
@@ -130,13 +192,16 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -160,13 +225,16 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -179,8 +247,6 @@ contract VotsEngineTest is Test {
         // Verify election was created
         // assertTrue(votsEngine.electionExists(ELECTION_NAME));
         assertEq(votsEngine.getTotalElectionsCount(), 1);
-
-        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
         assertEq(tokenId, 1);
 
         address electionAddress = votsEngine.getElectionAddress(tokenId);
@@ -198,13 +264,16 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -224,13 +293,16 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -244,17 +316,17 @@ contract VotsEngineTest is Test {
         vm.expectRevert(IVotsEngine.VotsEngine__DuplicateElectionName.selector);
 
         vm.prank(creator);
-        IElection.ElectionParams memory secondParams = IElection.ElectionParams({
-            startTimeStamp: startTimestamp + 10 days,
-            endTimeStamp: endTimestamp + 10 days,
-            electionName: ELECTION_NAME,
-            description: ELECTION_DESCRIPTION,
-            candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            electionCategories: electionCategories
-        });
+        IElection.ElectionParams memory secondParams = IElection
+            .ElectionParams({
+                startTimeStamp: startTimestamp + 10 days,
+                endTimeStamp: endTimestamp + 10 days,
+                electionName: ELECTION_NAME,
+                description: ELECTION_DESCRIPTION,
+                candidatesList: candidatesList,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
+                electionCategories: electionCategories
+            });
 
         votsEngine.createElection(secondParams);
         // startTimestamp + 10 days,
@@ -276,13 +348,15 @@ contract VotsEngineTest is Test {
             electionName: "Election 1",
             candidatesList: candidatesList,
             description: ELECTION_DESCRIPTION,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId1 = votsEngine.getElectionTokenId("Election 1");
+
+        votsEngine.addVotersToElection(tokenId1, votersList);
         // startTimestamp,
         // endTimestamp,
         // "Election 1",
@@ -294,19 +368,21 @@ contract VotsEngineTest is Test {
 
         // Create second election
 
-        IElection.ElectionParams memory secondParams = IElection.ElectionParams({
-            startTimeStamp: startTimestamp + 10 days,
-            endTimeStamp: endTimestamp + 10 days,
-            electionName: "Election 2",
-            candidatesList: candidatesList,
-            description: ELECTION_DESCRIPTION,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            electionCategories: electionCategories
-        });
+        IElection.ElectionParams memory secondParams = IElection
+            .ElectionParams({
+                startTimeStamp: startTimestamp + 10 days,
+                endTimeStamp: endTimestamp + 10 days,
+                electionName: "Election 2",
+                candidatesList: candidatesList,
+                description: ELECTION_DESCRIPTION,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
+                electionCategories: electionCategories
+            });
 
         votsEngine.createElection(secondParams);
+        uint256 tokenId2 = votsEngine.getElectionTokenId("Election 2");
+        votsEngine.addVotersToElection(tokenId2, votersList);
         // startTimestamp + 10 days,
         // endTimestamp + 10 days,
         // "Election 2",
@@ -318,12 +394,22 @@ contract VotsEngineTest is Test {
 
         vm.stopPrank();
         assertEq(votsEngine.getTotalElectionsCount(), 2);
-        assertTrue(votsEngine.electionExistsByTokenId(votsEngine.getElectionTokenId("Election 1")));
-        assertTrue(votsEngine.electionExistsByTokenId(votsEngine.getElectionTokenId("Election 2")));
+        assertTrue(
+            votsEngine.electionExistsByTokenId(
+                votsEngine.getElectionTokenId("Election 1")
+            )
+        );
+        assertTrue(
+            votsEngine.electionExistsByTokenId(
+                votsEngine.getElectionTokenId("Election 2")
+            )
+        );
     }
 
     function testCreateElectionRevertOnEmptyElectionName() public {
-        vm.expectRevert(IVotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector);
+        vm.expectRevert(
+            IVotsEngine.VotsEngine__ElectionNameCannotBeEmpty.selector
+        );
         vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
@@ -331,9 +417,8 @@ contract VotsEngineTest is Test {
             electionName: "",
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -361,13 +446,16 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -377,8 +465,6 @@ contract VotsEngineTest is Test {
         // pollingOfficerAddresses,
         // electionCategories
 
-        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
-
         // Start election
         vm.warp(startTimestamp + 1);
 
@@ -387,7 +473,11 @@ contract VotsEngineTest is Test {
         votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Verify accreditation
-        assertEq(IElection(votsEngine.getElectionAddress(tokenId)).getAccreditedVotersCount(), 1);
+        assertEq(
+            IElection(votsEngine.getElectionAddress(tokenId))
+                .getAccreditedVotersCount(),
+            1
+        );
     }
 
     function testAccrediteVoterRevertOnInvalidPollingOfficer() public {
@@ -399,13 +489,15 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
         votsEngine.createElection(params);
+        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+        vm.prank(creator);
+        votsEngine.addVotersToElection(tokenId, votersList);
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -415,13 +507,16 @@ contract VotsEngineTest is Test {
         // pollingOfficerAddresses,
         // electionCategories
 
-        uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
-
         // Start election
         vm.warp(startTimestamp + 1);
 
         // Try to accredite with invalid officer
-        vm.expectRevert(abi.encodeWithSelector(Election.Election__OnlyPollingOfficerAllowed.selector, unknownAddress));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingOfficerAllowed.selector,
+                unknownAddress
+            )
+        );
         vm.prank(unknownAddress); // user2 is not a polling officer
         votsEngine.accrediteVoter(voterFive.name, tokenId);
     }
@@ -444,9 +539,8 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -481,20 +575,25 @@ contract VotsEngineTest is Test {
 
     function testVoteCandidatesSuccess() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -512,34 +611,49 @@ contract VotsEngineTest is Test {
         votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Prepare vote
-        IElection.CandidateInfoDTO[] memory votes = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes = new IElection.CandidateInfoDTO[](2);
         votes[0] = candidateOne;
         votes[1] = candidateThree;
 
         // Cast vote
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterOne.matricNo, voterOne.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            votes,
+            tokenId
+        );
 
         // Verify vote was cast
-        assertEq(IElection(votsEngine.getElectionAddress(tokenId)).getVotedVotersCount(), 1);
+        assertEq(
+            IElection(votsEngine.getElectionAddress(tokenId))
+                .getVotedVotersCount(),
+            1
+        );
     }
 
     function testVoteCandidatesRevertOnInvalidPollingUnit() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -557,33 +671,49 @@ contract VotsEngineTest is Test {
         votsEngine.accrediteVoter(voterOne.matricNo, tokenId);
 
         // Prepare vote
-        IElection.CandidateInfoDTO[] memory votes = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes = new IElection.CandidateInfoDTO[](2);
 
         votes[0] = candidateOne;
         votes[1] = candidateThree;
 
         // Try to vote with invalid polling unit
-        vm.expectRevert(abi.encodeWithSelector(Election.Election__OnlyPollingUnitAllowed.selector, creator));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__OnlyPollingUnitAllowed.selector,
+                creator
+            )
+        );
         vm.prank(creator); // creator is not a polling unit
-        votsEngine.voteCandidates(voterOne.matricNo, voterOne.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            votes,
+            tokenId
+        );
     }
 
     function testVoteCandidatesRevertOnUnaccreditedVoter() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -599,15 +729,26 @@ contract VotsEngineTest is Test {
         vm.warp(startTimestamp + 1);
 
         // Prepare vote
-        IElection.CandidateInfoDTO[] memory votes = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes = new IElection.CandidateInfoDTO[](2);
 
         votes[0] = candidateOne;
         votes[1] = candidateThree;
 
         // Try to vote without accreditation
-        vm.expectRevert(abi.encodeWithSelector(Election.Election__UnaccreditedVoter.selector, voterFive.matricNo));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__UnaccreditedVoter.selector,
+                voterFive.matricNo
+            )
+        );
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterFive.matricNo, voterFive.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterFive.matricNo,
+            voterFive.name,
+            votes,
+            tokenId
+        );
     }
 
     // ====================================================================
@@ -623,9 +764,8 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -641,31 +781,40 @@ contract VotsEngineTest is Test {
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
-        VotsEngine.ElectionInfo memory electionInfo = votsEngine.getElectionInfo(tokenId);
+        VotsEngine.ElectionInfo memory electionInfo = votsEngine
+            .getElectionInfo(tokenId);
 
         assertEq(electionInfo.createdBy, creator);
         assertEq(electionInfo.electionName, ELECTION_NAME);
         assertEq(electionInfo.startTimestamp, startTimestamp);
         assertEq(electionInfo.endTimestamp, endTimestamp);
-        assertEq(uint256(electionInfo.state), uint256(IElection.ElectionState.OPENED));
+        assertEq(
+            uint256(electionInfo.state),
+            uint256(IElection.ElectionState.OPENED)
+        );
     }
 
     function testGetElectionStats() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -696,20 +845,25 @@ contract VotsEngineTest is Test {
 
     function testGetAllVoters() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -720,18 +874,28 @@ contract VotsEngineTest is Test {
         // electionCategories
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
+        vm.warp(endTimestamp + 1);
 
-        IElection.ElectionVoter[] memory voters = votsEngine.getAllVoters(tokenId);
+        IElection.ElectionVoter[] memory voters = votsEngine.getAllVoters(
+            tokenId
+        );
 
         assertEq(voters.length, votersList.length);
         assertEq(voters[0].name, voterOne.name);
-        assertEq(uint256(voters[0].voterState), uint256(IElection.VoterState.REGISTERED));
+        assertEq(
+            uint256(voters[0].voterState),
+            uint256(IElection.VoterState.REGISTERED)
+        );
     }
 
     function testGetAllCandidatesInDto() public {
         candidatesList.push(candidateFive);
 
-        electionCategories = ["President", "Vice President", "General Secretary"];
+        electionCategories = [
+            "President",
+            "Vice President",
+            "General Secretary"
+        ];
         // Create election
         vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
@@ -740,9 +904,8 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -758,33 +921,54 @@ contract VotsEngineTest is Test {
 
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
 
-        IElection.CandidateInfoDTO[] memory candidates = votsEngine.getAllCandidatesInDto(tokenId);
+        IElection.CandidateInfoDTO[] memory candidates = votsEngine
+            .getAllCandidatesInDto(tokenId);
 
         assertEq(candidates.length, 5);
         assertEq(candidates[0].name, candidateOne.name);
         assertEq(candidates[0].matricNo, candidateOne.matricNo);
         assertEq(candidates[0].category, candidateOne.category);
-        console.log("candidates[0].name, candidateOne.name", candidates[0].name, candidateOne.name);
+        console.log(
+            "candidates[0].name, candidateOne.name",
+            candidates[0].name,
+            candidateOne.name
+        );
 
         assertEq(candidates[1].name, candidateTwo.name);
         assertEq(candidates[1].matricNo, candidateTwo.matricNo);
         assertEq(candidates[1].category, candidateTwo.category);
-        console.log("candidates[1].name, candidateTwo.name", candidates[1].name, candidateTwo.name);
+        console.log(
+            "candidates[1].name, candidateTwo.name",
+            candidates[1].name,
+            candidateTwo.name
+        );
 
         assertEq(candidates[2].name, candidateThree.name);
         assertEq(candidates[2].matricNo, candidateThree.matricNo);
         assertEq(candidates[2].category, candidateThree.category);
-        console.log("candidates[2].name, candidateThree.name", candidates[2].name, candidateThree.name);
+        console.log(
+            "candidates[2].name, candidateThree.name",
+            candidates[2].name,
+            candidateThree.name
+        );
 
         assertEq(candidates[3].name, candidateFour.name);
         assertEq(candidates[3].matricNo, candidateFour.matricNo);
         assertEq(candidates[3].category, candidateFour.category);
-        console.log("candidates[3].name, candidateFour.name", candidates[3].name, candidateFour.name);
+        console.log(
+            "candidates[3].name, candidateFour.name",
+            candidates[3].name,
+            candidateFour.name
+        );
 
         assertEq(candidates[4].name, candidateFive.name);
         assertEq(candidates[4].matricNo, candidateFive.matricNo);
         assertEq(candidates[4].category, candidateFive.category);
-        console.log("candidates[4].name, candidateFive.name", candidates[4].name, candidateFour.name);
+        console.log(
+            "candidates[4].name, candidateFive.name",
+            candidates[4].name,
+            candidateFour.name
+        );
     }
 
     function testGetAllElectionsSummary() public {
@@ -796,9 +980,8 @@ contract VotsEngineTest is Test {
             electionName: "Election 1",
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -813,17 +996,17 @@ contract VotsEngineTest is Test {
         // electionCategories
 
         vm.prank(creator2);
-        IElection.ElectionParams memory secondParams = IElection.ElectionParams({
-            startTimeStamp: startTimestamp + 10 days,
-            endTimeStamp: endTimestamp + 10 days,
-            electionName: "Election 2",
-            description: ELECTION_DESCRIPTION,
-            candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
-            electionCategories: electionCategories
-        });
+        IElection.ElectionParams memory secondParams = IElection
+            .ElectionParams({
+                startTimeStamp: startTimestamp + 10 days,
+                endTimeStamp: endTimestamp + 10 days,
+                electionName: "Election 2",
+                description: ELECTION_DESCRIPTION,
+                candidatesList: candidatesList,
+                pollingUnits: pollingUnitAddresses,
+                pollingOfficers: pollingOfficerAddresses,
+                electionCategories: electionCategories
+            });
 
         votsEngine.createElection(secondParams);
         // startTimestamp + 10 days,
@@ -835,7 +1018,8 @@ contract VotsEngineTest is Test {
         // pollingOfficerAddresses,
         // electionCategories
 
-        VotsEngine.ElectionSummary[] memory summaries = votsEngine.getAllElectionsSummary();
+        VotsEngine.ElectionSummary[] memory summaries = votsEngine
+            .getAllElectionsSummary();
 
         assertEq(summaries.length, 2);
         assertEq(summaries[0].electionId, 1);
@@ -887,20 +1071,25 @@ contract VotsEngineTest is Test {
 
     function testGetElectionResultsAfterElectionEnds() public {
         // Create election
-        vm.prank(creator);
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
+        vm.startPrank(creator);
         votsEngine.createElection(params);
+
+        votsEngine.addVotersToElection(
+            votsEngine.getElectionTokenId(ELECTION_NAME),
+            votersList
+        );
+        vm.stopPrank();
         // startTimestamp,
         // endTimestamp,
         // ELECTION_NAME,
@@ -923,29 +1112,43 @@ contract VotsEngineTest is Test {
         votsEngine.accrediteVoter(voterTwo.matricNo, tokenId);
 
         // Vote 1
-        IElection.CandidateInfoDTO[] memory votes1 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes1 = new IElection.CandidateInfoDTO[](2);
 
         votes1[0] = candidateOne;
         votes1[1] = candidateThree;
 
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterOne.matricNo, voterOne.name, votes1, tokenId);
+        votsEngine.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            votes1,
+            tokenId
+        );
 
         // Vote 2
-        IElection.CandidateInfoDTO[] memory votes2 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes2 = new IElection.CandidateInfoDTO[](2);
 
         votes2[0] = candidateOne;
         votes2[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterTwo.matricNo, voterTwo.name, votes2, tokenId);
+        votsEngine.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            votes2,
+            tokenId
+        );
 
         // End election
         vm.warp(endTimestamp + 1);
 
         // Get results
-        Election.ElectionCandidate[] memory allCandidates = votsEngine.getAllCandidates(tokenId);
-        Election.ElectionWinner[][] memory winners = votsEngine.getEachCategoryWinner(tokenId);
+        Election.CandidateInfoDTO[] memory allCandidates = votsEngine
+            .getAllCandidates(tokenId);
+        Election.ElectionWinner[][] memory winners = votsEngine
+            .getEachCategoryWinner(tokenId);
 
         // Verify results
         assertTrue(allCandidates.length > 0);
@@ -969,9 +1172,8 @@ contract VotsEngineTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
-            pollingUnitAddresses: pollingUnitAddresses,
-            pollingOfficerAddresses: pollingOfficerAddresses,
+            pollingUnits: pollingUnitAddresses,
+            pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
 
@@ -1021,21 +1223,33 @@ contract VotsEngineTest is Test {
 
         // Initially OPENED
 
-        VotsEngine.ElectionInfo memory initElectionInfo = votsEngine.getElectionInfo(tokenId);
-        assertEq(uint256(initElectionInfo.state), uint256(IElection.ElectionState.OPENED));
+        VotsEngine.ElectionInfo memory initElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint256(initElectionInfo.state),
+            uint256(IElection.ElectionState.OPENED)
+        );
 
         // Move to STARTED
         vm.warp(startTimestamp + 1);
         votsEngine.updateElectionState(tokenId);
 
-        VotsEngine.ElectionInfo memory midElectionInfo = votsEngine.getElectionInfo(tokenId);
-        assertEq(uint256(midElectionInfo.state), uint256(IElection.ElectionState.STARTED));
+        VotsEngine.ElectionInfo memory midElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint256(midElectionInfo.state),
+            uint256(IElection.ElectionState.STARTED)
+        );
 
         // Move to ENDED
         vm.warp(endTimestamp + 1);
         votsEngine.updateElectionState(tokenId);
-        VotsEngine.ElectionInfo memory endElectionInfo = votsEngine.getElectionInfo(tokenId);
-        assertEq(uint256(endElectionInfo.state), uint256(IElection.ElectionState.ENDED));
+        VotsEngine.ElectionInfo memory endElectionInfo = votsEngine
+            .getElectionInfo(tokenId);
+        assertEq(
+            uint256(endElectionInfo.state),
+            uint256(IElection.ElectionState.ENDED)
+        );
     }
 
     // ====================================================================
@@ -1058,10 +1272,18 @@ contract VotsEngineTest is Test {
 
         _createElectionWithDefaultValues();
         uint256 tokenId = votsEngine.getElectionTokenId(ELECTION_NAME);
-        IElection selectedElection = IElection(votsEngine.getElectionAddress(tokenId));
+        IElection selectedElection = IElection(
+            votsEngine.getElectionAddress(tokenId)
+        );
         // 2. Verify initial state
-        assertEq(selectedElection.getRegisteredVotersCount(), votersList.length);
-        assertEq(selectedElection.getRegisteredCandidatesCount(), candidatesList.length);
+        assertEq(
+            selectedElection.getRegisteredVotersCount(),
+            votersList.length
+        );
+        assertEq(
+            selectedElection.getRegisteredCandidatesCount(),
+            candidatesList.length
+        );
         assertEq(selectedElection.getAccreditedVotersCount(), 0);
         assertEq(selectedElection.getVotedVotersCount(), 0);
 
@@ -1083,34 +1305,56 @@ contract VotsEngineTest is Test {
         assertEq(selectedElection.getAccreditedVotersCount(), 4);
 
         // 5. Cast votes
-        IElection.CandidateInfoDTO[] memory votes = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[]
+            memory votes = new IElection.CandidateInfoDTO[](2);
 
         votes[0] = candidateOne;
         votes[1] = candidateThree;
 
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterOne.matricNo, voterOne.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterOne.matricNo,
+            voterOne.name,
+            votes,
+            tokenId
+        );
 
         vm.prank(pollingUnit2);
-        votsEngine.voteCandidates(voterTwo.matricNo, voterTwo.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterTwo.matricNo,
+            voterTwo.name,
+            votes,
+            tokenId
+        );
 
         votes[0] = candidateTwo;
         votes[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterThree.matricNo, voterThree.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterThree.matricNo,
+            voterThree.name,
+            votes,
+            tokenId
+        );
         votes[0] = candidateOne;
         votes[1] = candidateFour;
 
         vm.prank(pollingUnit1);
-        votsEngine.voteCandidates(voterFour.matricNo, voterFour.name, votes, tokenId);
+        votsEngine.voteCandidates(
+            voterFour.matricNo,
+            voterFour.name,
+            votes,
+            tokenId
+        );
 
         assertEq(selectedElection.getVotedVotersCount(), 4);
 
         // 6. End election and check results
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = votsEngine.getEachCategoryWinner(tokenId);
+        Election.ElectionWinner[][] memory winners = votsEngine
+            .getEachCategoryWinner(tokenId);
 
         // President: John Doe should win with 2 votes
         assertEq(winners[0].length, 1);

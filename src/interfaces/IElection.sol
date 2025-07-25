@@ -39,9 +39,8 @@ interface IElection {
         string electionName;
         string description;
         CandidateInfoDTO[] candidatesList;
-        VoterInfoDTO[] votersList;
-        address[] pollingUnitAddresses;
-        address[] pollingOfficerAddresses;
+        PollIdentifier[] pollingUnits;
+        PollIdentifier[] pollingOfficers;
         string[] electionCategories;
     }
 
@@ -62,6 +61,8 @@ interface IElection {
     struct VoterInfoDTO {
         string name;
         string matricNo;
+        string department;
+        uint256 level;
     }
 
     /**
@@ -69,6 +70,8 @@ interface IElection {
      */
     struct ElectionVoter {
         string name;
+        string department;
+        uint256 level;
         VoterState voterState;
     }
 
@@ -91,16 +94,36 @@ interface IElection {
         string category;
     }
 
+    /**
+     * @dev Structure for Polling Unit Identifier
+     */
+    struct PollIdentifier {
+        string pollRoleName;
+        address pollAddress;
+    }
+
     // ====================================================================
     // Voter Management Functions
     // ====================================================================
+
+    /**
+     * @dev Adds voters to the election after creation. Can only be called by election creator before election starts.
+     * @param votersList Array of voters to register
+     */
+    function addVoters(
+        address creatorAddress,
+        VoterInfoDTO[] memory votersList
+    ) external;
 
     /**
      * @dev Accredits a voter for this election
      * @param voterMatricNo The voter's matriculation number
      * @param accreditedBy Address that accredited the voter
      */
-    function accrediteVoter(string calldata voterMatricNo, address accreditedBy) external;
+    function accrediteVoter(
+        string calldata voterMatricNo,
+        address accreditedBy
+    ) external;
 
     /**
      * @dev Validates if a voter can vote in this election
@@ -109,9 +132,11 @@ interface IElection {
      * @param votedBy Address attempting to vote
      * @return bool True if voter is valid for voting
      */
-    function validateVoterForVoting(string memory voterName, string memory voterMatricNo, address votedBy)
-        external
-        returns (bool);
+    function validateVoterForVoting(
+        string memory voterName,
+        string memory voterMatricNo,
+        address votedBy
+    ) external returns (bool);
 
     /**
      * @dev Processes votes for candidates
@@ -136,14 +161,18 @@ interface IElection {
      * @param pollingUnit Address to validate
      * @return bool True if address is a polling unit
      */
-    function validateAddressAsPollingUnit(address pollingUnit) external returns (bool);
+    function validateAddressAsPollingUnit(
+        address pollingUnit
+    ) external returns (bool);
 
     /**
      * @dev Validates if an address is a polling officer
      * @param pollingOfficer Address to validate
      * @return bool True if address is a polling officer
      */
-    function validateAddressAsPollingOfficer(address pollingOfficer) external returns (bool);
+    function validateAddressAsPollingOfficer(
+        address pollingOfficer
+    ) external returns (bool);
 
     // ====================================================================
     // Getter Functions - Basic Info
@@ -242,6 +271,12 @@ interface IElection {
     // ====================================================================
 
     /**
+     * @dev Returns the number of voters that can be registered in a batch
+     * @return ElectionVoter[] Array of all voters
+     */
+    function getVotersBatchLimit() external pure returns (uint256);
+
+    /**
      * @dev Returns all voters in the election
      * @return ElectionVoter[] Array of all voters
      */
@@ -251,7 +286,10 @@ interface IElection {
      * @dev Returns all accredited voters
      * @return ElectionVoter[] Array of accredited voters
      */
-    function getAllAccreditedVoters() external view returns (ElectionVoter[] memory);
+    function getAllAccreditedVoters()
+        external
+        view
+        returns (ElectionVoter[] memory);
 
     /**
      * @dev Returns all voters who have voted
@@ -263,31 +301,46 @@ interface IElection {
      * @dev Returns all candidates as DTOs (without vote counts)
      * @return CandidateInfoDTO[] Array of candidate DTOs
      */
-    function getAllCandidatesInDto() external view returns (CandidateInfoDTO[] memory);
+    function getAllCandidatesInDto()
+        external
+        view
+        returns (CandidateInfoDTO[] memory);
 
     /**
      * @dev Returns all candidates with vote counts (only after election ends)
      * @return ElectionCandidate[] Array of candidates with vote counts
      */
-    function getAllCandidates() external returns (ElectionCandidate[] memory);
+    function getAllCandidates()
+        external
+        view
+        returns (CandidateInfoDTO[] memory);
 
     /**
      * @dev Returns winners for each category (handles ties)
      * @return ElectionWinner[][] Array of winners per category
      */
-    function getEachCategoryWinner() external returns (ElectionWinner[][] memory);
+    function getEachCategoryWinner()
+        external
+        view
+        returns (ElectionWinner[][] memory);
 
     /**
      * @dev Returns polling officers addresses
      * @return address[] Array of polling officer addresses
      */
-    function getPollingOfficersAddresses() external view returns (address[] memory);
+    function getPollingOfficersAddresses()
+        external
+        view
+        returns (PollIdentifier[] memory);
 
     /**
      * @dev Returns polling units addresses
      * @return address[] Array of polling unit addresses
      */
-    function getPollingUnitsAddresses() external view returns (address[] memory);
+    function getPollingUnitsAddresses()
+        external
+        view
+        returns (PollIdentifier[] memory);
 
     // ====================================================================
     // State Management

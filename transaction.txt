@@ -1,149 +1,176 @@
 
-  [9795130] DeployVotsEngine::run()
-    ├─ [0] VM::startBroadcast()
-    │   └─ ← [Return] 
-    ├─ [183382] → new HelperConfig@0x120a30438AE558E28327a58e941fa3822269a16B
-    │   └─ ← [Return] 578 bytes of code
-    ├─ [406] HelperConfig::activeNetworkConfig() [staticcall]
-    │   └─ ← [Return] 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000
-    ├─ [3088683] → new CreateElection@0xC47ad6D77697266d6612aa578a0512d84B9c9649
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 15308 bytes of code
-    ├─ [2264850] → new VotsElectionNft@0x7b80Dcda97907eFF4D99655223437E4689E559c6
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 10969 bytes of code
-    ├─ [2504563] → new VotsEngine@0xbC9aFaB1b833427195F9674b0f34B501b408f810
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    │   └─ ← [Return] 12389 bytes of code
-    ├─ [1542915] → new VotsEngineFunctionClient@0x280fb0Be714053ACD440371cE6a56E67Fc7aD375
-    │   └─ ← [Return] 7704 bytes of code
-    ├─ [24224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x280fb0Be714053ACD440371cE6a56E67Fc7aD375])
-    │   ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x280fb0Be714053ACD440371cE6a56E67Fc7aD375])
-    │   └─ ← [Return] 
-    ├─ [2236] CreateElection::transferOwnership(VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    │   └─ ← [Return] 
-    ├─ [2674] VotsElectionNft::transferOwnership(VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    │   └─ ← [Stop] 
-    ├─ [0] VM::stopBroadcast()
-    │   └─ ← [Return] 
-    └─ ← [Return] VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810]
-
-
-Script ran successfully.
-
 == Return ==
-0: contract VotsEngine 0xbC9aFaB1b833427195F9674b0f34B501b408f810
+0: contract VotsEngine 0x91f995B3160af869F8bDB9d031648363CACdC60F
 
 ## Setting up 1 EVM.
 ==========================
 Simulated On-chain Traces:
 
-  [183382] → new HelperConfig@0x120a30438AE558E28327a58e941fa3822269a16B
-    └─ ← [Return] 578 bytes of code
-
-  [3088683] → new CreateElection@0xC47ad6D77697266d6612aa578a0512d84B9c9649
+  [3582502] → new CreateElection@0xC3235ce9C7CF374C435c2066c12d7341d9818428
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 15308 bytes of code
+    └─ ← [Return] 17774 bytes of code
 
-  [2264850] → new VotsElectionNft@0x7b80Dcda97907eFF4D99655223437E4689E559c6
+  [2303694] → new VotsElectionNft@0xD34359FCFB6596CBf2ce4b146AF98402CEe4f8B5
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 10969 bytes of code
+    └─ ← [Return] 11163 bytes of code
 
-  [2504563] → new VotsEngine@0xbC9aFaB1b833427195F9674b0f34B501b408f810
+  [2591461] → new VotsEngine@0x91f995B3160af869F8bDB9d031648363CACdC60F
     ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
-    └─ ← [Return] 12389 bytes of code
+    └─ ← [Return] 12823 bytes of code
 
-  [1542915] → new VotsEngineFunctionClient@0x280fb0Be714053ACD440371cE6a56E67Fc7aD375
+  [1542915] → new VotsEngineFunctionClient@0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A
     └─ ← [Return] 7704 bytes of code
 
-  [26224] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x280fb0Be714053ACD440371cE6a56E67Fc7aD375])
-    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x280fb0Be714053ACD440371cE6a56E67Fc7aD375])
-    └─ ← [Return] 
+  [26279] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A])
+    └─ ← [Return]
 
-  [7036] CreateElection::transferOwnership(VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    └─ ← [Return] 
+  [7036] CreateElection::transferOwnership(VotsEngine: [0x91f995B3160af869F8bDB9d031648363CACdC60F])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x91f995B3160af869F8bDB9d031648363CACdC60F])
+    └─ ← [Return]
 
-  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xbC9aFaB1b833427195F9674b0f34B501b408f810])
-    └─ ← [Stop] 
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0x91f995B3160af869F8bDB9d031648363CACdC60F])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0x91f995B3160af869F8bDB9d031648363CACdC60F])
+    └─ ← [Stop]
 
 
 ==========================
 
 Chain 11155111
 
-Estimated gas price: 0.006078103 gwei
+Estimated gas price: 0.001444578 gwei
 
-Estimated total gas used for script: 13960939
+Estimated total gas used for script: 14500429
 
-Estimated amount required: 0.000084856025218717 ETH
+Estimated amount required: 0.000020947000723962 ETH
 
 ==========================
 
 ##### sepolia
-✅  [Success] Hash: 0x6d5712349f829bfb4f424a771bd82e5619e76f09b05c758cb0540f7165f08d4b
-Block: 8655259
-Paid: 0.0000000995106057 ETH (28468 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0x0f08eeebbc4ef47a40d3b829d2748c7684473c427bea6c93f4e6b32ab61ba8fe
+Contract Address: 0xD34359FCFB6596CBf2ce4b146AF98402CEe4f8B5
+Block: 8839064
+Paid: 0.000003095385333792 ETH (2549724 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0x6ed44d591c42de83a4d863c17df1b8291858765c040dcc2533721a8350043a1d
-Contract Address: 0x280fb0Be714053ACD440371cE6a56E67Fc7aD375
-Block: 8655259
-Paid: 0.000006016864660125 ETH (1721305 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0x15f65fa3cb8f9704b04f8c3e5c334f7fc2cbc0280fe9c4d80ffeb6e95ae91957
+Contract Address: 0x91f995B3160af869F8bDB9d031648363CACdC60F
+Block: 8839064
+Paid: 0.000003464658645208 ETH (2853901 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0xeda0f0299706999acb6bfe268af38b4a75a549754e7ae7af8c30262ee53c7e32
-Contract Address: 0xC47ad6D77697266d6612aa578a0512d84B9c9649
-Block: 8655259
-Paid: 0.000011831348909325 ETH (3384713 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0xa36bac05579ccda5c04c813686cd23a22fa84b88e60ef0a5b27e908957ee3321
+Block: 8839064
+Paid: 0.000000034560379744 ETH (28468 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0xd8ea1744ce75f3f4e6ce8f0fffbd8da63d75b4dfe8b9b2e77d55ec83be98bbda
-Contract Address: 0x120a30438AE558E28327a58e941fa3822269a16B
-Block: 8655259
-Paid: 0.00000088078141635 ETH (251974 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0xea62dd80283382ec7222ba70b756c1c2b6e9f651e81ea3d11970d20c7eac2013
+Contract Address: 0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A
+Block: 8839064
+Paid: 0.00000208967804044 ETH (1721305 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0x097b695b2cab87c291f9cb02f41866952ae682a5571d5c1cbfb8f49198d649b1
-Block: 8655259
-Paid: 0.0000001665827394 ETH (47656 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0x4f53d8d42718d507037b65019a3fa00057a9543b1791a2d0b3dd0400ed180e7a
+Contract Address: 0xC3235ce9C7CF374C435c2066c12d7341d9818428
+Block: 8839064
+Paid: 0.00000475380038632 ETH (3915790 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0xf1b4d3cca03fd002685db8b6b9fc2b5726b64d7d551cc94c9db022fd04427119
-Contract Address: 0xbC9aFaB1b833427195F9674b0f34B501b408f810
-Block: 8655259
-Paid: 0.000009648009039075 ETH (2760103 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0x6d2be35a4efa6186381693b325daa17af5ab40583419fb2041ae1bf92811450c
+Block: 8839064
+Paid: 0.000000035092115248 ETH (28906 gas * 0.001214008 gwei)
 
 
 ##### sepolia
-✅  [Success] Hash: 0xe357fcf5c382c40ebec9aff1dffbe2476d3d1a756c09e9fad642ae34fb62db9a
-Contract Address: 0x7b80Dcda97907eFF4D99655223437E4689E559c6
-Block: 8655259
-Paid: 0.0000087657000783 ETH (2507692 gas * 0.003495525 gwei)
+✅  [Success] Hash: 0x3a34fc677e0cddb5f824dd44bb46042d5d9c73c5a7e057a7a3e152e744983114
+Block: 8839064
+Paid: 0.000000057921535688 ETH (47711 gas * 0.001214008 gwei)
 
-
-##### sepolia
-✅  [Success] Hash: 0x60aaa583f03631ef9a49f0fea9482e6c8a7e887ec79cff17fd185e418444fe55
-Block: 8655259
-Paid: 0.00000010104164565 ETH (28906 gas * 0.003495525 gwei)
-
-✅ Sequence #1 on sepolia | Total Paid: 0.000037509839093925 ETH (10730817 gas * avg 0.003495525 gwei)
-                                                                                                                                                                                                                       
+✅ Sequence #1 on sepolia | Total Paid: 0.00001353109643644 ETH (11145805 gas * avg 0.001214008 gwei)
+                                                                                                                                                                         
 
 ==========================
 
 ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+Warning: We haven't found any matching bytecode for the following contracts: [0xd34359fcfb6596cbf2ce4b146af98402cee4f8b5].
 
-Network Name: Avalanche C-Chain
-New RPC URL: https://api.avax-test.network/ext/bc/C/rpc
-ChainID: 43113
-Symbol: AVAX
-Explorer: https://testnet.snowtrace.io
+This may occur when resuming a verification, but the underlying source code or compiler version has changed.
+##
+Start verification for (3) contracts
+Start verifying contract `0xC3235ce9C7CF374C435c2066c12d7341d9818428` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (4 tries remaining)
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (3 tries remaining)
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (2 tries remaining)
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (1 tries remaining)
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (0 tries remaining)
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xC3235ce9C7CF374C435c2066c12d7341d9818428.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `5gattwctg6jrsfsdctwtwaa18wtw6sxabq8q3kccm6wgrzquyj`
+        URL: https://sepolia.etherscan.io/address/0xc3235ce9c7cf374c435c2066c12d7341d9818428
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0x91f995B3160af869F8bDB9d031648363CACdC60F` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 000000000000000000000000c3235ce9c7cf374c435c2066c12d7341d9818428000000000000000000000000d34359fcfb6596cbf2ce4b146af98402cee4f8b5
+
+Submitting verification for [src/VotsEngine.sol:VotsEngine] 0x91f995B3160af869F8bDB9d031648363CACdC60F.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `jxwx8kbnhhepzbj3ga1vgrcisis5ky7schf83seusvhyzltntx`
+        URL: https://sepolia.etherscan.io/address/0x91f995b3160af869f8bdb9d031648363cacdc60f
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 000000000000000000000000b83e47c2bc239b3bf370bc41e1459a34b41238d066756e2d657468657265756d2d7365706f6c69612d310000000000000000000000000000000000000000000091f995b3160af869f8bdb9d031648363cacdc60f
+
+Submitting verification for [src/VotsEngineFunctionClient.sol:VotsEngineFunctionClient] 0xAccf5D57346D6D6C7F0372A9e83b2a2B132B195A.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `zkrgxtf7zhiykzbnvpadbnsaqcbhfsqbq77wdwhgi6rzwp4f35`
+        URL: https://sepolia.etherscan.io/address/0xaccf5d57346d6d6c7f0372a9e83b2a2b132b195a
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+All (3) contracts were verified!
