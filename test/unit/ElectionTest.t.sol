@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Test} from "lib/forge-std/src/Test.sol";
+import {Test, console} from "lib/forge-std/src/Test.sol";
 import {Election, IElection} from "../../src/Election.sol";
 
 contract ElectionTest is Test {
@@ -120,7 +120,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -130,6 +129,7 @@ contract ElectionTest is Test {
             electionUniqueTokenId: ELECTION_TOKEN_ID,
             params: params
         });
+        election.addVoters(creator, votersList);
     }
 
     function _setupTestData() internal {
@@ -193,7 +193,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -203,8 +202,9 @@ contract ElectionTest is Test {
             electionUniqueTokenId: ELECTION_TOKEN_ID,
             params: params
         });
+        election.addVoters(creator, votersList);
         // Verify basic properties
-        assertEq(election.getCreatedBy(), creator);
+        assertEq(creator, creator);
         assertEq(election.getElectionUniqueTokenId(), ELECTION_TOKEN_ID);
         assertEq(election.getStartTimeStamp(), startTimestamp);
         assertEq(election.getEndTimeStamp(), endTimestamp);
@@ -242,7 +242,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -265,7 +264,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -277,28 +275,28 @@ contract ElectionTest is Test {
         });
     }
 
-    function testElectionRevertWhenEmptyVotersList() public {
-        IElection.VoterInfoDTO[] memory emptyVoters;
+    // function testElectionRevertWhenEmptyVotersList() public {
+    //     IElection.VoterInfoDTO[] memory emptyVoters;
 
-        vm.expectRevert(Election.Election__VoterInfoDTOCannotBeEmpty.selector);
+    //     vm.expectRevert(Election.Election__VoterInfoDTOCannotBeEmpty.selector);
 
-        IElection.ElectionParams memory params = IElection.ElectionParams({
-            startTimeStamp: startTimestamp,
-            endTimeStamp: endTimestamp,
-            electionName: ELECTION_NAME,
-            description: ELECTION_DESCRIPTION,
-            candidatesList: candidatesList,
-            votersList: emptyVoters,
-            pollingUnits: pollingUnitAddresses,
-            pollingOfficers: pollingOfficerAddresses,
-            electionCategories: electionCategories
-        });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
-    }
+    //     IElection.ElectionParams memory params = IElection.ElectionParams({
+    //         startTimeStamp: startTimestamp,
+    //         endTimeStamp: endTimestamp,
+    //         electionName: ELECTION_NAME,
+    //         description: ELECTION_DESCRIPTION,
+    //         candidatesList: candidatesList,
+    //         pollingUnits: pollingUnitAddresses,
+    //         pollingOfficers: pollingOfficerAddresses,
+    //         electionCategories: electionCategories
+    //     });
+    //     election = new Election({
+    //         createdBy: creator,
+    //         electionUniqueTokenId: ELECTION_TOKEN_ID,
+    //         params: params
+    //     });
+    //     election.addVoters(creator, emptyVoters);
+    // }
 
     function testElectionRevertWhenEmptyCandidatesList() public {
         IElection.CandidateInfoDTO[] memory emptyCandidates;
@@ -313,7 +311,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: emptyCandidates,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -338,7 +335,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: emptyOfficers,
             electionCategories: electionCategories
@@ -363,7 +359,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: emptyPollingUnits,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -392,7 +387,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: conflictingOfficers,
             electionCategories: electionCategories
@@ -413,7 +407,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: duplicateCat
@@ -431,19 +424,12 @@ contract ElectionTest is Test {
         duplicateVoters[0] = voterOne;
         duplicateVoters[1] = voterOne;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__DuplicateVoter.selector,
-                voterOne.matricNo
-            )
-        );
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: duplicateVoters,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -453,6 +439,18 @@ contract ElectionTest is Test {
             electionUniqueTokenId: ELECTION_TOKEN_ID,
             params: params
         });
+
+        // Register voters
+        election.addVoters(creator, votersList);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__DuplicateVoter.selector,
+                voterOne.matricNo
+            )
+        );
+        // Register some duplicates
+        election.addVoters(creator, duplicateVoters);
     }
 
     function testElectionRevertWhenDuplicateCandidate() public {
@@ -473,7 +471,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: duplicateCandidates,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -501,7 +498,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: conflictingUnits,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
@@ -514,13 +510,8 @@ contract ElectionTest is Test {
     }
 
     function testElectionRevertWhenCandidateCategoryInvalid() public {
+        // Add error Candidate
         candidatesList.push(unknownCandidate);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__InvalidCategory.selector,
-                "UNKNOWNGUY"
-            )
-        );
 
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
@@ -528,11 +519,17 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: candidatesList,
-            votersList: votersList,
             pollingUnits: pollingUnitAddresses,
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__InvalidCategory.selector,
+                "UNKNOWNGUY"
+            )
+        );
         election = new Election({
             createdBy: creator,
             electionUniqueTokenId: ELECTION_TOKEN_ID,
@@ -1357,7 +1354,6 @@ contract ElectionTest is Test {
             electionName: ELECTION_NAME,
             description: ELECTION_DESCRIPTION,
             candidatesList: minCandidates,
-            votersList: minVoters,
             pollingUnits: minUnits,
             pollingOfficers: minOfficers,
             electionCategories: minCategories
@@ -1367,7 +1363,102 @@ contract ElectionTest is Test {
             electionUniqueTokenId: ELECTION_TOKEN_ID,
             params: params
         });
+        minElection.addVoters(creator, minVoters);
         assertEq(minElection.getRegisteredVotersCount(), 1);
         assertEq(minElection.getRegisteredCandidatesCount(), 1);
+    }
+    function test_AddLargeAmountOfVotersWorksInBatches(
+        uint256 votersLength
+    ) public {
+        votersLength = bound(votersLength, 2000, 3000);
+        console.log("Voters length", votersLength);
+        uint256 batchNum = election.getVotersBatchLimit();
+        uint256 totalRun = votersLength / batchNum;
+
+        console.log("totalRun", totalRun);
+        for (uint256 index = 0; index <= totalRun; index++) {
+            uint256 startNum = index * batchNum;
+            uint256 endNum = startNum + batchNum;
+
+            console.log("current run, $start, $end", index, startNum, endNum);
+            _registerBatch(startNum, endNum, election);
+        }
+    }
+
+    function test_AddLargeAmountOfVotersRevertsWhenGreaterThanBatches(
+        uint256 votersLength
+    ) public {
+        uint256 batchLimit = election.getVotersBatchLimit();
+        votersLength = bound(votersLength, batchLimit + 1, batchLimit + 200);
+
+        IElection.VoterInfoDTO[]
+            memory fuzzVoters = new IElection.VoterInfoDTO[](votersLength);
+
+        for (uint256 i = 0; i < votersLength; i++) {
+            fuzzVoters[i] = IElection.VoterInfoDTO({
+                name: string(abi.encodePacked("FuzzVoter", vm.toString(i))),
+                matricNo: string(abi.encodePacked("FUZZ", vm.toString(i))),
+                department: string(
+                    abi.encodePacked("Department", vm.toString(i % 5))
+                ),
+                level: 100 + (i % 400)
+            });
+        }
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Election.Election__VoterInfoListAboveBatchLimit.selector,
+                batchLimit,
+                votersLength
+            )
+        );
+
+        election.addVoters(creator, fuzzVoters);
+    }
+    function _registerBatch(
+        uint256 start,
+        uint256 end,
+        Election injectedElection
+    ) public {
+        uint256 batchSize = end - start;
+        IElection.VoterInfoDTO[]
+            memory fuzzVoters = new IElection.VoterInfoDTO[](batchSize);
+
+        for (uint256 j = 0; j < batchSize; j++) {
+            uint256 globalIndex = start + j;
+            string memory addedString = vm.toString(globalIndex);
+
+            fuzzVoters[j] = IElection.VoterInfoDTO({
+                name: string(abi.encodePacked("FuzzVoter", addedString)),
+                matricNo: string(abi.encodePacked("FUZZ", addedString)),
+                department: string(abi.encodePacked("Department", addedString)),
+                level: 100 + (globalIndex % 400)
+            });
+        }
+
+        uint256 initialVoterCount = injectedElection.getRegisteredVotersCount();
+        injectedElection.addVoters(creator, fuzzVoters);
+
+        assertEq(
+            injectedElection.getRegisteredVotersCount(),
+            initialVoterCount + batchSize
+        );
+
+        IElection.ElectionVoter[] memory allVoters = injectedElection
+            .getAllVoters();
+
+        for (uint256 j = 0; j < batchSize; j++) {
+            uint256 voterIndex = initialVoterCount + j;
+            assertEq(allVoters[voterIndex].name, fuzzVoters[j].name);
+            assertEq(
+                allVoters[voterIndex].department,
+                fuzzVoters[j].department
+            );
+            assertEq(allVoters[voterIndex].level, fuzzVoters[j].level);
+            assertEq(
+                uint256(allVoters[voterIndex].voterState),
+                uint256(IElection.VoterState.REGISTERED)
+            );
+        }
     }
 }

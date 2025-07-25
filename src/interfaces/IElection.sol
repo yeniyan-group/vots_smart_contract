@@ -39,7 +39,6 @@ interface IElection {
         string electionName;
         string description;
         CandidateInfoDTO[] candidatesList;
-        VoterInfoDTO[] votersList;
         PollIdentifier[] pollingUnits;
         PollIdentifier[] pollingOfficers;
         string[] electionCategories;
@@ -106,6 +105,15 @@ interface IElection {
     // ====================================================================
     // Voter Management Functions
     // ====================================================================
+
+    /**
+     * @dev Adds voters to the election after creation. Can only be called by election creator before election starts.
+     * @param votersList Array of voters to register
+     */
+    function addVoters(
+        address creatorAddress,
+        VoterInfoDTO[] memory votersList
+    ) external;
 
     /**
      * @dev Accredits a voter for this election
@@ -261,6 +269,12 @@ interface IElection {
     // ====================================================================
     // Getter Functions - Arrays
     // ====================================================================
+
+    /**
+     * @dev Returns the number of voters that can be registered in a batch
+     * @return ElectionVoter[] Array of all voters
+     */
+    function getVotersBatchLimit() external pure returns (uint256);
 
     /**
      * @dev Returns all voters in the election

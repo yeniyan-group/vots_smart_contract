@@ -106,6 +106,22 @@ contract VotsEngine is IVotsEngine, Ownable {
         emit ElectionContractedCreated(newElectionTokenId, params.electionName);
     }
 
+    /**
+     * @dev Adds voters to an existing election. Can only be called by the election creator before election starts.
+     * @param votersList Array of voters to register
+     * @param electionTokenId The token ID of the election
+     */
+    function addVotersToElection(
+        uint256 electionTokenId,
+        IElection.VoterInfoDTO[] calldata votersList
+    ) external validElection(electionTokenId) {
+        // Call addVoters function on the election contract
+        IElection(s_tokenToAddress[electionTokenId]).addVoters(
+            msg.sender,
+            votersList
+        );
+    }
+
     function accrediteVoter(
         string calldata voterMatricNo,
         uint256 electionTokenId

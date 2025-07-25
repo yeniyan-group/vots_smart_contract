@@ -90,6 +90,16 @@ interface IVotsEngine {
     function createElection(IElection.ElectionParams calldata params) external;
 
     /**
+     * @dev Adds voters to an existing election. Can only be called by the election creator before election starts.
+     * @param votersList Array of voters to register
+     * @param electionTokenId The token ID of the election
+     */
+    function addVotersToElection(
+        uint256 electionTokenId,
+        IElection.VoterInfoDTO[] calldata votersList
+    ) external;
+
+    /**
      * @dev Accredits a voter for an election
      * @param voterMatricNo Voter's matriculation number
      * @param electionTokenId Token ID of the election
