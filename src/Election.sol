@@ -731,8 +731,14 @@ contract Election is IElection, Ownable {
         onElectionStarted
         noUnknown(voterMatricNo)
     {
-        if (_votersMap[voterMatricNo].voterState == VoterState.ACCREDITED) {
+        // Add explicit logging for debugging
+        VoterState currentState = _votersMap[voterMatricNo].voterState;
+        // if voter is voted or accredited revert
+        if (currentState == VoterState.ACCREDITED) {
             revert Election__VoterAlreadyAccredited();
+        }
+        if (currentState == VoterState.VOTED) {
+            revert Election__VoterAlreadyVoted();
         }
         _votersMap[voterMatricNo].voterState = VoterState.ACCREDITED;
         s_accreditedVotersCount++;
