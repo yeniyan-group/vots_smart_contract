@@ -23,89 +23,54 @@ contract ElectionTest is Test {
     string[] public electionCategories;
     string[] public duplicateCat;
 
-    IElection.CandidateInfoDTO candidateOne =
-        IElection.CandidateInfoDTO({
-            name: "Ayeni Samuel",
-            matricNo: "CAND001",
-            category: "President",
-            voteFor: 1,
-            voteAgainst: 0
-        });
-    IElection.CandidateInfoDTO candidateTwo =
-        IElection.CandidateInfoDTO({
-            name: "Leumas Ineya",
-            matricNo: "CAND002",
-            category: "President",
-            voteFor: 1,
-            voteAgainst: 0
-        });
-    IElection.CandidateInfoDTO candidateThree =
-        IElection.CandidateInfoDTO({
-            name: "Bob Johnson",
-            matricNo: "CAND003",
-            category: "Vice President",
-            voteFor: 1,
-            voteAgainst: 0
-        });
-    IElection.CandidateInfoDTO candidateFour =
-        IElection.CandidateInfoDTO({
-            name: "Nosnhoj Bob",
-            matricNo: "CAND004",
-            category: "Vice President",
-            voteFor: 1,
-            voteAgainst: 0
-        });
-    IElection.CandidateInfoDTO unknownCandidate =
-        IElection.CandidateInfoDTO({
-            name: "Unknown Bob",
-            matricNo: "CAND0088",
-            category: "UNKNOWNGUY",
-            voteFor: 1,
-            voteAgainst: 0
-        });
+    IElection.CandidateInfoDTO candidateOne = IElection.CandidateInfoDTO({
+        name: "Ayeni Samuel",
+        matricNo: "CAND001",
+        category: "President",
+        voteFor: 1,
+        voteAgainst: 0
+    });
+    IElection.CandidateInfoDTO candidateTwo = IElection.CandidateInfoDTO({
+        name: "Leumas Ineya",
+        matricNo: "CAND002",
+        category: "President",
+        voteFor: 1,
+        voteAgainst: 0
+    });
+    IElection.CandidateInfoDTO candidateThree = IElection.CandidateInfoDTO({
+        name: "Bob Johnson",
+        matricNo: "CAND003",
+        category: "Vice President",
+        voteFor: 1,
+        voteAgainst: 0
+    });
+    IElection.CandidateInfoDTO candidateFour = IElection.CandidateInfoDTO({
+        name: "Nosnhoj Bob",
+        matricNo: "CAND004",
+        category: "Vice President",
+        voteFor: 1,
+        voteAgainst: 0
+    });
+    IElection.CandidateInfoDTO unknownCandidate = IElection.CandidateInfoDTO({
+        name: "Unknown Bob",
+        matricNo: "CAND0088",
+        category: "UNKNOWNGUY",
+        voteFor: 1,
+        voteAgainst: 0
+    });
 
     IElection.VoterInfoDTO voterOne =
-        IElection.VoterInfoDTO({
-            name: "Voter1 Surname",
-            matricNo: "VOT001",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "Voter1 Surname", matricNo: "VOT001", department: "Computer Science", level: 100});
     IElection.VoterInfoDTO voterTwo =
-        IElection.VoterInfoDTO({
-            name: "Voter2",
-            matricNo: "VOT002",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "Voter2", matricNo: "VOT002", department: "Computer Science", level: 100});
     IElection.VoterInfoDTO voterThree =
-        IElection.VoterInfoDTO({
-            name: "Voter3",
-            matricNo: "VOT003",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "Voter3", matricNo: "VOT003", department: "Computer Science", level: 100});
     IElection.VoterInfoDTO voterFour =
-        IElection.VoterInfoDTO({
-            name: "Voter4",
-            matricNo: "VOT004",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "Voter4", matricNo: "VOT004", department: "Computer Science", level: 100});
     IElection.VoterInfoDTO voterFive =
-        IElection.VoterInfoDTO({
-            name: "Voter5",
-            matricNo: "VOT005",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "Voter5", matricNo: "VOT005", department: "Computer Science", level: 100});
     IElection.VoterInfoDTO unknownVoter =
-        IElection.VoterInfoDTO({
-            name: "This Unknown",
-            matricNo: "VOT007",
-            department: "Computer Science",
-            level: 100
-        });
+        IElection.VoterInfoDTO({name: "This Unknown", matricNo: "VOT007", department: "Computer Science", level: 100});
 
     IElection.CandidateInfoDTO[] candidatesList;
     IElection.VoterInfoDTO[] votersList;
@@ -124,11 +89,7 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
         election.addVoters(creator, votersList);
     }
 
@@ -152,31 +113,15 @@ contract ElectionTest is Test {
 
         // Setup polling addresses
         pollingOfficerAddresses.push(
-            IElection.PollIdentifier({
-                pollAddress: pollingOfficer1,
-                pollRoleName: "pollingOfficer1"
-            })
+            IElection.PollIdentifier({pollAddress: pollingOfficer1, pollRoleName: "pollingOfficer1"})
         );
         pollingOfficerAddresses.push(
-            IElection.PollIdentifier({
-                pollAddress: pollingOfficer2,
-                pollRoleName: "pollingOfficer2"
-            })
+            IElection.PollIdentifier({pollAddress: pollingOfficer2, pollRoleName: "pollingOfficer2"})
         );
 
         // Setup polling unit addresses
-        pollingUnitAddresses.push(
-            IElection.PollIdentifier({
-                pollAddress: pollingUnit1,
-                pollRoleName: "pollingUnit1"
-            })
-        );
-        pollingUnitAddresses.push(
-            IElection.PollIdentifier({
-                pollAddress: pollingUnit2,
-                pollRoleName: "pollingUnit2"
-            })
-        );
+        pollingUnitAddresses.push(IElection.PollIdentifier({pollAddress: pollingUnit1, pollRoleName: "pollingUnit1"}));
+        pollingUnitAddresses.push(IElection.PollIdentifier({pollAddress: pollingUnit2, pollRoleName: "pollingUnit2"}));
 
         //
         electionCategories = ["President", "Vice President"];
@@ -197,11 +142,7 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
         election.addVoters(creator, votersList);
         // Verify basic properties
         assertEq(creator, creator);
@@ -209,21 +150,12 @@ contract ElectionTest is Test {
         assertEq(election.getStartTimeStamp(), startTimestamp);
         assertEq(election.getEndTimeStamp(), endTimestamp);
         assertEq(election.getElectionName(), ELECTION_NAME);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.OPENED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.OPENED));
 
         // Verify counts
         assertEq(election.getRegisteredVotersCount(), votersList.length);
-        assertEq(
-            election.getRegisteredCandidatesCount(),
-            candidatesList.length
-        );
-        assertEq(
-            election.getPollingOfficerCount(),
-            pollingOfficerAddresses.length
-        );
+        assertEq(election.getRegisteredCandidatesCount(), candidatesList.length);
+        assertEq(election.getPollingOfficerCount(), pollingOfficerAddresses.length);
         assertEq(election.getPollingUnitCount(), pollingUnitAddresses.length);
 
         // Initial counts should be zero
@@ -246,11 +178,7 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenInvalidEndTimeStamp() public {
@@ -268,11 +196,7 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     // function testElectionRevertWhenEmptyVotersList() public {
@@ -301,9 +225,7 @@ contract ElectionTest is Test {
     function testElectionRevertWhenEmptyCandidatesList() public {
         IElection.CandidateInfoDTO[] memory emptyCandidates;
 
-        vm.expectRevert(
-            Election.Election__CandidatesInfoDTOCannotBeEmpty.selector
-        );
+        vm.expectRevert(Election.Election__CandidatesInfoDTOCannotBeEmpty.selector);
 
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
@@ -315,19 +237,13 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenEmptyPollingOfficers() public {
         IElection.PollIdentifier[] memory emptyOfficers;
 
-        vm.expectRevert(
-            Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
-        );
+        vm.expectRevert(Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector);
 
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
@@ -339,19 +255,13 @@ contract ElectionTest is Test {
             pollingOfficers: emptyOfficers,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenEmptyPollingUnits() public {
         IElection.PollIdentifier[] memory emptyPollingUnits;
 
-        vm.expectRevert(
-            Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector
-        );
+        vm.expectRevert(Election.Election__PollingOfficerAndUnitCannotBeEmpty.selector);
 
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
@@ -363,21 +273,13 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenCreatorHasMultipleRoles() public {
         // Make creator also a polling officer
-        IElection.PollIdentifier[]
-            memory conflictingOfficers = new IElection.PollIdentifier[](1);
-        conflictingOfficers[0] = IElection.PollIdentifier({
-            pollAddress: creator,
-            pollRoleName: "creator"
-        });
+        IElection.PollIdentifier[] memory conflictingOfficers = new IElection.PollIdentifier[](1);
+        conflictingOfficers[0] = IElection.PollIdentifier({pollAddress: creator, pollRoleName: "creator"});
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
 
@@ -391,11 +293,7 @@ contract ElectionTest is Test {
             pollingOfficers: conflictingOfficers,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenCategoryHasDuplicate() public {
@@ -411,16 +309,11 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: duplicateCat
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenDuplicateVoter() public {
-        IElection.VoterInfoDTO[]
-            memory duplicateVoters = new IElection.VoterInfoDTO[](2);
+        IElection.VoterInfoDTO[] memory duplicateVoters = new IElection.VoterInfoDTO[](2);
         duplicateVoters[0] = voterOne;
         duplicateVoters[1] = voterOne;
 
@@ -434,37 +327,22 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
 
         // Register voters
         election.addVoters(creator, votersList);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__DuplicateVoter.selector,
-                voterOne.matricNo
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__DuplicateVoter.selector, voterOne.matricNo));
         // Register some duplicates
         election.addVoters(creator, duplicateVoters);
     }
 
     function testElectionRevertWhenDuplicateCandidate() public {
-        IElection.CandidateInfoDTO[]
-            memory duplicateCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory duplicateCandidates = new IElection.CandidateInfoDTO[](2);
         duplicateCandidates[0] = candidateOne;
         duplicateCandidates[1] = candidateOne;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__DuplicateCandidate.selector,
-                candidateOne.matricNo
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__DuplicateCandidate.selector, candidateOne.matricNo));
         IElection.ElectionParams memory params = IElection.ElectionParams({
             startTimeStamp: startTimestamp,
             endTimeStamp: endTimestamp,
@@ -475,20 +353,12 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenPollingOfficerIsAlsoPollingUnit() public {
-        IElection.PollIdentifier[]
-            memory conflictingUnits = new IElection.PollIdentifier[](1);
-        conflictingUnits[0] = IElection.PollIdentifier({
-            pollAddress: pollingOfficer1,
-            pollRoleName: "pollingOfficer1"
-        });
+        IElection.PollIdentifier[] memory conflictingUnits = new IElection.PollIdentifier[](1);
+        conflictingUnits[0] = IElection.PollIdentifier({pollAddress: pollingOfficer1, pollRoleName: "pollingOfficer1"});
 
         vm.expectRevert(Election.Election__AddressCanOnlyHaveOneRole.selector);
 
@@ -502,11 +372,7 @@ contract ElectionTest is Test {
             pollingOfficers: pollingOfficerAddresses,
             electionCategories: electionCategories
         });
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     function testElectionRevertWhenCandidateCategoryInvalid() public {
@@ -524,17 +390,8 @@ contract ElectionTest is Test {
             electionCategories: electionCategories
         });
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__InvalidCategory.selector,
-                "UNKNOWNGUY"
-            )
-        );
-        election = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__InvalidCategory.selector, "UNKNOWNGUY"));
+        election = new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
     }
 
     // ====================================================================
@@ -542,42 +399,27 @@ contract ElectionTest is Test {
     // ====================================================================
     function testElectionStateProgressionOverTime() public {
         // Initially OPENED
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.OPENED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.OPENED));
 
         // Move to start time
         vm.warp(startTimestamp);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.STARTED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.STARTED));
 
         // Move to end time
         vm.warp(endTimestamp);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.ENDED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.ENDED));
     }
 
     function testUpdateElectionStateFunction() public {
         // Move to start time and update
         vm.warp(startTimestamp);
         election.updateElectionState();
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.STARTED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.STARTED));
 
         // Move to end time and update
         vm.warp(endTimestamp);
         election.updateElectionState();
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.ENDED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.ENDED));
     }
 
     // ====================================================================
@@ -626,24 +468,14 @@ contract ElectionTest is Test {
     function testAccrediteVoterRevertWhenUnknownVoter() public {
         vm.warp(startTimestamp);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__UnknownVoter.selector,
-                "UNKNOWN_VOTER"
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__UnknownVoter.selector, "UNKNOWN_VOTER"));
         election.accrediteVoter("UNKNOWN_VOTER", pollingOfficer1);
     }
 
     function testAccrediteVoterRevertWhenUnauthorizedPollingOfficer() public {
         vm.warp(startTimestamp);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__OnlyPollingOfficerAllowed.selector,
-                unknownAddress
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__OnlyPollingOfficerAllowed.selector, unknownAddress));
 
         election.accrediteVoter(voterOne.matricNo, unknownAddress);
     }
@@ -653,10 +485,7 @@ contract ElectionTest is Test {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                Election
-                    .Election__UnauthorizedAccountOnlyVotsEngineCanCallContract
-                    .selector,
-                unknownAddress
+                Election.Election__UnauthorizedAccountOnlyVotsEngineCanCallContract.selector, unknownAddress
             )
         );
 
@@ -692,22 +521,15 @@ contract ElectionTest is Test {
         vm.warp(startTimestamp);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        election.validateVoterForVoting(
-            "Voter1",
-            voterOne.matricNo,
-            pollingUnit1
-        );
+        election.validateVoterForVoting("Voter1", voterOne.matricNo, pollingUnit1);
     }
+
     function testValidateVoterFailsWithFullName() public {
         vm.warp(startTimestamp);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
         vm.expectRevert(Election.Election__VoterCannotBeValidated.selector);
-        election.validateVoterForVoting(
-            voterOne.name,
-            voterOne.matricNo,
-            pollingUnit1
-        );
+        election.validateVoterForVoting(voterOne.name, voterOne.matricNo, pollingUnit1);
     }
 
     function testVoteCandidatesSuccess() public {
@@ -717,28 +539,21 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
         // Prepare voting candidates
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidateOne;
         votingCandidates[1] = candidateTwo;
 
         vm.expectEmit(false, false, false, true);
         emit Election.VoterVoted();
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
 
         // Verify voted count increased
         assertEq(election.getVotedVotersCount(), 1);
     }
 
     function testVoteCandidatesRevertWhenElectionNotStarted() public {
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](1);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](1);
         votingCandidates[0] = candidatesList[0];
 
         vm.expectRevert(
@@ -749,56 +564,29 @@ contract ElectionTest is Test {
             )
         );
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            voterOne.name,
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, voterOne.name, pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenUnknownVoter() public {
         vm.warp(startTimestamp);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](1);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](1);
         votingCandidates[0] = candidatesList[0];
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__UnknownVoter.selector,
-                unknownVoter.matricNo
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__UnknownVoter.selector, unknownVoter.matricNo));
 
-        election.voteCandidates(
-            unknownVoter.matricNo,
-            unknownVoter.name,
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(unknownVoter.matricNo, unknownVoter.name, pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenVoterNotAccredited() public {
         vm.warp(startTimestamp);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](1);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](1);
         votingCandidates[0] = candidatesList[0];
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__UnaccreditedVoter.selector,
-                voterOne.matricNo
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__UnaccreditedVoter.selector, voterOne.matricNo));
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            voterOne.name,
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, voterOne.name, pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenEmptyCandidatesList() public {
@@ -809,16 +597,9 @@ contract ElectionTest is Test {
 
         IElection.CandidateInfoDTO[] memory emptyCandidates;
 
-        vm.expectRevert(
-            Election.Election__CandidatesInfoDTOCannotBeEmpty.selector
-        );
+        vm.expectRevert(Election.Election__CandidatesInfoDTOCannotBeEmpty.selector);
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            emptyCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, emptyCandidates);
     }
 
     function testVoteCandidatesRevertWhenVoterNameMismatch() public {
@@ -827,19 +608,13 @@ contract ElectionTest is Test {
         // Accredite voter first
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidatesList[0];
         votingCandidates[1] = candidatesList[2];
 
         vm.expectRevert(Election.Election__VoterCannotBeValidated.selector);
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "WRONGNAMEEEE",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "WRONGNAMEEEE", pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenUnauthorizedPollingUnit() public {
@@ -848,50 +623,30 @@ contract ElectionTest is Test {
         // Accredite voter first
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidatesList[0];
         votingCandidates[1] = candidatesList[2];
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__OnlyPollingUnitAllowed.selector,
-                unknownAddress
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__OnlyPollingUnitAllowed.selector, unknownAddress));
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Alice Johnson",
-            unknownAddress,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Alice Johnson", unknownAddress, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenNotOwner() public {
         vm.warp(startTimestamp);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidatesList[0];
         votingCandidates[1] = candidatesList[2];
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                Election
-                    .Election__UnauthorizedAccountOnlyVotsEngineCanCallContract
-                    .selector,
-                unknownAddress
+                Election.Election__UnauthorizedAccountOnlyVotsEngineCanCallContract.selector, unknownAddress
             )
         );
 
         vm.prank(unknownAddress);
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenInvalidCategoryVoted() public {
@@ -900,24 +655,13 @@ contract ElectionTest is Test {
         // Accredite voter first
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidatesList[0];
         votingCandidates[1] = unknownCandidate;
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__InvalidCategory.selector,
-                unknownCandidate.category
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__InvalidCategory.selector, unknownCandidate.category));
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenVoterAlreadyVoted() public {
@@ -926,30 +670,15 @@ contract ElectionTest is Test {
         // Accredite and vote first time
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidateOne;
         votingCandidates[1] = candidateThree;
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
 
         // Try to vote again
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__VoterAlreadyVoted.selector
-            )
-        );
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit2,
-            votingCandidates
-        );
+        vm.expectRevert(abi.encodeWithSelector(Election.Election__VoterAlreadyVoted.selector));
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit2, votingCandidates);
     }
 
     function testVoteCandidatesRevertWhenIncorrectCategoryCount() public {
@@ -957,21 +686,11 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
         // Only vote for 1 category when 2 are required
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](1);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](1);
         votingCandidates[0] = candidateOne;
 
-        vm.expectRevert(
-            Election
-                .Election__AllCategoriesMustHaveOnlyOneVotedCandidate
-                .selector
-        );
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        vm.expectRevert(Election.Election__AllCategoriesMustHaveOnlyOneVotedCandidate.selector);
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
     }
 
     function testVoteCandidatesMultipleVotersSuccess() public {
@@ -981,24 +700,13 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
         election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidateOne;
         votingCandidates[1] = candidateThree;
 
         // Vote with both voters
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
-        election.voteCandidates(
-            voterTwo.matricNo,
-            voterTwo.name,
-            pollingUnit2,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
+        election.voteCandidates(voterTwo.matricNo, voterTwo.name, pollingUnit2, votingCandidates);
 
         assertEq(election.getVotedVotersCount(), 2);
     }
@@ -1025,36 +733,28 @@ contract ElectionTest is Test {
 
         // Check first voter data
         assertEq(allVoters[0].name, voterOne.name);
-        assertEq(
-            uint256(allVoters[0].voterState),
-            uint256(IElection.VoterState.REGISTERED)
-        );
+        assertEq(uint256(allVoters[0].voterState), uint256(IElection.VoterState.REGISTERED));
     }
 
     function testGetAllAccreditedVotersInitiallyEmpty() public {
         vm.warp(endTimestamp + 1);
-        Election.ElectionVoter[] memory accreditedVoters = election
-            .getAllAccreditedVoters();
+        Election.ElectionVoter[] memory accreditedVoters = election.getAllAccreditedVoters();
         assertEq(accreditedVoters.length, 0);
     }
+
     function testGetAllAccreditedVotersAfterAccreditation() public {
         vm.warp(startTimestamp);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
         vm.warp(endTimestamp + 1);
-        Election.ElectionVoter[] memory accreditedVoters = election
-            .getAllAccreditedVoters();
+        Election.ElectionVoter[] memory accreditedVoters = election.getAllAccreditedVoters();
         assertEq(accreditedVoters.length, 1);
         assertEq(accreditedVoters[0].name, voterOne.name);
-        assertEq(
-            uint256(accreditedVoters[0].voterState),
-            uint256(IElection.VoterState.ACCREDITED)
-        );
+        assertEq(uint256(accreditedVoters[0].voterState), uint256(IElection.VoterState.ACCREDITED));
     }
 
     function testGetAllVotedVotersInitiallyEmpty() public {
         vm.warp(endTimestamp + 1);
-        Election.ElectionVoter[] memory votedVoters = election
-            .getAllVotedVoters();
+        Election.ElectionVoter[] memory votedVoters = election.getAllVotedVoters();
         assertEq(votedVoters.length, 0);
     }
 
@@ -1062,32 +762,21 @@ contract ElectionTest is Test {
         vm.warp(startTimestamp);
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
 
-        IElection.CandidateInfoDTO[]
-            memory votingCandidates = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory votingCandidates = new IElection.CandidateInfoDTO[](2);
         votingCandidates[0] = candidateOne;
         votingCandidates[1] = candidateThree;
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            votingCandidates
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, votingCandidates);
 
         vm.warp(endTimestamp + 1);
-        Election.ElectionVoter[] memory votedVoters = election
-            .getAllVotedVoters();
+        Election.ElectionVoter[] memory votedVoters = election.getAllVotedVoters();
         assertEq(votedVoters.length, 1);
         assertEq(votedVoters[0].name, voterOne.name);
-        assertEq(
-            uint256(votedVoters[0].voterState),
-            uint256(IElection.VoterState.VOTED)
-        );
+        assertEq(uint256(votedVoters[0].voterState), uint256(IElection.VoterState.VOTED));
     }
 
     function testGetAllCandidatesInDto() public view {
-        IElection.CandidateInfoDTO[] memory candidates = election
-            .getAllCandidatesInDto();
+        IElection.CandidateInfoDTO[] memory candidates = election.getAllCandidatesInDto();
         assertEq(candidates.length, candidatesList.length);
 
         // Verify first candidate
@@ -1116,8 +805,7 @@ contract ElectionTest is Test {
     function testGetAllCandidatesAfterElectionEnds() public {
         vm.warp(endTimestamp + 1); // Election ended
 
-        Election.CandidateInfoDTO[] memory candidates = election
-            .getAllCandidates();
+        Election.CandidateInfoDTO[] memory candidates = election.getAllCandidates();
         assertEq(candidates.length, candidatesList.length);
     }
 
@@ -1137,8 +825,7 @@ contract ElectionTest is Test {
     function testGetEachCategoryWinnerWithNoVotes() public {
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = election
-            .getEachCategoryWinner();
+        Election.ElectionWinner[][] memory winners = election.getEachCategoryWinner();
         assertEq(winners.length, 2); // Two categories
         assertEq(winners[0].length, 0); // No votes for President
         assertEq(winners[1].length, 0); // No votes for VicePresident
@@ -1151,33 +838,20 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
         election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
 
-        IElection.CandidateInfoDTO[]
-            memory vote1 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote1 = new IElection.CandidateInfoDTO[](2);
         vote1[0] = candidateOne; // President
         vote1[1] = candidateThree; // VicePresident
 
-        IElection.CandidateInfoDTO[]
-            memory vote2 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote2 = new IElection.CandidateInfoDTO[](2);
         vote2[0] = candidateOne; // President (same)
         vote2[1] = candidateFour; // VicePresident (different)
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            vote1
-        );
-        election.voteCandidates(
-            voterTwo.matricNo,
-            voterTwo.name,
-            pollingUnit2,
-            vote2
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, vote1);
+        election.voteCandidates(voterTwo.matricNo, voterTwo.name, pollingUnit2, vote2);
 
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = election
-            .getEachCategoryWinner();
+        Election.ElectionWinner[][] memory winners = election.getEachCategoryWinner();
         assertEq(winners.length, 2);
         assertEq(winners[0].length, 1); // One President winner (candidateOne with 2 votes)
         assertEq(winners[1].length, 2); // Two VicePresident winners (tie with 1 vote each)
@@ -1190,33 +864,20 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterOne.matricNo, pollingOfficer1);
         election.accrediteVoter(voterTwo.matricNo, pollingOfficer2);
 
-        IElection.CandidateInfoDTO[]
-            memory vote1 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote1 = new IElection.CandidateInfoDTO[](2);
         vote1[0] = candidateOne;
         vote1[1] = candidateThree;
 
-        IElection.CandidateInfoDTO[]
-            memory vote2 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote2 = new IElection.CandidateInfoDTO[](2);
         vote2[0] = candidateTwo; // Different president candidate
         vote2[1] = candidateFour; // Different VP candidate
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            vote1
-        );
-        election.voteCandidates(
-            voterTwo.matricNo,
-            voterTwo.name,
-            pollingUnit2,
-            vote2
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, vote1);
+        election.voteCandidates(voterTwo.matricNo, voterTwo.name, pollingUnit2, vote2);
 
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = election
-            .getEachCategoryWinner();
+        Election.ElectionWinner[][] memory winners = election.getEachCategoryWinner();
         assertEq(winners[0].length, 2); // Tie for President
         assertEq(winners[1].length, 2); // Tie for VicePresident
     }
@@ -1228,24 +889,15 @@ contract ElectionTest is Test {
     function testElectionStateTransitionAtExactTimestamps() public {
         // Test at exact start timestamp
         vm.warp(startTimestamp);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.STARTED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.STARTED));
 
         // Test one second before end
         vm.warp(endTimestamp - 1);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.STARTED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.STARTED));
 
         // Test at exact end timestamp
         vm.warp(endTimestamp);
-        assertEq(
-            uint256(election.getElectionState()),
-            uint256(IElection.ElectionState.ENDED)
-        );
+        assertEq(uint256(election.getElectionState()), uint256(IElection.ElectionState.ENDED));
     }
 
     function testVoteCountingAccuracy() public {
@@ -1257,44 +909,25 @@ contract ElectionTest is Test {
         election.accrediteVoter(voterThree.matricNo, pollingOfficer1);
 
         // All vote for candidateOne for President, different for VP
-        IElection.CandidateInfoDTO[]
-            memory vote1 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote1 = new IElection.CandidateInfoDTO[](2);
         vote1[0] = candidateOne;
         vote1[1] = candidateThree;
 
-        IElection.CandidateInfoDTO[]
-            memory vote2 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote2 = new IElection.CandidateInfoDTO[](2);
         vote2[0] = candidateOne;
         vote2[1] = candidateThree;
 
-        IElection.CandidateInfoDTO[]
-            memory vote3 = new IElection.CandidateInfoDTO[](2);
+        IElection.CandidateInfoDTO[] memory vote3 = new IElection.CandidateInfoDTO[](2);
         vote3[0] = candidateOne;
         vote3[1] = candidateFour;
 
-        election.voteCandidates(
-            voterOne.matricNo,
-            "Voter1",
-            pollingUnit1,
-            vote1
-        );
-        election.voteCandidates(
-            voterTwo.matricNo,
-            voterTwo.name,
-            pollingUnit2,
-            vote2
-        );
-        election.voteCandidates(
-            voterThree.matricNo,
-            voterThree.name,
-            pollingUnit1,
-            vote3
-        );
+        election.voteCandidates(voterOne.matricNo, "Voter1", pollingUnit1, vote1);
+        election.voteCandidates(voterTwo.matricNo, voterTwo.name, pollingUnit2, vote2);
+        election.voteCandidates(voterThree.matricNo, voterThree.name, pollingUnit1, vote3);
 
         vm.warp(endTimestamp + 1);
 
-        Election.ElectionWinner[][] memory winners = election
-            .getEachCategoryWinner();
+        Election.ElectionWinner[][] memory winners = election.getEachCategoryWinner();
         // candidateOne should have 3 votes for President
         assertEq(winners[0].length, 1);
         assertEq(winners[0][0].electionCandidate.votes, 3);
@@ -1310,27 +943,17 @@ contract ElectionTest is Test {
 
     function testConstructorWithMinimumValidInputs() public {
         // Test with minimal valid inputs (1 candidate, 1 voter, 1 officer, 1 unit, 1 category)
-        IElection.CandidateInfoDTO[]
-            memory minCandidates = new IElection.CandidateInfoDTO[](1);
+        IElection.CandidateInfoDTO[] memory minCandidates = new IElection.CandidateInfoDTO[](1);
         minCandidates[0] = candidateOne;
 
-        IElection.VoterInfoDTO[]
-            memory minVoters = new IElection.VoterInfoDTO[](1);
+        IElection.VoterInfoDTO[] memory minVoters = new IElection.VoterInfoDTO[](1);
         minVoters[0] = voterOne;
 
-        IElection.PollIdentifier[]
-            memory minOfficers = new IElection.PollIdentifier[](1);
-        minOfficers[0] = IElection.PollIdentifier({
-            pollAddress: pollingOfficer1,
-            pollRoleName: "pollingOfficer1"
-        });
+        IElection.PollIdentifier[] memory minOfficers = new IElection.PollIdentifier[](1);
+        minOfficers[0] = IElection.PollIdentifier({pollAddress: pollingOfficer1, pollRoleName: "pollingOfficer1"});
 
-        IElection.PollIdentifier[]
-            memory minUnits = new IElection.PollIdentifier[](1);
-        minUnits[0] = IElection.PollIdentifier({
-            pollAddress: pollingUnit1,
-            pollRoleName: "pollingUnit1"
-        });
+        IElection.PollIdentifier[] memory minUnits = new IElection.PollIdentifier[](1);
+        minUnits[0] = IElection.PollIdentifier({pollAddress: pollingUnit1, pollRoleName: "pollingUnit1"});
 
         string[] memory minCategories = new string[](1);
         minCategories[0] = "President";
@@ -1358,18 +981,14 @@ contract ElectionTest is Test {
             pollingOfficers: minOfficers,
             electionCategories: minCategories
         });
-        Election minElection = new Election({
-            createdBy: creator,
-            electionUniqueTokenId: ELECTION_TOKEN_ID,
-            params: params
-        });
+        Election minElection =
+            new Election({createdBy: creator, electionUniqueTokenId: ELECTION_TOKEN_ID, params: params});
         minElection.addVoters(creator, minVoters);
         assertEq(minElection.getRegisteredVotersCount(), 1);
         assertEq(minElection.getRegisteredCandidatesCount(), 1);
     }
-    function test_AddLargeAmountOfVotersWorksInBatches(
-        uint256 votersLength
-    ) public {
+
+    function test_AddLargeAmountOfVotersWorksInBatches(uint256 votersLength) public {
         votersLength = bound(votersLength, 2000, 3000);
         console.log("Voters length", votersLength);
         uint256 batchNum = election.getVotersBatchLimit();
@@ -1385,44 +1004,31 @@ contract ElectionTest is Test {
         }
     }
 
-    function test_AddLargeAmountOfVotersRevertsWhenGreaterThanBatches(
-        uint256 votersLength
-    ) public {
+    function test_AddLargeAmountOfVotersRevertsWhenGreaterThanBatches(uint256 votersLength) public {
         uint256 batchLimit = election.getVotersBatchLimit();
         votersLength = bound(votersLength, batchLimit + 1, batchLimit + 200);
 
-        IElection.VoterInfoDTO[]
-            memory fuzzVoters = new IElection.VoterInfoDTO[](votersLength);
+        IElection.VoterInfoDTO[] memory fuzzVoters = new IElection.VoterInfoDTO[](votersLength);
 
         for (uint256 i = 0; i < votersLength; i++) {
             fuzzVoters[i] = IElection.VoterInfoDTO({
                 name: string(abi.encodePacked("FuzzVoter", vm.toString(i))),
                 matricNo: string(abi.encodePacked("FUZZ", vm.toString(i))),
-                department: string(
-                    abi.encodePacked("Department", vm.toString(i % 5))
-                ),
+                department: string(abi.encodePacked("Department", vm.toString(i % 5))),
                 level: 100 + (i % 400)
             });
         }
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                Election.Election__VoterInfoListAboveBatchLimit.selector,
-                batchLimit,
-                votersLength
-            )
+            abi.encodeWithSelector(Election.Election__VoterInfoListAboveBatchLimit.selector, batchLimit, votersLength)
         );
 
         election.addVoters(creator, fuzzVoters);
     }
-    function _registerBatch(
-        uint256 start,
-        uint256 end,
-        Election injectedElection
-    ) public {
+
+    function _registerBatch(uint256 start, uint256 end, Election injectedElection) public {
         uint256 batchSize = end - start;
-        IElection.VoterInfoDTO[]
-            memory fuzzVoters = new IElection.VoterInfoDTO[](batchSize);
+        IElection.VoterInfoDTO[] memory fuzzVoters = new IElection.VoterInfoDTO[](batchSize);
 
         for (uint256 j = 0; j < batchSize; j++) {
             uint256 globalIndex = start + j;
@@ -1439,26 +1045,16 @@ contract ElectionTest is Test {
         uint256 initialVoterCount = injectedElection.getRegisteredVotersCount();
         injectedElection.addVoters(creator, fuzzVoters);
 
-        assertEq(
-            injectedElection.getRegisteredVotersCount(),
-            initialVoterCount + batchSize
-        );
+        assertEq(injectedElection.getRegisteredVotersCount(), initialVoterCount + batchSize);
 
-        IElection.ElectionVoter[] memory allVoters = injectedElection
-            .getAllVoters();
+        IElection.ElectionVoter[] memory allVoters = injectedElection.getAllVoters();
 
         for (uint256 j = 0; j < batchSize; j++) {
             uint256 voterIndex = initialVoterCount + j;
             assertEq(allVoters[voterIndex].name, fuzzVoters[j].name);
-            assertEq(
-                allVoters[voterIndex].department,
-                fuzzVoters[j].department
-            );
+            assertEq(allVoters[voterIndex].department, fuzzVoters[j].department);
             assertEq(allVoters[voterIndex].level, fuzzVoters[j].level);
-            assertEq(
-                uint256(allVoters[voterIndex].voterState),
-                uint256(IElection.VoterState.REGISTERED)
-            );
+            assertEq(uint256(allVoters[voterIndex].voterState), uint256(IElection.VoterState.REGISTERED));
         }
     }
 }
