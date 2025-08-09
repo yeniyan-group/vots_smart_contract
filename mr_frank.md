@@ -215,4 +215,218 @@ Sensitive values saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contr
 
 Error: Not all (3 / 4) contracts were verified!
 make: *** [deploy-votsengine] Error 1
+ayeniyeniyan@Samuels-MacBook-Pro vots_smart_contract % make deploy-votsengine 
+[⠊] Compiling...
+[⠒] Compiling 11 files with Solc 0.8.28
+[⠢] Solc 0.8.28 finished in 7.27s
+Compiler run successful!
+Enter keystore password:
+Traces:
+  [10445191] DeployVotsEngine::run()
+    ├─ [209289] → new HelperConfig@0x5aAdFB43eF8dAF45DD80F4676345b7676f1D70e3
+    │   └─ ← [Return] 712 bytes of code
+    ├─ [428] HelperConfig::activeNetworkConfig() [staticcall]
+    │   └─ ← [Return] 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0, 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000
+    ├─ [0] VM::startBroadcast()
+    │   └─ ← [Return]
+    ├─ [3586102] → new CreateElection@0xdCaFcAC286f4761b101a35DC679980e42625Ea2D
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 17792 bytes of code
+    ├─ [2303694] → new VotsElectionNft@0xf6cA541355f1234b8053D9Adc4B972a4dBd9714D
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 11163 bytes of code
+    ├─ [2591461] → new VotsEngine@0xcA60599c2951118814142080E05321CEAd0877E1
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    │   └─ ← [Return] 12823 bytes of code
+    ├─ [1542915] → new VotsEngineFunctionClient@0x24217E577eA1E80549eED56BBEb8f6D16698399C
+    │   └─ ← [Return] 7704 bytes of code
+    ├─ [24279] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x24217E577eA1E80549eED56BBEb8f6D16698399C])
+    │   ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x24217E577eA1E80549eED56BBEb8f6D16698399C])
+    │   └─ ← [Return]
+    ├─ [2236] CreateElection::transferOwnership(VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    │   └─ ← [Return]
+    ├─ [2674] VotsElectionNft::transferOwnership(VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    │   ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    │   └─ ← [Stop]
+    ├─ [0] VM::stopBroadcast()
+    │   └─ ← [Return]
+    └─ ← [Return] VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1]
+
+
+Script ran successfully.
+
+== Return ==
+0: contract VotsEngine 0xcA60599c2951118814142080E05321CEAd0877E1
+
+## Setting up 1 EVM.
+==========================
+Simulated On-chain Traces:
+
+  [3586102] → new CreateElection@0xdCaFcAC286f4761b101a35DC679980e42625Ea2D
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 17792 bytes of code
+
+  [2303694] → new VotsElectionNft@0xf6cA541355f1234b8053D9Adc4B972a4dBd9714D
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 11163 bytes of code
+
+  [2591461] → new VotsEngine@0xcA60599c2951118814142080E05321CEAd0877E1
+    ├─ emit OwnershipTransferred(previousOwner: 0x0000000000000000000000000000000000000000, newOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0)
+    └─ ← [Return] 12823 bytes of code
+
+  [1542915] → new VotsEngineFunctionClient@0x24217E577eA1E80549eED56BBEb8f6D16698399C
+    └─ ← [Return] 7704 bytes of code
+
+  [26279] VotsEngine::setFunctionClient(VotsEngineFunctionClient: [0x24217E577eA1E80549eED56BBEb8f6D16698399C])
+    ├─ emit FunctionClientUpdated(oldClient: 0x0000000000000000000000000000000000000000, newClient: VotsEngineFunctionClient: [0x24217E577eA1E80549eED56BBEb8f6D16698399C])
+    └─ ← [Return]
+
+  [7036] CreateElection::transferOwnership(VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    └─ ← [Return]
+
+  [7474] VotsElectionNft::transferOwnership(VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    ├─ emit OwnershipTransferred(previousOwner: 0x688ce0CCf27a0D0B2b578199ACf3125a1F31f1c0, newOwner: VotsEngine: [0xcA60599c2951118814142080E05321CEAd0877E1])
+    └─ ← [Stop]
+
+
+==========================
+
+Chain 11155111
+
+Estimated gas price: 0.00120008 gwei
+
+Estimated total gas used for script: 14505467
+
+Estimated amount required: 0.00001740772083736 ETH
+
+==========================
+
+##### sepolia
+✅  [Success] Hash: 0xbe0da2d8cad6c99ec884ef9e532724c56d7c71981dd3d86b0a20f7794d867408
+Contract Address: 0xf6cA541355f1234b8053D9Adc4B972a4dBd9714D
+Block: 8949475
+Paid: 0.000003059765689512 ETH (2549724 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x4bfe7d86b616bc431a1ddf96601b24cbf901906c596059638a9a05791226a927
+Block: 8949475
+Paid: 0.000000057255013018 ETH (47711 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xb52caaa095cba22bdda922e0c44f2f7b4883a24c0487642a2dfc7713e0217187
+Contract Address: 0xdCaFcAC286f4761b101a35DC679980e42625Ea2D
+Block: 8949475
+Paid: 0.000004703762547764 ETH (3919678 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xf3b0f7797959f565fd14f60eaa64abc742b7ce5964f2cff3b7b4415b76659244
+Block: 8949475
+Paid: 0.000000034162681784 ETH (28468 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xa8310d8138036a38547f46e413dba1fcbada9a7aa93a5a7aa875c2c8464ef358
+Contract Address: 0xcA60599c2951118814142080E05321CEAd0877E1
+Block: 8949475
+Paid: 0.000003424775247782 ETH (2853889 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0x2bed04d91e1f9fde27edd8e3c6c122e7f364b04277e9984ad51a698332c4b5f2
+Contract Address: 0x24217E577eA1E80549eED56BBEb8f6D16698399C
+Block: 8949475
+Paid: 0.00000206563140959 ETH (1721305 gas * 0.001200038 gwei)
+
+
+##### sepolia
+✅  [Success] Hash: 0xec34d271d1d86e42e7eb9627ec0ef6c01e868ccaec088899a3b940874df33e12
+Block: 8949476
+Paid: 0.000000034688298428 ETH (28906 gas * 0.001200038 gwei)
+
+✅ Sequence #1 on sepolia | Total Paid: 0.000013380040887878 ETH (11149681 gas * avg 0.001200038 gwei)
+                                                                                                                                                                                          
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+##
+Start verification for (4) contracts
+Start verifying contract `0xdCaFcAC286f4761b101a35DC679980e42625Ea2D` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [src/CreateElection.sol:CreateElection] 0xdCaFcAC286f4761b101a35DC679980e42625Ea2D.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `pfimvhjivldwgeis85g8swukcngeqy38kzeehrhgrsigznheqr`
+        URL: https://sepolia.etherscan.io/address/0xdcafcac286f4761b101a35dc679980e42625ea2d
+Contract verification status:
+Response: `NOTOK`
+Details: `Already Verified`
+Contract source code already verified
+Start verifying contract `0xf6cA541355f1234b8053D9Adc4B972a4dBd9714D` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+
+Submitting verification for [src/VotsElectionNft.sol:VotsElectionNft] 0xf6cA541355f1234b8053D9Adc4B972a4dBd9714D.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `sjiq8jkxahrftwivcg15bhnah1celpvdfz7jqksktjgzfbynyu`
+        URL: https://sepolia.etherscan.io/address/0xf6ca541355f1234b8053d9adc4b972a4dbd9714d
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `NOTOK`
+Details: `Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.`
+Error: Failed to verify contract: Checking verification result failed; Contract failed to verify.
+Start verifying contract `0xcA60599c2951118814142080E05321CEAd0877E1` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 000000000000000000000000dcafcac286f4761b101a35dc679980e42625ea2d000000000000000000000000f6ca541355f1234b8053d9adc4b972a4dbd9714d
+
+Submitting verification for [src/VotsEngine.sol:VotsEngine] 0xcA60599c2951118814142080E05321CEAd0877E1.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `cbejfam98887cbcnrjqp7spgbs1nj6tp6hmuzvtxygcjcly5nt`
+        URL: https://sepolia.etherscan.io/address/0xca60599c2951118814142080e05321cead0877e1
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0x24217E577eA1E80549eED56BBEb8f6D16698399C` deployed on sepolia
+EVM version: cancun
+Compiler version: 0.8.28
+Optimizations:    200
+Constructor args: 000000000000000000000000b83e47c2bc239b3bf370bc41e1459a34b41238d066756e2d657468657265756d2d7365706f6c69612d3100000000000000000000000000000000000000000000ca60599c2951118814142080e05321cead0877e1
+
+Submitting verification for [src/VotsEngineFunctionClient.sol:VotsEngineFunctionClient] 0x24217E577eA1E80549eED56BBEb8f6D16698399C.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `kdxankmy8eayp2fi2uqipvrirrf6urtwasmeivv381mfxzsa4u`
+        URL: https://sepolia.etherscan.io/address/0x24217e577ea1e80549eed56bbeb8f6d16698399c
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+
+Transactions saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/broadcast/DeployVotsEngine.s.sol/11155111/run-latest.json
+
+Sensitive values saved to: /Users/ayeniyeniyan/Documents/GitHub/vots_smart_contract/cache/DeployVotsEngine.s.sol/11155111/run-latest.json
+
+Error: Not all (3 / 4) contracts were verified!
+make: *** [deploy-votsengine] Error 1
 ayeniyeniyan@Samuels-MacBook-Pro vots_smart_contract % 
